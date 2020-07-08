@@ -4,7 +4,7 @@ from flask_restful import Api, Resource
 from .schemas import ClasificacionSchema
 from ..models import Clasificacion
 
-clasificacion_v1 = Blueprint('api_v1', __name__)
+clasificacion_v1 = Blueprint('clasificacion_v1', __name__)
 
 
 class ClasificacionListResource(Resource):
