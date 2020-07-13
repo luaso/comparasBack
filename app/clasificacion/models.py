@@ -1,15 +1,18 @@
 from app.db import db, BaseModelMixin
+from sqlalchemy import Column, Integer, String
+
 
 class Clasificacion(db.Model, BaseModelMixin):
-    idClasificacion = db.Column(db.Integer, primary_key=True)
-    nombreClasificacion = db.Column(db.String)
+    __tablename__= "clasificacion"
+    idclasificacion = db.Column(db.Integer, primary_key=True)
+    nombreclasificacion = db.Column(db.String)
 
 
-    def __init__(self, nombreClasificacion):
-        self.nombreClasificacion = nombreClasificacion
+    def __init__(self, nombreclasificacion):
+        self.nombreClasificacion = nombreclasificacion
 
     def __repr__(self):
-        return f'Clasificacion({self.nombreClasificacion})'
+        return f'Clasificacion({self.nombreclasificacion})'
 
     def __str__(self):
-        return f'{self.nombreClasificacion}'
+        return f'{self.nombreclasificacion}'

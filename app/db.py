@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Column, Integer, String
 
 db = SQLAlchemy()
 
@@ -14,6 +15,7 @@ class BaseModelMixin:
 
     @classmethod
     def get_all(cls):
+        print("entro al get_all")
         return cls.query.all()
 
     @classmethod

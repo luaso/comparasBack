@@ -10,6 +10,7 @@ clasificacion_v1 = Blueprint('clasificacion_v1', __name__)
 class ClasificacionListResource(Resource):
     def get(self):
         clasificaciones = Clasificacion.get_all()
+        print(clasificaciones)
         result = clasificacion_schema.dump(clasificaciones, many=True)
         return result
 
