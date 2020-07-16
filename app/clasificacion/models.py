@@ -9,7 +9,7 @@ class Clasificacion(db.Model, BaseModelMixin):
 
 
     def __init__(self, nombreclasificacion):
-        self.nombreClasificacion = nombreclasificacion
+        self.nombreclasificacion = nombreclasificacion
 
     def __repr__(self):
         return f'Clasificacion({self.nombreclasificacion})'

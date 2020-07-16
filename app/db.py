@@ -20,6 +20,7 @@ class BaseModelMixin:
 
     @classmethod
     def get_by_id(cls, id):
+        print("entro al get_by_id")
         return cls.query.get(id)
 
     @classmethod

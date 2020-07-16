@@ -42,8 +42,9 @@ def create_app(DevelopmentConfig):
     # Registra los blueprints
     app.register_blueprint(clasificacion_v1)
 
+
     # Registra manejadores de errores personalizados
-    #register_error_handlers(app)
+    register_error_handlers(app)
 
     return app
 
