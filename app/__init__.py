@@ -3,7 +3,7 @@ from flask_restful import Api
 
 from app.common.error_handling import ObjectNotFound, AppErrorBaseClass
 from app.db import db
-from app.categoria.api_v1.resources import categoria_v1
+from app.administrador.api_v1.resources import categoria_v1
 from .ext import ma, migrate
 
 

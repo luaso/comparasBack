@@ -1,13 +1,12 @@
-from flask import request, Blueprint
-from flask_restful import Api, Resource
+from flask import request
+from flask_restful import Resource
 
-from .schemas import CategoriasSchema
-from ..models import Categorias
+from app.administrador.schemas.categoria_schema import CategoriasSchema
+from app.administrador.models.categoria_model import Categorias
 from app import ObjectNotFound
 
-
-categoria_v1 = Blueprint('categoria_v1', __name__)
 categoria_schema = CategoriasSchema()
+
 
 class CategoriaList(Resource):
     def get(self):
@@ -16,14 +15,13 @@ class CategoriaList(Resource):
         result = categoria_schema.dump(categoria, many=True)
         return result
 
-
 class Categoria(Resource):
     def get(self, nombreCategoria):
         print("entro a clase by id")
         categoria = Categorias.find_by_name(nombreCategoria)
         print(categoria)
         if categoria is None:
-            raise ObjectNotFound('La categoria no existe')
+            raise ObjectNotFound('La administrador no existe')
         result = categoria_schema.dump(categoria)
         return result
 
@@ -64,8 +62,3 @@ class Categoria(Resource):
         print("despues de guardar")
         result = categoria_schema.dump(categoria)
         return result, 201
-
-
-api = Api(categoria_v1)
-api.add_resource(CategoriaList, '/api/categoria/', endpoint='categoria_list_resource')
-api.add_resource(Categoria, '/api/categoria/<string:nombreCategoria>', endpoint='categoria_resource')
