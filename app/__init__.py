@@ -3,7 +3,7 @@ from flask_restful import Api
 
 from app.common.error_handling import ObjectNotFound, AppErrorBaseClass
 from app.db import db
-from app.clasificacion.api_v1.resources import clasificacion_v1
+from app.categoria.api_v1.resources import categoria_v1
 from .ext import ma, migrate
 
 
@@ -17,16 +17,14 @@ def create_app(DevelopmentConfig):
     app.config['TESTING'] = True
     app.config['SECRET_KEY'] = 'Desarrollo key'
 
+    app.config['ENV'] = 'development'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SHOW_SQLALCHEMY_LOG_MESSAGES'] = False
     app.config['ERROR_404_HELP'] = False
-    app.config['ERROR_404_HELP'] = False
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SHOW_SQLALCHEMY_LOG_MESSAGES'] = False
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://desarrollador3:VzXY#FP$AqNI@64.227.98.56:5432/comparas'
 
 
-    print(app.config['SQLALCHEMY_DATABASE_URI'])
+    print(app.config['DEBUG'])
     # Inicializa las extensiones
     db.init_app(app)
 
@@ -40,7 +38,7 @@ def create_app(DevelopmentConfig):
     app.url_map.strict_slashes = False
 
     # Registra los blueprints
-    app.register_blueprint(clasificacion_v1)
+    app.register_blueprint(categoria_v1)
 
 
     # Registra manejadores de errores personalizados
@@ -52,24 +50,24 @@ def create_app(DevelopmentConfig):
 def register_error_handlers(app):
     @app.errorhandler(Exception)
     def handle_exception_error(e):
-        return jsonify({'msg': 'aaaaaaaaa Internal server error'}), 500
+        return jsonify({'msg': 'prsn Internal server error'}), 500
 
     @app.errorhandler(405)
     def handle_405_error(e):
-        return jsonify({'msg': 'aaaaaaaaa Method not allowed'}), 405
+        return jsonify({'msg': 'prsn Method not allowed'}), 405
 
     @app.errorhandler(403)
     def handle_403_error(e):
-        return jsonify({'msg': 'aaaaaaaaa Forbidden error'}), 403
+        return jsonify({'msg': 'prsn Forbidden error'}), 403
 
     @app.errorhandler(404)
     def handle_404_error(e):
-        return jsonify({'msg': 'aaaaaaaaa Not Found error'}), 404
+        return jsonify({'msg': 'prsn Not Found error'}), 404
 
     @app.errorhandler(AppErrorBaseClass)
     def handle_app_base_error(e):
-        return jsonify({'aaaaaaaaa msg': str(e)}), 500
+        return jsonify({'prsn msg': str(e)}), 500
 
     @app.errorhandler(ObjectNotFound)
     def handle_object_not_found_error(e):
-        return jsonify({'aaaaaaaaa msg': str(e)}), 404
+        return jsonify({'prsn msg': str(e)}), 404

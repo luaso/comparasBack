@@ -11,7 +11,9 @@ class BaseModelMixin:
 
     def delete(self):
         db.session.delete(self)
+        print("netro al delete ")
         db.session.commit()
+
 
     @classmethod
     def get_all(cls):
