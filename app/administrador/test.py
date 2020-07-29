@@ -1,1 +1,0 @@
-from app.administrador.resources.categorias_resource import Categoria

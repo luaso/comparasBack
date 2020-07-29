@@ -1,5 +1,6 @@
 from flask import Flask, jsonify
 from flask_restful import Api
+from config.configuration import DevelopmentConfig
 
 from app.common.error_handling import ObjectNotFound, AppErrorBaseClass
 from app.db import db
@@ -7,24 +8,26 @@ from app.administrador.api_v1.routes import Administrador
 from .ext import ma, migrate
 
 
-def create_app(DevelopmentConfig):
+def create_app(config):
     app = Flask(__name__)
     #app.config.from_object(DevelopmentConfig)
 
     #inicializacion de la configuracion(cambiar)
 
-    app.config['DEBUG'] = True
-    app.config['TESTING'] = True
-    app.config['SECRET_KEY'] = 'Desarrollo key'
+    #app.config['DEBUG'] = True
+    #app.config['TESTING'] = True
+    #app.config['SECRET_KEY'] = 'Desarrollo key'
 
-    app.config['ENV'] = 'development'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SHOW_SQLALCHEMY_LOG_MESSAGES'] = False
-    app.config['ERROR_404_HELP'] = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://desarrollador3:VzXY#FP$AqNI@64.227.98.56:5432/comparas'
+    #app.config['ENV'] = 'development'
+    #app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    #app.config['SHOW_SQLALCHEMY_LOG_MESSAGES'] = False
+    #app.config['ERROR_404_HELP'] = False
+    #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://desarrollador3:VzXY#FP$AqNI@64.227.98.56:5432/comparas'
+    app.config.from_object(config)
 
+    print(app.config['SQLALCHEMY_DATABASE_URI'])
+    print(app.config['SQLALCHEMY_DATABASE_URI'])
 
-    print(app.config['DEBUG'])
     # Inicializa las extensiones
     db.init_app(app)
 
