@@ -2,7 +2,7 @@ from flask import Flask, jsonify
 from flask_restful import Api
 from config.configuration import DevelopmentConfig
 
-from app.common.error_handling import ObjectNotFound, AppErrorBaseClass
+from app.common.error_handling import ObjectNotFound, AppErrorBaseClass, PruebaExeption
 from app.db import db
 from app.administrador.api_v1.routes import Administrador
 from .ext import ma, migrate
@@ -25,7 +25,6 @@ def create_app(config):
     #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://desarrollador3:VzXY#FP$AqNI@64.227.98.56:5432/comparas'
     app.config.from_object(config)
 
-    print(app.config['SQLALCHEMY_DATABASE_URI'])
     print(app.config['SQLALCHEMY_DATABASE_URI'])
 
     # Inicializa las extensiones
@@ -53,24 +52,28 @@ def create_app(config):
 def register_error_handlers(app):
     @app.errorhandler(Exception)
     def handle_exception_error(e):
-        return jsonify({'msg': 'prsn Internal server error'}), 500
+        return jsonify({'msg': 'COMPARAS Internal server error'}), 500
 
     @app.errorhandler(405)
     def handle_405_error(e):
-        return jsonify({'msg': 'prsn Method not allowed'}), 405
+        return jsonify({'msg': 'COMPARAS Method not allowed'}), 405
 
     @app.errorhandler(403)
     def handle_403_error(e):
-        return jsonify({'msg': 'prsn Forbidden error'}), 403
+        return jsonify({'msg': 'COMPARAS Forbidden error'}), 403
 
     @app.errorhandler(404)
     def handle_404_error(e):
-        return jsonify({'msg': 'prsn Not Found error'}), 404
+        return jsonify({'msg': 'COMPARAS Not Found error'}), 404
 
     @app.errorhandler(AppErrorBaseClass)
     def handle_app_base_error(e):
         return jsonify({'prsn msg': str(e)}), 500
 
     @app.errorhandler(ObjectNotFound)
+    def handle_object_not_found_error(e):
+        return jsonify({'prsn msg': str(e)}), 404
+
+    @app.errorhandler(PruebaExeption)
     def handle_object_not_found_error(e):
         return jsonify({'prsn msg': str(e)}), 404

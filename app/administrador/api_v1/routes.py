@@ -9,5 +9,5 @@ Administrador = Blueprint('Administrador', __name__)
 
 
 api = Api(Administrador)
-api.add_resource(CategoriaList, '/api/administrador/', endpoint='categoria_list_resource')
-api.add_resource(Categoria, '/api/administrador/<string:nombreCategoria>', endpoint='categoria_resource')
+api.add_resource(CategoriaList, '/api/categoria/', endpoint='categoria_list_resource')
+api.add_resource(Categoria, '/api/categoria/<int:idCategoria>', endpoint='categoria_resource')

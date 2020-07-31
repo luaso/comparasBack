@@ -30,3 +30,8 @@ class Categorias(db.Model, BaseModelMixin):
     @classmethod
     def find_by_name(cls, name):
         return cls.query.filter_by(nombreCategoria=name).first()
+
+    @classmethod
+    def find_by_id(cls, id):
+        print("entro a find_by_id")
+        return cls.query.get(id)

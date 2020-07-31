@@ -4,3 +4,6 @@ class AppErrorBaseClass(Exception):
 
 class ObjectNotFound(AppErrorBaseClass):
     pass
+
+class PruebaExeption(AppErrorBaseClass):
+    pass
