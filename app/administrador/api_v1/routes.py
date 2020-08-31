@@ -4,6 +4,7 @@ from flask_restful import Api
 from app.administrador.resources.categorias_resource import Categoria, CategoriaList
 from app.administrador.resources.supermercados_resources import Supermercado, SupermercadoList
 
+
 Administrador = Blueprint('Administrador', __name__)
 
 
