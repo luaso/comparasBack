@@ -20,9 +20,17 @@ class ProductoList(Resource):
 
 
 class Producto(Resource):
-    def get(self, idProducto):
+    def get(self, nombreProducto):
         print("entro a get by id")
-        producto = Productos.find_by_id(idProducto)
+
+        producto = Productos.query.filter_by(nombreProducto=nombreProducto).first()
+
+        #producto = Productos.query.filter(nombreProducto.match('Primor'))
+        #producto = Productos.query.filter_by(nombreProducto='Primor').first()
+        #producto = Productos.query.filter_by(Productos.nombreProducto.match('Primor'))
+        #producto = Productos.query.filter(Productos.nombreProducto.like='Leo%').all()
+
+
         print(producto)
         if producto is None:
             raise ObjectNotFound('El producto no existe')

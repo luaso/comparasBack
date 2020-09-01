@@ -11,4 +11,5 @@ UsuarioComun = Blueprint('UsuarioComun', __name__)
 
 api = Api(UsuarioComun)
 api.add_resource(ProductoList, '/api/producto/', endpoint='producto_list_resource')
-api.add_resource(Producto, '/api/producto/<int:idProducto>', endpoint='producto_resource')
+api.add_resource(Producto, '/api/producto/<string:nombreProducto>', endpoint='producto_resource')
+#api.add_resource(Producto, '/api/producto1/', endpoint='nombreProducto_resource')
