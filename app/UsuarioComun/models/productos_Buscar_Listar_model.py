@@ -19,6 +19,7 @@ class Productos(db.Model, BaseModelMixin):
 
     nombreProducto = db.Column(db.String)
     contenidoProducto = db.Column(db.String)
+    Imagen = db.Column(db.String)
 
 
 
