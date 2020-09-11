@@ -4,6 +4,7 @@ from sqlalchemy import Column, Integer, String
 
 
 db = SQLAlchemy()
+
 class Categorias(db.Model, BaseModelMixin):
     __tablename__= "CATEGORIAS"
     idCategoria = db.Column(db.Integer, primary_key=True)
