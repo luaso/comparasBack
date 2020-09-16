@@ -23,22 +23,14 @@ class Producto(Resource):
     def get(self, nombreProducto):
         #producto = Productos.query.filter_by(nombreProducto=nombreProducto).first()
         producto = Productos.query.filter(or_(Productos.nombreProducto.ilike('%'+ nombreProducto +'%'), Productos.contenidoProducto.ilike('%'+ nombreProducto +'%')))
-
         for resultado1 in producto:
             print(resultado1.nombreProducto)
-
-
-
         if producto is None:
             raise ObjectNotFound('El producto no existe')
-
-
         print('=================================================')
         result = productos_Buscar_Listar_schema.dump(producto, many=True)
         print(result)
         print('=================================================')
-
-
         return {"producto": result}, 200
 
 
