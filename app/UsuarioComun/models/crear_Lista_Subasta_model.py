@@ -39,6 +39,21 @@ class Usuarios(db.Model):
     password = db.Column(db.String)
     subastas = db.relationship('Subastas', backref='Usuarios', lazy=True)
 
+class Categorias(db.Model):
+    __tablename__= "CATEGORIAS"
+    idCategoria = db.Column(db.Integer, primary_key=True)
+    nombreCategoria = db.Column(db.String)
+    productos = db.relationship('Productos', backref='Categorias', lazy=True)
+
+
+class Productos(db.Model):
+    __tablename__ = "PRODUCTOS"
+    idProducto = db.Column(db.Integer, primary_key=True)
+    idCategoria = db.Column(db.Integer, db.ForeignKey(Categorias.idCategoria), nullable=False)
+    nombreProducto = db.Column(db.String)
+    contenidoProducto = db.Column(db.String)
+    subastas_productos = db.relationship('Subastas_Productos', backref='Productos', lazy=True)
+
 class Subastas(db.Model):
     __tablename__= "SUBASTAS"
     idSubasta = db.Column(db.Integer, primary_key=True)
@@ -58,10 +73,22 @@ class Subastas(db.Model):
         self.fechaSubasta = fechaSubasta
 
 
+class Subastas_Productos(db.Model):
+    __tablename__= "SUBASTAS_PRODUCTOS"
+    idSubastasProductos = db.Column(db.Integer, primary_key=True)
+    idSubasta = db.Column(db.Integer,db.ForeignKey(Subastas.idSubasta), nullable=False)
+    idProducto = db.Column(db.Integer, db.ForeignKey(Productos.idProducto), nullable=False)
+    Cantidad = db.Column(db.Float)
+
+    def __init__(self,idSubasta, idProducto, Cantidad):
+
+        self.idSubasta = idSubasta
+        self.idProducto = idProducto
+        self.Cantidad = Cantidad
 
 class TaskSchema(ma.Schema):
     class Meta:
-        fields = ('idUsuario', 'idEstado', 'tiempoInicial','nombreSubasta','precioIdeal','fechaSubasta')
+        fields = ('idUsuario', 'idEstado', 'tiempoInicial','nombreSubasta','precioIdeal','fechaSubasta','idSubasta','idProducto','Cantidad')
 
 task_schema = TaskSchema()
 tasks_schema = TaskSchema(many=True)
@@ -69,11 +96,11 @@ tasks_schema = TaskSchema(many=True)
 @app.route('/api/Subasta', methods=['POST'])
 def create_task():
 
-    if  request.json['idUsuario'] != 1 :
-        idUsuario = request.json['idUsuario']
-    else:
-        idUsuario = 1
-
+    #if  request.json['idUsuario'] != 1 :
+    #    idUsuario = request.json['idUsuario']
+    #else:
+    #    idUsuario = 1
+    idUsuario = 1
     idEstado = 1
     tiempoInicial = datetime.now()
     nombreSubasta = 'Creación de lista'
