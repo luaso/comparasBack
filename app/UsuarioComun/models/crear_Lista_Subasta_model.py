@@ -109,16 +109,18 @@ def create_task():
 
     crearSubasta = Subastas(idUsuario, idEstado,tiempoInicial,nombreSubasta,precioIdeal,fechaSubasta)
     db.session.add(crearSubasta)
-
+    idSubastaCreada = 0
     try:
         db.session.commit()
         print('Crear Subasta')
         intCreacion = 1
+        idSubastaCreada = crearSubasta.idSubasta
+        print('ID :', idSubastaCreada)
     except:
         print('Error al Crear Subasta')
 
     if  intCreacion == 1:
-        idSubasta = request.json['idSubasta']
+        idSubasta = idSubastaCreada
         idProducto = request.json['idProducto']
         Cantidad = request.json['Cantidad']
         new_task = Subastas_Productos(idSubasta, idProducto, Cantidad)
@@ -126,7 +128,26 @@ def create_task():
         db.session.commit()
         #return task_schema.jsonify(new_task)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     return task_schema.jsonify(new_task)
+
+
 
 if __name__ =="__main__":
     app.run(debug=True)
