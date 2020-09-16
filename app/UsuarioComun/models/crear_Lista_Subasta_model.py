@@ -125,27 +125,12 @@ def create_task():
         Cantidad = request.json['Cantidad']
         new_task = Subastas_Productos(idSubasta, idProducto, Cantidad)
         db.session.add(new_task)
+    try:
         db.session.commit()
-        #return task_schema.jsonify(new_task)
+        print('Productos Agregados a la subasta')
+    except:
+        print('Error al agregar productos')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    return task_schema.jsonify(new_task)
 
 
 
