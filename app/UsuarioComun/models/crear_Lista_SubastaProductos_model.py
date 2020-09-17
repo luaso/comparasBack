@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
-
+import json
 
 
 app = Flask(__name__)
@@ -85,7 +85,18 @@ class Subastas_Productos(db.Model):
 
 class TaskSchema(ma.Schema):
     class Meta:
-        fields = ('idSubastasProductos','idSubasta', 'idProducto', 'Cantidad', 'idProducto', 'idCategoria','nombreProducto','contenidoProducto')
+        fields = ('idSubastasProductos',
+                  'idSubasta',
+                  'idProducto',
+                  'Cantidad',
+                  'idProducto',
+                  'idCategoria',
+                  'nombreProducto',
+                  'contenidoProducto',
+                  'Subastas_Productos.idSubasta',
+                  'Productos.idProducto',
+                  'Productos.nombreProducto',
+                  'Subastas_Productos.Cantidad')
 
 
 
@@ -119,25 +130,16 @@ def get_Subasta_Productos():
 # FILTRAR LISTA DE PRODUCTOS DE SUBASTA_PRODUCTOS MEDIANTE LA ID DE SUBASTA
 @app.route('/api/SubastaProductos1', methods=['GET'])
 def get_get_Subasta_Productos_idSubasta():
+    countries = []
 
-
-    #filtro = Subastas_Productos.query.filter_by(idSubasta=1).all()
-
-    filtro = db.session.query(Subastas_Productos, Productos).outerjoin(Productos, Subastas_Productos.idProducto == Productos.idProducto).all()
-    #filtro  = db.session.query(Subastas_Productos, Productos).join(Productos).all()
-
-
+    filtro = db.session.query(Subastas_Productos, Productos).outerjoin(Productos, Subastas_Productos.idProducto == Productos.idProducto).filter(Subastas_Productos.idSubasta==85).all()
     for subastas_Productos, productos in filtro:
         print(productos.idProducto, productos.nombreProducto)
 
 
-    print(filtro)
     resultado = task_schema.dump(filtro, many=True)
     print(resultado)
     return {"productos": resultado}, 200
-
-
-
 
 
 
