@@ -1,7 +1,6 @@
 from flask import request
 from flask_restful import Resource
 
-
 from app.administrador.schemas.supermercado_schema import SupermercadosSchema
 from app.administrador.models.supermercados_model import Supermercados
 

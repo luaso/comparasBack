@@ -5,6 +5,7 @@ from config.configuration import DevelopmentConfig
 from app.common.error_handling import ObjectNotFound, AppErrorBaseClass, PruebaExeption
 from app.db import db
 from app.administrador.api_v1.routes import Administrador
+from app.UsuarioComun.api_v1.routes import UsuarioComun
 from .ext import ma, migrate
 
 
@@ -41,6 +42,7 @@ def create_app(config):
 
     # Registra los blueprints
     app.register_blueprint(Administrador)
+    app.register_blueprint(UsuarioComun)
 
 
     # Registra manejadores de errores personalizados
