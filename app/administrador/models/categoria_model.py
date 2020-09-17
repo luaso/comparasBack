@@ -1,6 +1,6 @@
 from app.db import db, BaseModelMixin
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Date
 
 db = SQLAlchemy()
 
@@ -8,10 +8,12 @@ class Categorias(db.Model, BaseModelMixin):
     __tablename__= "CATEGORIAS"
     idCategoria = db.Column(db.Integer, primary_key=True)
     nombreCategoria = db.Column(db.String)
+    fechaCreacion = db.Column(db.DateTime)
 
 
-    def __init__(self, nombreCategoria):
+    def __init__(self, nombreCategoria, fechaCreacion):
         self.nombreCategoria = nombreCategoria
+        self.fechaCreacion = fechaCreacion
 
     def __repr__(self):
         return f'Categoria({self.nombreCategoria})'

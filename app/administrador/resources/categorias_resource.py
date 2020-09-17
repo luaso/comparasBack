@@ -1,5 +1,6 @@
 from flask import request
 from flask_restful import Resource
+from datetime import datetime
 
 from app.administrador.schemas.categoria_schema import CategoriasSchema
 from app.administrador.models.categoria_model import Categorias
@@ -26,7 +27,7 @@ class CategoriaList(Resource):
         except Exception as ex:
             raise ObjectNotFound(ex)
         print(categoria_dict)
-        categoria = Categorias(nombreCategoria = categoria_dict['nombreCategoria'])
+        categoria = Categorias(nombreCategoria = categoria_dict['nombreCategoria'], fechaCreacion = datetime.now())
         print(categoria)
         try:
             categoria.save()
