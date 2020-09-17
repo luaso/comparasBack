@@ -128,11 +128,11 @@ def get_Subasta_Productos():
 
 
 # FILTRAR LISTA DE PRODUCTOS DE SUBASTA_PRODUCTOS MEDIANTE LA ID DE SUBASTA
-@app.route('/api/SubastaProductos1', methods=['GET'])
-def get_get_Subasta_Productos_idSubasta():
+@app.route('/api/SubastaProductos1/<idSubasta>', methods=['GET'])
+def get_get_Subasta_Productos_idSubasta(idSubasta):
     countries = []
 
-    filtro = db.session.query(Subastas_Productos, Productos).outerjoin(Productos, Subastas_Productos.idProducto == Productos.idProducto).filter(Subastas_Productos.idSubasta==85).all()
+    filtro = db.session.query(Subastas_Productos, Productos).outerjoin(Productos, Subastas_Productos.idProducto == Productos.idProducto).filter(Subastas_Productos.idSubasta==idSubasta).all()
     for subastas_Productos, productos in filtro:
         print(productos.idProducto, productos.nombreProducto)
 
