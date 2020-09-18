@@ -21,8 +21,7 @@ task_schema = TaskSchema()
 tasks_schema = TaskSchema(many=True)
 
 class buscarProductosSubastaEjecucion(Resource):
-    def get(idSubasta):
-        print('entro111111111111111111111111111111111111')
+    def get(self, idSubasta):
         filtro = db.session.query(Subastas_Productos, Productos).outerjoin(Productos,Subastas_Productos.idProducto == Productos.idProducto).filter(Subastas_Productos.idSubasta == idSubasta).all()
         for subastas_Productos, productos in filtro:
             print(productos.idProducto, productos.nombreProducto)
