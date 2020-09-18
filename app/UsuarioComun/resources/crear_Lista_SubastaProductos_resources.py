@@ -28,3 +28,16 @@ class buscarProductosSubastaEjecucion(Resource):
         resultado = task_schema.dump(filtro, many=True)
         print(resultado)
         return {"productos": resultado}, 200
+
+class compararProductosSupermercados(Resource):
+    def get(self, idSubasta):
+        filtro = db.session.query(Subastas_Productos, Productos_Supermercados, Productos, Supermercados, Productos_Supermercados.idSupermercado * Productos_Supermercados.precio). \
+            outerjoin(Productos, Subastas_Productos.idProducto == Productos.idProducto). \
+            outerjoin(Productos_Supermercados, Productos.idProducto == Productos_Supermercados.idProducto). \
+            outerjoin(Supermercados, Productos_Supermercados.idSupermercado == Supermercados.idSupermercado). \
+            filter(Subastas_Productos.idSubasta == idSubasta).all()
+        print(filtro)
+
+        resultado = task_schema.dump(filtro, many=True)
+        # print(resultado)
+        return {"productos": resultado}, 200

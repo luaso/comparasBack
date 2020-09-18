@@ -149,17 +149,17 @@ def get_Subasta_Productos():
 
 
 # FILTRAR LISTA DE PRODUCTOS DE SUBASTA_PRODUCTOS MEDIANTE LA ID DE SUBASTA
-@app.route('/api/SubastaProductos1/<idSubasta>', methods=['GET'])
-def get_Subasta_Productos_idSubasta(idSubasta):
-
-    filtro = db.session.query(Subastas_Productos, Productos).outerjoin(Productos, Subastas_Productos.idProducto == Productos.idProducto).filter(Subastas_Productos.idSubasta==idSubasta).all()
-    for subastas_Productos, productos in filtro:
-        print(productos.idProducto, productos.nombreProducto)
-
-
-    resultado = task_schema.dump(filtro, many=True)
-    print(resultado)
-    return {"productos": resultado}, 200
+#@app.route('/api/SubastaProductos1/<idSubasta>', methods=['GET'])
+#def get_Subasta_Productos_idSubasta(idSubasta):
+#
+#    filtro = db.session.query(Subastas_Productos, Productos).outerjoin(Productos, Subastas_Productos.idProducto == Productos.idProducto).filter(Subastas_Productos.idSubasta==idSubasta).all()
+#    for subastas_Productos, productos in filtro:
+#        print(productos.idProducto, productos.nombreProducto)
+#
+#
+#    resultado = task_schema.dump(filtro, many=True)
+#    print(resultado)
+#    return {"productos": resultado}, 200
 
 # MOSTRAR DATOS DE COMPARACIÓN ENTRE LOS SUPERMERCADOS Y LOS PRODUCTOS QUE CONTIENEN
 @app.route('/api/ComparacionSupermercados/<idSubasta>', methods=['GET'])
