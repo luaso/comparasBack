@@ -9,7 +9,9 @@ productos_Buscar_Listar_schema = ProductosBuscarListarSchema()
 class ProductoList(Resource):
     def get(self):
         try:
+            print('Estoy aqui')
             producto = Productos.get_all()
+            print('Error al jalar')
         except:
             raise ObjectNotFound('error al buscar')
 
