@@ -162,18 +162,18 @@ def get_Subasta_Productos():
 #    return {"productos": resultado}, 200
 
 # MOSTRAR DATOS DE COMPARACIÓN ENTRE LOS SUPERMERCADOS Y LOS PRODUCTOS QUE CONTIENEN
-@app.route('/api/ComparacionSupermercados/<idSubasta>', methods=['GET'])
-def get_Comparacion_Supermercados_Productos(idSubasta):
-    filtro = db.session.query(Subastas_Productos, Productos_Supermercados, Productos, Supermercados, Productos_Supermercados.idSupermercado * Productos_Supermercados.precio).\
-            outerjoin(Productos, Subastas_Productos.idProducto == Productos.idProducto).\
-            outerjoin(Productos_Supermercados, Productos.idProducto == Productos_Supermercados.idProducto). \
-            outerjoin(Supermercados, Productos_Supermercados.idSupermercado == Supermercados.idSupermercado). \
-            filter(Subastas_Productos.idSubasta==idSubasta).all()
-    print(filtro)
-
-    resultado = task_schema.dump(filtro, many=True)
-    #print(resultado)
-    return {"productos": resultado}, 200
-
-if __name__ =="__main__":
-    app.run(debug=True)
+#@app.route('/api/ComparacionSupermercados/<idSubasta>', methods=['GET'])
+#def get_Comparacion_Supermercados_Productos(idSubasta):
+#    filtro = db.session.query(Subastas_Productos, Productos_Supermercados, Productos, Supermercados, Productos_Supermercados.idSupermercado * Productos_Supermercados.precio).\
+#            outerjoin(Productos, Subastas_Productos.idProducto == Productos.idProducto).\
+#            outerjoin(Productos_Supermercados, Productos.idProducto == Productos_Supermercados.idProducto). \
+#            outerjoin(Supermercados, Productos_Supermercados.idSupermercado == Supermercados.idSupermercado). \
+#            filter(Subastas_Productos.idSubasta==idSubasta).all()
+#    print(filtro)
+#
+#    resultado = task_schema.dump(filtro, many=True)
+#    #print(resultado)
+#    return {"productos": resultado}, 200
+#
+#if __name__ =="__main__":
+#    app.run(debug=True)
