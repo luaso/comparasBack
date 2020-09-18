@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify
 from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, func
+
 import json
 
 
@@ -12,6 +13,13 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
+class Supermercados(db.Model):
+    __tablename__ = "SUPERMERCADOS"
+    idSupermercado = db.Column(db.Integer, primary_key=True)
+    nombreSupermercado = db.Column(db.String)
+    imagenSupermercado = db.Column(db.String)
+    urlSupermercado = db.Column(db.String)
+    productos_supermercados = db.relationship('Productos_Supermercados', backref='Supermercados', lazy=True)
 
 class Estado(db.Model):
     __tablename__ = "ESTADO"
@@ -68,6 +76,15 @@ class Productos(db.Model):
     contenidoProducto = db.Column(db.String)
     subastas_productos = db.relationship('Subastas_Productos', backref='Productos', lazy=True)
 
+class Productos_Supermercados(db.Model):
+    __tablename__ = "PRODUCTOS_SUPERMERCADOS"
+    idProductoSupermercado = db.Column(db.Integer, primary_key=True)
+    idSupermercado = db.Column(db.Integer,db.ForeignKey(Supermercados.idSupermercado), nullable=False)
+    idProducto = db.Column(db.Integer,db.ForeignKey(Productos.idProducto), nullable=False)
+    precio = db.Column(db.Float)
+    sku = db.Column(db.String)
+    fechaProducto = db.Column(db.Date)
+
 class Subastas_Productos(db.Model):
     __tablename__= "SUBASTAS_PRODUCTOS"
     idSubastasProductos = db.Column(db.Integer, primary_key=True)
@@ -96,7 +113,11 @@ class TaskSchema(ma.Schema):
                   'Subastas_Productos.idSubasta',
                   'Productos.idProducto',
                   'Productos.nombreProducto',
-                  'Subastas_Productos.Cantidad')
+                  'Subastas_Productos.Cantidad',
+                  'Productos_Supermercados.idSupermercado',
+                  'Supermercados.nombreSupermercado',
+                  'Productos_Supermercados.precio',
+                  'anon_1')
 
 
 
@@ -129,8 +150,7 @@ def get_Subasta_Productos():
 
 # FILTRAR LISTA DE PRODUCTOS DE SUBASTA_PRODUCTOS MEDIANTE LA ID DE SUBASTA
 @app.route('/api/SubastaProductos1/<idSubasta>', methods=['GET'])
-def get_get_Subasta_Productos_idSubasta(idSubasta):
-    countries = []
+def get_Subasta_Productos_idSubasta(idSubasta):
 
     filtro = db.session.query(Subastas_Productos, Productos).outerjoin(Productos, Subastas_Productos.idProducto == Productos.idProducto).filter(Subastas_Productos.idSubasta==idSubasta).all()
     for subastas_Productos, productos in filtro:
@@ -141,7 +161,27 @@ def get_get_Subasta_Productos_idSubasta(idSubasta):
     print(resultado)
     return {"productos": resultado}, 200
 
+# MOSTRAR DATOS DE COMPARACIÓN ENTRE LOS SUPERMERCADOS Y LOS PRODUCTOS QUE CONTIENEN
+@app.route('/api/ComparacionSupermercados/<idSubasta>', methods=['GET'])
+def get_Comparacion_Supermercados_Productos(idSubasta):
+    #filtro = db.session.query(User)\
+    #        .join((Group, User.groups))\
+    #        .join((Department, Group.departments)).filter(Department.name == 'R&D')
 
+    filtro = db.session.query(Subastas_Productos, Productos_Supermercados, Productos, Supermercados, Productos_Supermercados.idSupermercado * Productos_Supermercados.precio).\
+            outerjoin(Productos, Subastas_Productos.idProducto == Productos.idProducto).\
+            outerjoin(Productos_Supermercados, Productos.idProducto == Productos_Supermercados.idProducto). \
+            outerjoin(Supermercados, Productos_Supermercados.idSupermercado == Supermercados.idSupermercado). \
+            filter(Subastas_Productos.idSubasta==idSubasta).all()
+    print(filtro)
+
+
+    #cursor = db.session.query(Productos_Supermercados.idSupermercado * Productos_Supermercados.precio)
+    #print(cursor)
+
+    resultado = task_schema.dump(filtro, many=True)
+    #print(resultado)
+    return {"productos": resultado}, 200
 
 if __name__ =="__main__":
     app.run(debug=True)
