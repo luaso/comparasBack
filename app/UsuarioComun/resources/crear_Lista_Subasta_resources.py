@@ -1,39 +1,70 @@
-from flask import request
 from flask_restful import Api, Resource
 from sqlalchemy import or_
-from app.UsuarioComun.schemas.crear_Lista_Subasta_schema import TaskSchema
-from app.UsuarioComun.models.crear_Lista_Subasta_model import Subastas
+#from app.UsuarioComun.schemas.crear_Lista_Subasta_schema import TaskSchema
+from app.UsuarioComun.models.crear_Lista_Subasta_model import Subastas, Subastas_Productos, TaskSchema
+from datetime import datetime
 from app import ObjectNotFound
+from flask import Flask, request, jsonify
+from flask_marshmallow import Marshmallow
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Column, Integer, String
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://desarrollador3:VzXY#FP$AqNI@64.227.98.56:5432/comparas'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+ma = Marshmallow(app)
 
 taskSchema = TaskSchema()
-class Subastas(Resource):
-    def post():
-        #data = request.get_json()
-        #print(' data ================================')
-        #print(data)
 
-        #try:
-        #    subasta_dict = taskSchema.load(data)
-        #except Exception as ex:
-        #    raise ObjectNotFound(ex)
-        #print(' subasta_dict ================================')
-        #print(subasta_dict)
+class subastasEjecucion(Resource):
+    def post(self):
+        idUsuario = 1
+        print(idUsuario)
+        idEstado = 1
+        print(idEstado)
+        tiempoInicial = datetime.now()
+        print(tiempoInicial)
+        nombreSubasta = 'Creación de lista'
+        print(nombreSubasta)
+        precioIdeal = 0.0
+        print(precioIdeal)
+        fechaSubasta = 'Por definir'
+        print(fechaSubasta)
+        print('Selección de datos completado')
+        crearSubasta = Subastas(idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, fechaSubasta)
+        print('Agrupación de datos completado')
+        db.session.add(crearSubasta)
+        print('Sessión aperturada')
+        idSubastaCreada = 0
+        try:
+            db.session.commit()
+            print('Creación de SUBASTA completada')
+            intCreacion = 1
+            idSubastaCreada = crearSubasta.idSubasta
+            print('ID :', idSubastaCreada)
+        except:
+            print('Error al Crear Subasta')
 
-        #idUsuario = request.json['idUsuario']
-        #idEstado = request.json['idEstado']
-        #tiempoInicial = request.json['tiempoInicial']
-        #nombreSubasta = request.json['nombreSubasta']
-        #precioIdeal = request.json['precioIdeal']
-        #fechaSubasta = request.json['fechaSubasta']
+        data = request.get_json()
+        # categoria_dict = task_schema.load(data)
 
-        new_task = Subastas(idUsuario=1, idEstado=1, tiempoInicial='2020-02-10', nombreSubasta='dato de prueba 13:51', precioIdeal=0.0, fechaSubasta='dato de prueba 13:51')
-        #print(new_task)
-        db.session.add(new_task)
-        db.session.commit()
+        print(data)
 
-        #try:
-        #    subastas.save()
-        #except:
-        #    raise ObjectNotFound('error al agregar a la BD')
-        #result = taskSchema.dump(subastas)
-        #return {"supermercado": result}, 201
+        for productos in data['productos']:
+            print('idProducto:', productos['idProducto'])
+            print('Cantidad:', productos['Cantidad'])
+            if intCreacion == 1:
+                idSubasta = idSubastaCreada
+                idProducto = productos['idProducto']
+                Cantidad = productos['Cantidad']
+                new_task = Subastas_Productos(idSubasta, idProducto, Cantidad)
+                db.session.add(new_task)
+            try:
+                db.session.commit()
+                print('Productos Agregados a la subasta con exito')
+            except:
+                print('Error al agregar productos')
+        # return (data)
+
+        return jsonify(idSubastaCreada)

@@ -93,54 +93,54 @@ class TaskSchema(ma.Schema):
 task_schema = TaskSchema()
 tasks_schema = TaskSchema(many=True)
 
-@app.route('/api/Subasta', methods=['POST'])
-def create_task():
-
-
-    idUsuario = 1
-    idEstado = 1
-    tiempoInicial = datetime.now()
-    nombreSubasta = 'Creación de lista'
-    precioIdeal = 0.0
-    fechaSubasta = 'Por definir'
-
-    crearSubasta = Subastas(idUsuario, idEstado,tiempoInicial,nombreSubasta,precioIdeal,fechaSubasta)
-    db.session.add(crearSubasta)
-    idSubastaCreada = 0
-    try:
-        db.session.commit()
-        print('Crear Subasta')
-        intCreacion = 1
-        idSubastaCreada = crearSubasta.idSubasta
-        print('ID :', idSubastaCreada)
-    except:
-        print('Error al Crear Subasta')
-
-    data = request.get_json()
-    #categoria_dict = task_schema.load(data)
-
-    print(data)
-
-    for productos in data['productos']:
-        print('idProducto:', productos['idProducto'])
-        print('Cantidad:', productos['Cantidad'])
-        if  intCreacion == 1:
-            idSubasta = idSubastaCreada
-            idProducto = productos['idProducto']
-            Cantidad = productos['Cantidad']
-            new_task = Subastas_Productos(idSubasta, idProducto, Cantidad)
-            db.session.add(new_task)
-        try:
-           db.session.commit()
-           print('Productos Agregados a la subasta')
-        except:
-           print('Error al agregar productos')
-    #return (data)
-
-    return jsonify(idSubastaCreada)
-
-
-if __name__ =="__main__":
-    app.run(debug=True)
+#@app.route('/api/Subasta', methods=['POST'])
+#def create_task():
+#
+#
+#   idUsuario = 1
+#   idEstado = 1
+#   tiempoInicial = datetime.now()
+#   nombreSubasta = 'Creación de lista'
+#   precioIdeal = 0.0
+#   fechaSubasta = 'Por definir'
+#
+#   crearSubasta = Subastas(idUsuario, idEstado,tiempoInicial,nombreSubasta,precioIdeal,fechaSubasta)
+#   db.session.add(crearSubasta)
+#   idSubastaCreada = 0
+#   try:
+#       db.session.commit()
+#       print('Crear Subasta')
+#       intCreacion = 1
+#       idSubastaCreada = crearSubasta.idSubasta
+#       print('ID :', idSubastaCreada)
+ #   except:
+#      print('Error al Crear Subasta')
+#
+#   data = request.get_json()
+#   #categoria_dict = task_schema.load(data)
+#
+#   print(data)
+#
+#   for productos in data['productos']:
+#       print('idProducto:', productos['idProducto'])
+#       print('Cantidad:', productos['Cantidad'])
+#       if  intCreacion == 1:
+#           idSubasta = idSubastaCreada
+#           idProducto = productos['idProducto']
+#           Cantidad = productos['Cantidad']
+#           new_task = Subastas_Productos(idSubasta, idProducto, Cantidad)
+#           db.session.add(new_task)
+#       try:
+#          db.session.commit()
+#          print('Productos Agregados a la subasta')
+ #       except:
+#         print('Error al agregar productos')
+#   #return (data)
+#
+#   return jsonify(idSubastaCreada)
+#
+#
+#if __name__ =="__main__":
+#    app.run(debug=True)
 
 
