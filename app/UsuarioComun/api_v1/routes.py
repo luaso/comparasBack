@@ -3,6 +3,7 @@ from flask_restful import Api
 
 from app.UsuarioComun.resources.productos_Buscar_Listar_resources import ProductoList, Producto, ProductosBuscados
 from app.UsuarioComun.resources.crear_Lista_Subasta_resources import subastasEjecucion
+from app.UsuarioComun.resources.crear_Lista_SubastaProductos_resources import buscarProductosSubastaEjecucion
 #from app.UsuarioComun.models.crear_Lista_Subasta_model import crearSubasta
 
 
@@ -17,4 +18,4 @@ api.add_resource(ProductoList, '/api/producto/', endpoint='producto_list_resourc
 api.add_resource(Producto, '/api/producto/<string:nombreProducto>', endpoint='producto_resource')
 api.add_resource(ProductosBuscados, '/api/ProductosBuscados/<int:idSubasta>', endpoint='productoBuscados_resource')
 api.add_resource(subastasEjecucion, '/api/Subasta', endpoint='crearSubasta_resource')
-
+api.add_resource(buscarProductosSubastaEjecucion, '/api/SubastaProductos1/<idSubasta>', endpoint='buscarProductosSubastaresource')

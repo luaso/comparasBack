@@ -164,20 +164,12 @@ def get_Subasta_Productos_idSubasta(idSubasta):
 # MOSTRAR DATOS DE COMPARACIÓN ENTRE LOS SUPERMERCADOS Y LOS PRODUCTOS QUE CONTIENEN
 @app.route('/api/ComparacionSupermercados/<idSubasta>', methods=['GET'])
 def get_Comparacion_Supermercados_Productos(idSubasta):
-    #filtro = db.session.query(User)\
-    #        .join((Group, User.groups))\
-    #        .join((Department, Group.departments)).filter(Department.name == 'R&D')
-
     filtro = db.session.query(Subastas_Productos, Productos_Supermercados, Productos, Supermercados, Productos_Supermercados.idSupermercado * Productos_Supermercados.precio).\
             outerjoin(Productos, Subastas_Productos.idProducto == Productos.idProducto).\
             outerjoin(Productos_Supermercados, Productos.idProducto == Productos_Supermercados.idProducto). \
             outerjoin(Supermercados, Productos_Supermercados.idSupermercado == Supermercados.idSupermercado). \
             filter(Subastas_Productos.idSubasta==idSubasta).all()
     print(filtro)
-
-
-    #cursor = db.session.query(Productos_Supermercados.idSupermercado * Productos_Supermercados.precio)
-    #print(cursor)
 
     resultado = task_schema.dump(filtro, many=True)
     #print(resultado)
