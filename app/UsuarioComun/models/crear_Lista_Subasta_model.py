@@ -96,10 +96,7 @@ tasks_schema = TaskSchema(many=True)
 @app.route('/api/Subasta', methods=['POST'])
 def create_task():
 
-    #if  request.json['idUsuario'] != 1 :
-    #    idUsuario = request.json['idUsuario']
-    #else:
-    #    idUsuario = 1
+
     idUsuario = 1
     idEstado = 1
     tiempoInicial = datetime.now()
@@ -138,18 +135,9 @@ def create_task():
            print('Productos Agregados a la subasta')
         except:
            print('Error al agregar productos')
-    return (data)
+    #return (data)
 
-
-
-    #    print(new_task.Cantidad[1])
-
-
-
-    #try:
-    #    return task_schema.jsonify(new_task)
-    #except:
-    #  print('Error al Crear Subasta')
+    return jsonify(idSubastaCreada)
 
 
 if __name__ =="__main__":
