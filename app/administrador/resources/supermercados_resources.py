@@ -27,7 +27,9 @@ class SupermercadoList(Resource):
         except Exception as ex:
             raise ObjectNotFound(ex)
         print(supermercado_dict)
-        supermercado = Supermercados(nombreSupermercado=supermercado_dict['nombreSupermercado'])
+        supermercado = Supermercados(nombreSupermercado=supermercado_dict['nombreSupermercado'],
+                                     imagenSupermercado=supermercado_dict['imagenSupermercado'],
+                                     urlSupermercado=supermercado_dict['urlSupermercado'])
         print(supermercado)
         try:
             supermercado.save()
