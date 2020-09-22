@@ -4,7 +4,7 @@ from flask_restful import Api
 from app.UsuarioComun.resources.productos_Buscar_Listar_resources import ProductoList, Producto, ProductosBuscados
 from app.UsuarioComun.resources.crear_Lista_Subasta_resources import subastasEjecucion
 from app.UsuarioComun.resources.crear_Lista_SubastaProductos_resources import buscarProductosSubastaEjecucion, compararProductosSupermercados
-from app.UsuarioComun.resources.registro_Usuario_resources import ObtenerRol
+from app.UsuarioComun.resources.registro_Usuario_resources import obtenerRol
 
 
 
@@ -20,4 +20,4 @@ api.add_resource(ProductosBuscados, '/api/ProductosBuscados/<int:idSubasta>', en
 api.add_resource(subastasEjecucion, '/api/Subasta', endpoint='crearSubasta_resource')
 api.add_resource(buscarProductosSubastaEjecucion, '/api/SubastaProductos1/<idSubasta>', endpoint='buscarProductosSubastaresource')
 api.add_resource(compararProductosSupermercados, '/api/ComparacionSupermercados/<idSubasta>', endpoint='ComparacionSupermercados')
-api.add_resource(ObtenerRol, '/api/ObtenerRol/', endpoint='ObtenerRol')
+api.add_resource(obtenerRol, '/api/ObtenerRol/', endpoint='ObtenerRol')

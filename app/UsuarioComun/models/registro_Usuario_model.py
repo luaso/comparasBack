@@ -16,6 +16,12 @@ class Rol(db.Model):
     nombreRol = db.Column(db.String)
     usuarios = db.relationship('Usuarios', backref='Rol', lazy=True)
 
+    def __init__(self, idRol, nombreRol):
+        self.idRol = idRol
+        self.nombreRol = nombreRol
+
+
+
 class Usuarios(db.Model):
     __tablename__ = "USUARIOS"
     idUsuario = db.Column(db.Integer, primary_key=True)
@@ -38,5 +44,22 @@ class RolSchema(ma.Schema):
     class Meta:
         fields = ('idRol', 'nombreRol')
 
-#rolSchema = RolSchema()
-#rolSchema_schema = rolSchema(many=True)
+rolSchema = RolSchema()
+
+
+#@app.route('/api/ObtenerRol/', methods=['GET'])
+#def get():
+    #print('22222')
+    #filtro = db.session.query(Rol.nombreRol).all()
+    #filtro = Rol.query.filter_by(idRol=1).first()
+
+    #print(filtro)
+
+    #resultado = rolSchema.dump(filtro, many=True)
+    #print(resultado)
+    #return {"productos": filtro}, 200
+
+
+
+#if __name__ =="__main__":
+   #app.run(debug=True)
