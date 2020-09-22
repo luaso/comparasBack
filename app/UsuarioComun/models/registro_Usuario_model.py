@@ -3,6 +3,11 @@ from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 from datetime import datetime
+import Crypto
+import binascii
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_OAEP
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://desarrollador3:VzXY#FP$AqNI@64.227.98.56:5432/comparas'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -37,7 +42,18 @@ class Usuarios(db.Model):
     email = db.Column(db.String)
     password = db.Column(db.String)
 
-
+    def __init__(self, nombreUsuario,idRol,Ruc,razonSocial,nombreComercial,codigoPostalPais,telefono,celular,direccion,email,password):
+        self.nombreUsuario = nombreUsuario
+        self.idRol = idRol
+        self.Ruc = Ruc
+        self.razonSocial = razonSocial
+        self.nombreComercial = nombreComercial
+        self.codigoPostalPais = codigoPostalPais
+        self.telefono = telefono
+        self.celular = celular
+        self.direccion = direccion
+        self.email = email
+        self.password = password
 
 
 class RolSchema(ma.Schema):
@@ -47,19 +63,75 @@ class RolSchema(ma.Schema):
 rolSchema = RolSchema()
 
 
-#@app.route('/api/ObtenerRol/', methods=['GET'])
-#def get():
-    #print('22222')
-    #filtro = db.session.query(Rol.nombreRol).all()
-    #filtro = Rol.query.filter_by(idRol=1).first()
+@app.route('/api/ObtenerRol/', methods=['GET'])
+def get():
+    print('22222')
+    filtro = db.session.query(Rol.nombreRol).all()
+    filtro = Rol.query.filter_by(idRol=1).first()
 
-    #print(filtro)
+    print(filtro)
 
-    #resultado = rolSchema.dump(filtro, many=True)
-    #print(resultado)
-    #return {"productos": filtro}, 200
+    resultado = rolSchema.dump(filtro, many=True)
+    print(resultado)
+    return {"productos": filtro}, 200
 
 
+@app.route('/api/GuardarUsuario/', methods=['POST'])
+def post():
+    data = request.get_json()
+    for usuarios in data['usuarios']:
+        nombreUsuario = usuarios['nombreUsuario']
+        idRol = usuarios['idRol']
+        Ruc = usuarios['Ruc']
+        razonSocial = usuarios['razonSocial']
+        nombreComercial = usuarios['nombreComercial']
+        codigoPostalPais = usuarios['codigoPostalPais']
+        telefono = usuarios['telefono']
+        celular = usuarios['celular']
+        direccion = usuarios['direccion']
+        email = usuarios['email']
+        password = usuarios['password']
 
-#if __name__ =="__main__":
-   #app.run(debug=True)
+        new_task = Usuarios(nombreUsuario, idRol, Ruc, razonSocial, nombreComercial, codigoPostalPais, telefono, celular, direccion, email, password)
+        print(new_task)
+        db.session.add(new_task)
+        try:
+            db.session.commit()
+            print('Productos Agregados a la subasta con exito')
+        except:
+            print('Error al agregar productos')
+    return ('Usuario registrado correctamente')
+
+@app.route('/api/prueba/', methods=['GET'])
+def key():
+    random_generator = Crypto.Random.new().read
+    private_key = RSA.generate(1024, random_generator)
+    public_key = private_key.publickey()
+
+    private_key = private_key.exportKey(format='DER')
+    public_key = public_key.exportKey(format='DER')
+
+    private_key = binascii.hexlify(private_key).decode('utf8')
+    public_key = binascii.hexlify(public_key).decode('utf8')
+
+    print(private_key)
+    print(public_key)
+
+    #PROCESO INVERSO
+    private_key =RSA.importKey(binascii.unhexlify(private_key))
+    public_key = RSA.importKey(binascii.unhexlify(public_key))
+
+
+    message = 'hola mundo desde un mensaje en plano'
+    message = message.encode()
+
+    cipher = PKCS1_OAEP.new(public_key)
+    encryptedmessage =  cipher.encrypt(message)
+
+    print(encryptedmessage)
+
+    return ('Hola esto es una prueba')
+
+if __name__ =="__main__":
+   app.run(debug=True)
+

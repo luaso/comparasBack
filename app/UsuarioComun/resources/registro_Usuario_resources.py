@@ -17,7 +17,6 @@ ma = Marshmallow(app)
 rolSchema = RolSchema()
 
 class obtenerRol(Resource):
-    print('ObtenerRol')
     def get(self):
         print('22222')
         filtro = db.session.query(Rol).all()
@@ -29,3 +28,30 @@ class obtenerRol(Resource):
         print(resultado)
         return {"Roles por registro": resultado}, 200
 
+class guardarUsuario(Resource):
+    def post(self):
+        print('ingresando a guardarusuario')
+        data = request.get_json()
+
+        for usuarios in data['usuarios']:
+            nombreUsuario = usuarios['nombreUsuario']
+            idRol = usuarios['idRol']
+            Ruc = usuarios['Ruc']
+            razonSocial = usuarios['razonSocial']
+            nombreComercial = usuarios['nombreComercial']
+            codigoPostalPais = usuarios['codigoPostalPais']
+            telefono = usuarios['telefono']
+            celular = usuarios['celular']
+            direccion = usuarios['direccion']
+            email = usuarios['email']
+            password = usuarios['password']
+
+            new_task = Usuarios(nombreUsuario, idRol, Ruc, razonSocial, nombreComercial, codigoPostalPais, telefono, celular, direccion, email, password)
+            print(new_task)
+            db.session.add(new_task)
+            try:
+                db.session.commit()
+                print('Productos Agregados a la subasta con exito')
+            except:
+                print('Error al agregar productos')
+        return ('Usuario registrado correctamente')
