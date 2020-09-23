@@ -3,10 +3,10 @@ from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 from datetime import datetime
-import Crypto
-import binascii
-from Crypto.PublicKey import RSA
-from Crypto.Cipher import PKCS1_OAEP
+#import Crypto
+#import binascii
+#from Crypto.PublicKey import RSA
+#from Crypto.Cipher import PKCS1_OAEP
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://desarrollador3:VzXY#FP$AqNI@64.227.98.56:5432/comparas'
@@ -102,35 +102,35 @@ def post():
             print('Error al agregar productos')
     return ('Usuario registrado correctamente')
 
-@app.route('/api/prueba/', methods=['GET'])
-def key():
-    random_generator = Crypto.Random.new().read
-    private_key = RSA.generate(1024, random_generator)
-    public_key = private_key.publickey()
+#@app.route('/api/prueba/', methods=['GET'])
+#def key():
+#    random_generator = Crypto.Random.new().read
+#    private_key = RSA.generate(1024, random_generator)
+#    public_key = private_key.publickey()
+#
+#    private_key = private_key.exportKey(format='DER')
+#    public_key = public_key.exportKey(format='DER')
 
-    private_key = private_key.exportKey(format='DER')
-    public_key = public_key.exportKey(format='DER')
+#    private_key = binascii.hexlify(private_key).decode('utf8')
+#    public_key = binascii.hexlify(public_key).decode('utf8')
 
-    private_key = binascii.hexlify(private_key).decode('utf8')
-    public_key = binascii.hexlify(public_key).decode('utf8')
-
-    print(private_key)
-    print(public_key)
+#    print(private_key)
+#    print(public_key)
 
     #PROCESO INVERSO
-    private_key =RSA.importKey(binascii.unhexlify(private_key))
-    public_key = RSA.importKey(binascii.unhexlify(public_key))
+#    private_key =RSA.importKey(binascii.unhexlify(private_key))
+#    public_key = RSA.importKey(binascii.unhexlify(public_key))
 
 
-    message = 'hola mundo desde un mensaje en plano'
-    message = message.encode()
+#    message = 'hola mundo desde un mensaje en plano'
+#    message = message.encode()
 
-    cipher = PKCS1_OAEP.new(public_key)
-    encryptedmessage =  cipher.encrypt(message)
+#    cipher = PKCS1_OAEP.new(public_key)
+#    encryptedmessage =  cipher.encrypt(message)
 
-    print(encryptedmessage)
+#    print(encryptedmessage)
 
-    return ('Hola esto es una prueba')
+#    return ('Hola esto es una prueba')
 
 if __name__ =="__main__":
    app.run(debug=True)
