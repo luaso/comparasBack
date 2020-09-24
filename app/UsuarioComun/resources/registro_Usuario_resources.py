@@ -35,6 +35,8 @@ class guardarUsuario(Resource):
 
         for usuarios in data['usuarios']:
             nombreUsuario = usuarios['nombreUsuario']
+            apellidoPatUsuario = usuarios['apellidoPatUsuario']
+            apellidoMatUsuario = usuarios['apellidoMatUsuario']
             idRol = usuarios['idRol']
             Ruc = usuarios['Ruc']
             razonSocial = usuarios['razonSocial']
@@ -46,7 +48,7 @@ class guardarUsuario(Resource):
             email = usuarios['email']
             password = usuarios['password']
 
-            new_task = Usuarios(nombreUsuario, idRol, Ruc, razonSocial, nombreComercial, codigoPostalPais, telefono, celular, direccion, email, password)
+            new_task = Usuarios(nombreUsuario,apellidoPatUsuario,apellidoMatUsuario, idRol, Ruc, razonSocial, nombreComercial, codigoPostalPais, telefono, celular, direccion, email, password)
             print(new_task)
             db.session.add(new_task)
             try:
@@ -55,3 +57,11 @@ class guardarUsuario(Resource):
             except:
                 print('Error al agregar productos')
         return ('Usuario registrado correctamente')
+
+class buscarUsuario(Resource):
+    print('111111111111')
+    def get(seft, idUsuario):
+        print('prueba entrada get')
+        task = Usuarios.query.get(idUsuario)
+        print('prueba salida get')
+        return rolSchema.jsonify(task)

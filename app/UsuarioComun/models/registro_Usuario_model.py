@@ -31,6 +31,8 @@ class Usuarios(db.Model):
     __tablename__ = "USUARIOS"
     idUsuario = db.Column(db.Integer, primary_key=True)
     nombreUsuario = db.Column(db.String)
+    apellidoPatUsuario = db.Column(db.String)
+    apellidoMatUsuario = db.Column(db.String)
     idRol = db.Column(db.Integer,db.ForeignKey(Rol.idRol), nullable=False)
     Ruc = db.Column(db.String)
     razonSocial = db.Column(db.String)
@@ -42,8 +44,10 @@ class Usuarios(db.Model):
     email = db.Column(db.String)
     password = db.Column(db.String)
 
-    def __init__(self, nombreUsuario,idRol,Ruc,razonSocial,nombreComercial,codigoPostalPais,telefono,celular,direccion,email,password):
+    def __init__(self, nombreUsuario,apellidoPatUsuario,apellidoMatUsuario,idRol,Ruc,razonSocial,nombreComercial,codigoPostalPais,telefono,celular,direccion,email,password):
         self.nombreUsuario = nombreUsuario
+        self.apellidoPatUsuario = apellidoPatUsuario
+        self.apellidoMatUsuario = apellidoMatUsuario
         self.idRol = idRol
         self.Ruc = Ruc
         self.razonSocial = razonSocial
@@ -58,9 +62,12 @@ class Usuarios(db.Model):
 
 class RolSchema(ma.Schema):
     class Meta:
-        fields = ('idRol', 'nombreRol')
+        fields = ('idRol', 'nombreRol','nombreUsuario','apellidoPatUsuario','apellidoMatUsuario','Ruc','razonSocial','nombreComercial','codigoPostalPais','telefono','celular','direccion','email','password')
+
+
 
 rolSchema = RolSchema()
+#rolsSchema = rolSchema(many=True)
 
 
 @app.route('/api/ObtenerRol/', methods=['GET'])
@@ -101,6 +108,54 @@ def post():
         except:
             print('Error al agregar productos')
     return ('Usuario registrado correctamente')
+
+@app.route('/api/BuscarUsuario/<idUsuario>', methods=['GET'])
+def get_usuario(idUsuario):
+  task = Usuarios.query.get(idUsuario)
+  return rolSchema.jsonify(task)
+
+@app.route('/api/EditarUsuario/<idUsuario>', methods=['PUT'])
+def put_usuario(idUsuario):
+  usuario = Usuarios.query.get(idUsuario)
+
+  nombreUsuario = request.json['nombreUsuario']
+  apellidoPatUsuario = request.json['apellidoPatUsuario']
+  apellidoMatUsuario = request.json['apellidoMatUsuario']
+  idRol = request.json['idRol']
+  Ruc = request.json['Ruc']
+  razonSocial = request.json['razonSocial']
+  nombreComercial = request.json['nombreComercial']
+  codigoPostalPais = request.json['codigoPostalPais']
+  telefono = request.json['telefono']
+  celular = request.json['celular']
+  direccion = request.json['direccion']
+  email = request.json['email']
+  password = request.json['password']
+
+  usuario.nombreUsuario = nombreUsuario
+  usuario.apellidoPatUsuario = apellidoPatUsuario
+  usuario.apellidoMatUsuario = apellidoMatUsuario
+  usuario.idRol = idRol
+  usuario.Ruc = Ruc
+  usuario.razonSocial = razonSocial
+  usuario.nombreComercial = nombreComercial
+  usuario.codigoPostalPais = codigoPostalPais
+  usuario.telefono = telefono
+  usuario.celular = celular
+  usuario.direccion = direccion
+  usuario.email = email
+  usuario.password = password
+
+
+  db.session.commit()
+
+  return task_schema.jsonify(task)
+
+
+
+
+
+
 
 #@app.route('/api/prueba/', methods=['GET'])
 #def key():
