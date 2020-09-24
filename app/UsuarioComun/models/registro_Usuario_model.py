@@ -43,8 +43,9 @@ class Usuarios(db.Model):
     direccion = db.Column(db.String)
     email = db.Column(db.String)
     password = db.Column(db.String)
+    imagen = db.Column(db.String)
 
-    def __init__(self, nombreUsuario,apellidoPatUsuario,apellidoMatUsuario,idRol,Ruc,razonSocial,nombreComercial,codigoPostalPais,telefono,celular,direccion,email,password):
+    def __init__(self, imagen,nombreUsuario,apellidoPatUsuario,apellidoMatUsuario,idRol,Ruc,razonSocial,nombreComercial,codigoPostalPais,telefono,celular,direccion,email,password):
         self.nombreUsuario = nombreUsuario
         self.apellidoPatUsuario = apellidoPatUsuario
         self.apellidoMatUsuario = apellidoMatUsuario
@@ -58,11 +59,12 @@ class Usuarios(db.Model):
         self.direccion = direccion
         self.email = email
         self.password = password
+        self.imagen = imagen
 
 
 class RolSchema(ma.Schema):
     class Meta:
-        fields = ('idRol', 'nombreRol','nombreUsuario','apellidoPatUsuario','apellidoMatUsuario','Ruc','razonSocial','nombreComercial','codigoPostalPais','telefono','celular','direccion','email','password')
+        fields = ('idRol', 'nombreRol','nombreUsuario','apellidoPatUsuario','apellidoMatUsuario','Ruc','razonSocial','nombreComercial','codigoPostalPais','telefono','celular','direccion','email')
 
 
 
