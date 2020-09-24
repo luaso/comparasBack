@@ -149,7 +149,7 @@ def put_usuario(idUsuario):
 
   db.session.commit()
 
-  return task_schema.jsonify(task)
+  return rolSchema.jsonify(usuario)
 
 
 

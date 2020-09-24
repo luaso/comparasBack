@@ -59,9 +59,44 @@ class guardarUsuario(Resource):
         return ('Usuario registrado correctamente')
 
 class buscarUsuario(Resource):
-    print('111111111111')
     def get(seft, idUsuario):
         print('prueba entrada get')
         task = Usuarios.query.get(idUsuario)
         print('prueba salida get')
         return rolSchema.jsonify(task)
+
+class editarUsuarioComprador(Resource):
+    def put(seft,idUsuario):
+        usuario = Usuarios.query.get(idUsuario)
+
+        nombreUsuario = request.json['nombreUsuario']
+        apellidoPatUsuario = request.json['apellidoPatUsuario']
+        apellidoMatUsuario = request.json['apellidoMatUsuario']
+        idRol = 4
+        Ruc = request.json['Ruc']
+        razonSocial = request.json['razonSocial']
+        nombreComercial = request.json['nombreComercial']
+        codigoPostalPais = request.json['codigoPostalPais']
+        telefono = request.json['telefono']
+        celular = request.json['celular']
+        direccion = request.json['direccion']
+        email = request.json['email']
+        password = request.json['password']
+
+        usuario.nombreUsuario = nombreUsuario
+        usuario.apellidoPatUsuario = apellidoPatUsuario
+        usuario.apellidoMatUsuario = apellidoMatUsuario
+        usuario.idRol = idRol
+        usuario.Ruc = Ruc
+        usuario.razonSocial = razonSocial
+        usuario.nombreComercial = nombreComercial
+        usuario.codigoPostalPais = codigoPostalPais
+        usuario.telefono = telefono
+        usuario.celular = celular
+        usuario.direccion = direccion
+        usuario.email = email
+        usuario.password = password
+
+        db.session.commit()
+
+        return rolSchema.jsonify(usuario)
