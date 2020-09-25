@@ -43,9 +43,9 @@ class Usuarios(db.Model):
     direccion = db.Column(db.String)
     email = db.Column(db.String)
     password = db.Column(db.String)
-    imagen = db.Column(db.String)
 
-    def __init__(self, imagen,nombreUsuario,apellidoPatUsuario,apellidoMatUsuario,idRol,Ruc,razonSocial,nombreComercial,codigoPostalPais,telefono,celular,direccion,email,password):
+
+    def __init__(self, nombreUsuario,apellidoPatUsuario,apellidoMatUsuario,idRol,Ruc,razonSocial,nombreComercial,codigoPostalPais,telefono,celular,direccion,email,password):
         self.nombreUsuario = nombreUsuario
         self.apellidoPatUsuario = apellidoPatUsuario
         self.apellidoMatUsuario = apellidoMatUsuario
@@ -59,12 +59,11 @@ class Usuarios(db.Model):
         self.direccion = direccion
         self.email = email
         self.password = password
-        self.imagen = imagen
 
 
 class RolSchema(ma.Schema):
     class Meta:
-        fields = ('idRol', 'nombreRol','nombreUsuario','apellidoPatUsuario','apellidoMatUsuario','Ruc','razonSocial','nombreComercial','codigoPostalPais','telefono','celular','direccion','email')
+        fields = ('idRol', 'nombreRol','nombreUsuario','apellidoPatUsuario','apellidoMatUsuario','Ruc','razonSocial','nombreComercial','codigoPostalPais','telefono','celular','direccion','email','imagen','password')
 
 
 
@@ -116,42 +115,40 @@ def get_usuario(idUsuario):
   task = Usuarios.query.get(idUsuario)
   return rolSchema.jsonify(task)
 
-@app.route('/api/EditarUsuario/<idUsuario>', methods=['PUT'])
+@app.route('/api/EditarUsuarioComprador/<idUsuario>', methods=['PUT'])
 def put_usuario(idUsuario):
-  usuario = Usuarios.query.get(idUsuario)
+    usuario = Usuarios.query.get(idUsuario)
+    nombreUsuario = request.json['nombreUsuario']
+    # apellidoPatUsuario = request.json['apellidoPatUsuario']
+    # apellidoMatUsuario = request.json['apellidoMatUsuario']
+    # idRol = 4
+    # Ruc = request.json['Ruc']
+    # razonSocial = request.json['razonSocial']
+    # nombreComercial = request.json['nombreComercial']
+    # codigoPostalPais = request.json['codigoPostalPais']
+    # telefono = request.json['telefono']
+    # celular = request.json['celular']
+    # direccion = request.json['direccion']
+    # email = request.json['email']
+    # password = request.json['password']
+    # imagen = request.json['imagen']
+    usuario.nombreUsuario = nombreUsuario
+    # usuario.apellidoPatUsuario = apellidoPatUsuario
+    # usuario.apellidoMatUsuario = apellidoMatUsuario
+    # usuario.idRol = idRol
+    # usuario.Ruc = Ruc
+    # usuario.razonSocial = razonSocial
+    # usuario.nombreComercial = nombreComercial
+    # usuario.codigoPostalPais = codigoPostalPais
+    # usuario.telefono = telefono
+    # usuario.celular = celular
+    # usuario.direccion = direccion
+    # usuario.email = email
+    # usuario.password = password
+    # usuario.imagen = imagen
+    db.session.commit()
 
-  nombreUsuario = request.json['nombreUsuario']
-  apellidoPatUsuario = request.json['apellidoPatUsuario']
-  apellidoMatUsuario = request.json['apellidoMatUsuario']
-  idRol = request.json['idRol']
-  Ruc = request.json['Ruc']
-  razonSocial = request.json['razonSocial']
-  nombreComercial = request.json['nombreComercial']
-  codigoPostalPais = request.json['codigoPostalPais']
-  telefono = request.json['telefono']
-  celular = request.json['celular']
-  direccion = request.json['direccion']
-  email = request.json['email']
-  password = request.json['password']
-
-  usuario.nombreUsuario = nombreUsuario
-  usuario.apellidoPatUsuario = apellidoPatUsuario
-  usuario.apellidoMatUsuario = apellidoMatUsuario
-  usuario.idRol = idRol
-  usuario.Ruc = Ruc
-  usuario.razonSocial = razonSocial
-  usuario.nombreComercial = nombreComercial
-  usuario.codigoPostalPais = codigoPostalPais
-  usuario.telefono = telefono
-  usuario.celular = celular
-  usuario.direccion = direccion
-  usuario.email = email
-  usuario.password = password
-
-
-  db.session.commit()
-
-  return rolSchema.jsonify(usuario)
+    return rolSchema.jsonify(usuario)
 
 
 
