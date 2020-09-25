@@ -43,9 +43,10 @@ class Usuarios(db.Model):
     direccion = db.Column(db.String)
     email = db.Column(db.String)
     password = db.Column(db.String)
+    imagen = db.Column(db.String)
 
 
-    def __init__(self, nombreUsuario,apellidoPatUsuario,apellidoMatUsuario,idRol,Ruc,razonSocial,nombreComercial,codigoPostalPais,telefono,celular,direccion,email,password):
+    def __init__(self, nombreUsuario,apellidoPatUsuario,apellidoMatUsuario,idRol,Ruc,razonSocial,nombreComercial,codigoPostalPais,telefono,celular,direccion,email,password,imagen):
         self.nombreUsuario = nombreUsuario
         self.apellidoPatUsuario = apellidoPatUsuario
         self.apellidoMatUsuario = apellidoMatUsuario
@@ -59,11 +60,12 @@ class Usuarios(db.Model):
         self.direccion = direccion
         self.email = email
         self.password = password
+        self.imagen = imagen
 
 
 class RolSchema(ma.Schema):
     class Meta:
-        fields = ('idRol', 'nombreRol','nombreUsuario','apellidoPatUsuario','apellidoMatUsuario','Ruc','razonSocial','nombreComercial','codigoPostalPais','telefono','celular','direccion','email','imagen','password')
+        fields = ('idRol', 'nombreRol','nombreUsuario','apellidoPatUsuario','apellidoMatUsuario','Ruc','razonSocial','nombreComercial','codigoPostalPais','telefono','celular','direccion','email','imagen','imagen')
 
 
 
@@ -130,7 +132,7 @@ def put_usuario(idUsuario):
     celular = request.json['celular']
     direccion = request.json['direccion']
     email = request.json['email']
-    #password = request.json['password']
+    imagen = request.json['imagen']
 
     usuario.nombreUsuario = nombreUsuario
     usuario.apellidoPatUsuario = apellidoPatUsuario
@@ -144,47 +146,13 @@ def put_usuario(idUsuario):
     usuario.celular = celular
     usuario.direccion = direccion
     usuario.email = email
-    #usuario.password = password
+    usuario.imagen = imagen
 
     db.session.commit()
 
     return rolSchema.jsonify(usuario)
 
 
-
-
-
-
-
-#@app.route('/api/prueba/', methods=['GET'])
-#def key():
-#    random_generator = Crypto.Random.new().read
-#    private_key = RSA.generate(1024, random_generator)
-#    public_key = private_key.publickey()
-#
-#    private_key = private_key.exportKey(format='DER')
-#    public_key = public_key.exportKey(format='DER')
-
-#    private_key = binascii.hexlify(private_key).decode('utf8')
-#    public_key = binascii.hexlify(public_key).decode('utf8')
-
-#    print(private_key)
-#    print(public_key)
-
-    #PROCESO INVERSO
-#    private_key =RSA.importKey(binascii.unhexlify(private_key))
-#    public_key = RSA.importKey(binascii.unhexlify(public_key))
-
-
-#    message = 'hola mundo desde un mensaje en plano'
-#    message = message.encode()
-
-#    cipher = PKCS1_OAEP.new(public_key)
-#    encryptedmessage =  cipher.encrypt(message)
-
-#    print(encryptedmessage)
-
-#    return ('Hola esto es una prueba')
 
 if __name__ =="__main__":
    app.run(debug=True)
