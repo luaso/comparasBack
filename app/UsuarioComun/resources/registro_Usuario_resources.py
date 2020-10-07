@@ -6,7 +6,7 @@ from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 from app import ObjectNotFound
-from app.UsuarioComun.models.registro_Usuario_model import Rol, Usuarios, RolSchema
+from app.UsuarioComun.models.registro_Usuario_model import Rol, Usuarios, RolSchema, Direcciones
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://desarrollador3:VzXY#FP$AqNI@64.227.98.56:5432/comparas'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -18,15 +18,14 @@ rolSchema = RolSchema()
 
 class obtenerRol(Resource):
     def get(self):
-        print('22222')
-        filtro = db.session.query(Rol).all()
+        #print('22222')
+        filtro = Rol.query.filter(Rol.idRol.in_((3, 4)))
 
-        for rol in filtro:
-            print(rol.nombreRol)
+        #print(filtro)
 
         resultado = rolSchema.dump(filtro, many=True)
-        print(resultado)
-        return {"Roles por registro": resultado}, 200
+        #print(resultado)
+        return {"rol": resultado}, 200
 
 class guardarUsuario(Resource):
     def post(self):
@@ -34,6 +33,7 @@ class guardarUsuario(Resource):
         data = request.get_json()
 
         for usuarios in data['usuarios']:
+            print('ingresando a seccion usuarios')
             nombreUsuario = usuarios['nombreUsuario']
             apellidoPatUsuario = usuarios['apellidoPatUsuario']
             apellidoMatUsuario = usuarios['apellidoMatUsuario']
@@ -44,18 +44,41 @@ class guardarUsuario(Resource):
             codigoPostalPais = usuarios['codigoPostalPais']
             telefono = usuarios['telefono']
             celular = usuarios['celular']
-            direccion = usuarios['direccion']
             email = usuarios['email']
             password = usuarios['password']
+            imagen = usuarios['imagen']
 
-            new_task = Usuarios(nombreUsuario,apellidoPatUsuario,apellidoMatUsuario, idRol, Ruc, razonSocial, nombreComercial, codigoPostalPais, telefono, celular, direccion, email, password)
-            print(new_task)
-            db.session.add(new_task)
+            CrearUsuario = Usuarios(nombreUsuario, apellidoPatUsuario, apellidoMatUsuario, idRol, Ruc, razonSocial,
+                                    nombreComercial, codigoPostalPais, telefono, celular, email, password, imagen)
+            print(CrearUsuario)
+            db.session.add(CrearUsuario)
             try:
                 db.session.commit()
-                print('Productos Agregados a la subasta con exito')
+                idUsuarioFK = CrearUsuario.idUsuario
+                print('Usuario agregado correctamente')
             except:
-                print('Error al agregar productos')
+                print('Error al agregar usuario')
+
+        for direcciones in data['direcciones']:
+            idUsuario = idUsuarioFK
+            print(idUsuario)
+            direccion = direcciones['direccion']
+            print(direccion)
+            latitud = direcciones['latitud']
+            print(latitud)
+            longitud = direcciones['longitud']
+            print(longitud)
+
+            print('entrando al try')
+            try:
+                CrearDireccion = Direcciones(idUsuario, direccion, latitud, longitud)
+                print(CrearDireccion)
+                db.session.add(CrearDireccion)
+                db.session.commit()
+                print('Direcciones agregadas correctamente')
+            except:
+                print('Error al agregar direccion')
+
         return ('Usuario registrado correctamente')
 
 class buscarUsuario(Resource):
@@ -83,6 +106,7 @@ class editarUsuarioComprador(Resource):
         email = request.json['email']
         password = request.json['password']
 
+
         usuario.nombreUsuario = nombreUsuario
         usuario.apellidoPatUsuario = apellidoPatUsuario
         usuario.apellidoMatUsuario = apellidoMatUsuario
@@ -96,6 +120,7 @@ class editarUsuarioComprador(Resource):
         usuario.direccion = direccion
         usuario.email = email
         usuario.password = password
+
 
         db.session.commit()
 
