@@ -128,16 +128,25 @@ class editarUsuarioComprador(Resource):
 
 class loginUsuario(Resource):
     def get(self):
-        print('prueba entrada get')
         email = request.json['email']
         password = request.json['password']
-        task = Usuarios.query.get(email)
-        print(task.password)
-        repuesta = '0'
-        if task.password == password:
-            print('Correcto')
-            repuesta = 'ok'
-        else:
-            print('incorrecto')
-            repuesta = 'nok'
-        return repuesta
+        try:
+
+            task = db.session.query(Usuarios).filter_by(email=email).first()
+            print(task.idUsuario)
+            print(task.password)
+            repuesta = '0'
+
+            if task.password == password:
+                print('Correcto')
+                repuesta = 'ok'
+                print(task.idUsuario)
+                idusuario = task.idUsuario
+            else:
+                print('incorrecto')
+                repuesta = 'nok'
+                idusuario = 'Usuario no encontrado'
+
+            return {"respuesta": repuesta, "idUsuario": idusuario}
+        except:
+            return {"respuesta": "Correo no encontrado"}
