@@ -126,3 +126,18 @@ class editarUsuarioComprador(Resource):
 
         return rolSchema.jsonify(usuario)
 
+class loginUsuario(Resource):
+    def get(self):
+        print('prueba entrada get')
+        email = request.json['email']
+        password = request.json['password']
+        task = Usuarios.query.get(email)
+        print(task.password)
+        repuesta = '0'
+        if task.password == password:
+            print('Correcto')
+            repuesta = 'ok'
+        else:
+            print('incorrecto')
+            repuesta = 'nok'
+        return repuesta
