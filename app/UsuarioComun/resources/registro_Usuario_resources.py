@@ -85,8 +85,15 @@ class buscarUsuario(Resource):
     def get(seft, idUsuario):
         print('prueba entrada get')
         task = Usuarios.query.get(idUsuario)
-        print('prueba salida get')
-        return rolSchema.jsonify(task)
+        filtro = db.session.query(Usuarios, Direcciones).outerjoin(Direcciones,
+                 Usuarios.idUsuario == Direcciones.idUsuario).filter(
+                 Usuarios.idUsuario == idUsuario).all()
+        print(filtro)
+
+        result = rolSchema.dump(filtro, many=True)
+        print(result)
+        print('=================================================')
+        return {"producto": result}, 200
 
 class editarUsuarioComprador(Resource):
     def put(seft,idUsuario):
