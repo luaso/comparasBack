@@ -127,26 +127,19 @@ class editarUsuarioComprador(Resource):
         return rolSchema.jsonify(usuario)
 
 class loginUsuario(Resource):
-    def get(self):
+    def post(self):
         email = request.json['email']
         password = request.json['password']
         try:
-
             task = db.session.query(Usuarios).filter_by(email=email).first()
-            print(task.idUsuario)
-            print(task.password)
             repuesta = '0'
-
             if task.password == password:
-                print('Correcto')
                 repuesta = 'ok'
-                print(task.idUsuario)
                 idusuario = task.idUsuario
+                idRol = task.idRol
             else:
-                print('incorrecto')
                 repuesta = 'nok'
                 idusuario = 'Usuario no encontrado'
-
-            return {"respuesta": repuesta, "idUsuario": idusuario}
+            return {"respuesta": repuesta, "idUsuario": idusuario, "idRol": idRol}
         except:
             return {"respuesta": "Correo no encontrado"}
