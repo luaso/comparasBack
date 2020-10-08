@@ -34,7 +34,6 @@ class Usuarios(db.Model):
     codigoPostalPais = db.Column(db.String)
     telefono = db.Column(db.String)
     celular = db.Column(db.String)
-    direccion = db.Column(db.String)
     email = db.Column(db.String)
     password = db.Column(db.String)
     subastas = db.relationship('Subastas', backref='Usuarios', lazy=True)
@@ -54,6 +53,21 @@ class Productos(db.Model):
     contenidoProducto = db.Column(db.String)
     subastas_productos = db.relationship('Subastas_Productos', backref='Productos', lazy=True)
 
+class Direcciones(db.Model):
+    __tablename__="DIRECCIONES"
+    idDireccion = db.Column(db.Integer, primary_key=True)
+    idUsuario = db.Column(db.Integer,db.ForeignKey(Usuarios.idUsuario), nullable=False)
+    direccion = db.Column(db.String)
+    latitud = db.Column(db.String)
+    longitud = db.Column(db.String)
+    subastas = db.relationship('Subastas', backref='Direcciones', lazy=True)
+    def __init__(self, idUsuario,direccion,latitud,longitud):
+        #self.idDireccion=idDireccion
+        self.idUsuario =idUsuario
+        self.direccion= direccion
+        self.latitud = latitud
+        self.longitud = longitud
+
 class Subastas(db.Model):
     __tablename__= "SUBASTAS"
     idSubasta = db.Column(db.Integer, primary_key=True)
@@ -63,14 +77,16 @@ class Subastas(db.Model):
     nombreSubasta = db.Column(db.String)
     precioIdeal = db.Column(db.Float)
     fechaSubasta = db.Column(db.String)
+    idDireccion = db.Column(db.Integer, db.ForeignKey(Direcciones.idDireccion), nullable=False)
 
-    def __init__(self, idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, fechaSubasta):
+    def __init__(self, idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, fechaSubasta,idDireccion):
         self.idUsuario = idUsuario
         self.idEstado = idEstado
         self.tiempoInicial = tiempoInicial
         self.nombreSubasta = nombreSubasta
         self.precioIdeal = precioIdeal
         self.fechaSubasta = fechaSubasta
+        self.idDireccion = idDireccion
 
 
 class Subastas_Productos(db.Model):

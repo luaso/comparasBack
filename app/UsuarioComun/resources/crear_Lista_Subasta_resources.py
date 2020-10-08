@@ -31,8 +31,12 @@ class subastasEjecucion(Resource):
         print(precioIdeal)
         fechaSubasta = 'Por definir'
         print(fechaSubasta)
+        # ESTE DATO PUEDE VARIAR SEGUN EL REGISTRO DE LA TABLA DIRECCIONES
+        #=================================================================
+        idDireccion = 24
+        # =================================================================
         print('Selección de datos completado')
-        crearSubasta = Subastas(idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, fechaSubasta)
+        crearSubasta = Subastas(idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, fechaSubasta,idDireccion)
         print('Agrupación de datos completado')
         db.session.add(crearSubasta)
         print('Sessión aperturada')
