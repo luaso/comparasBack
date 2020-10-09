@@ -193,7 +193,7 @@ def put_Comprador():
         nombreUsuario = usuario['nombreUsuario']
         apellidoPatUsuario = usuario['apellidoPatUsuario']
         apellidoMatUsuario = usuario['apellidoMatUsuario']
-        idRol = 3
+        idRol = 4
         Ruc = usuario['Ruc']
         razonSocial = usuario['razonSocial']
         nombreComercial = usuario['nombreComercial']
@@ -251,39 +251,60 @@ def delete_task(idDireccion):
 
 
 @app.route('/api/EditarUsuarioBodeguero/', methods=['PUT'])
-def put_Bodeguero(idUsuario):
-    usuario = Usuarios.query.get(idUsuario)
-    nombreUsuario = request.json['nombreUsuario']
-    apellidoPatUsuario = request.json['apellidoPatUsuario']
-    apellidoMatUsuario = request.json['apellidoMatUsuario']
-    idRol = 3
-    Ruc = request.json['Ruc']
-    razonSocial = request.json['razonSocial']
-    nombreComercial = request.json['nombreComercial']
-    codigoPostalPais = request.json['codigoPostalPais']
-    telefono = request.json['telefono']
-    celular = request.json['celular']
-    direccion = request.json['direccion']
-    email = request.json['email']
-    imagen = request.json['imagen']
+def put_Bodeguero():
+    data = request.get_json()
+    for usuario in data['Datos']:
+        idUsuario = usuario['idUsuario']
+        nombreUsuario = usuario['nombreUsuario']
+        apellidoPatUsuario = usuario['apellidoPatUsuario']
+        apellidoMatUsuario = usuario['apellidoMatUsuario']
+        idRol = 3
+        Ruc = usuario['Ruc']
+        razonSocial = usuario['razonSocial']
+        nombreComercial = usuario['nombreComercial']
+        codigoPostalPais = usuario['codigoPostalPais']
+        telefono = usuario['telefono']
+        celular = usuario['celular']
+        direccion = usuario['direccion']
+        email = usuario['email']
+        imagen = usuario['imagen']
 
-    usuario.nombreUsuario = nombreUsuario
-    usuario.apellidoPatUsuario = apellidoPatUsuario
-    usuario.apellidoMatUsuario = apellidoMatUsuario
-    usuario.idRol = idRol
-    usuario.Ruc = Ruc
-    usuario.razonSocial = razonSocial
-    usuario.nombreComercial = nombreComercial
-    usuario.codigoPostalPais = codigoPostalPais
-    usuario.telefono = telefono
-    usuario.celular = celular
-    usuario.direccion = direccion
-    usuario.email = email
-    usuario.imagen = imagen
-
+    usuarioEditar = Usuarios.query.get(idUsuario)
+    usuarioEditar.nombreUsuario = nombreUsuario
+    usuarioEditar.apellidoPatUsuario = apellidoPatUsuario
+    usuarioEditar.apellidoMatUsuario = apellidoMatUsuario
+    usuarioEditar.idRol = idRol
+    usuarioEditar.Ruc = Ruc
+    usuarioEditar.razonSocial = razonSocial
+    usuarioEditar.nombreComercial = nombreComercial
+    usuarioEditar.codigoPostalPais = codigoPostalPais
+    usuarioEditar.telefono = telefono
+    usuarioEditar.celular = celular
+    usuarioEditar.direccion = direccion
+    usuarioEditar.email = email
+    usuarioEditar.imagen = imagen
     db.session.commit()
 
-    return rolSchema.jsonify(usuario)
+    idUsuarioDireccion = idUsuario
+
+    for direcciones in data['direcciones']:
+
+        idUsuario = idUsuarioDireccion
+        direccion = direcciones['direccion']
+        latitud = direcciones['latitud']
+        longitud = direcciones['longitud']
+
+        print('entrando al try')
+        try:
+            CrearDireccion = Direcciones(idUsuario, direccion, latitud, longitud)
+            print(CrearDireccion)
+            db.session.add(CrearDireccion)
+            db.session.commit()
+            print('Direcciones agregadas correctamente')
+        except:
+            print('Error al agregar direccion')
+
+    return ('Usuario editado correctamente')
 
 
 #LOGIN
