@@ -187,17 +187,48 @@ def get_usuario(idUsuario):
 @app.route('/api/EditarUsuarioComprador/', methods=['PUT'])
 def put_Comprador():
     data = request.get_json()
+    for usuario in data['Datos']:
+
+        idUsuario = usuario['idUsuario']
+        nombreUsuario = usuario['nombreUsuario']
+        apellidoPatUsuario = usuario['apellidoPatUsuario']
+        apellidoMatUsuario = usuario['apellidoMatUsuario']
+        idRol = 3
+        Ruc = usuario['Ruc']
+        razonSocial = usuario['razonSocial']
+        nombreComercial = usuario['nombreComercial']
+        codigoPostalPais = usuario['codigoPostalPais']
+        telefono = usuario['telefono']
+        celular = usuario['celular']
+        direccion = usuario['direccion']
+        email = usuario['email']
+        imagen = usuario['imagen']
+
+
+    usuarioEditar = Usuarios.query.get(idUsuario)
+    usuarioEditar.nombreUsuario = nombreUsuario
+    usuarioEditar.apellidoPatUsuario = apellidoPatUsuario
+    usuarioEditar.apellidoMatUsuario = apellidoMatUsuario
+    usuarioEditar.idRol = idRol
+    usuarioEditar.Ruc = Ruc
+    usuarioEditar.razonSocial = razonSocial
+    usuarioEditar.nombreComercial = nombreComercial
+    usuarioEditar.codigoPostalPais = codigoPostalPais
+    usuarioEditar.telefono = telefono
+    usuarioEditar.celular = celular
+    usuarioEditar.direccion = direccion
+    usuarioEditar.email = email
+    usuarioEditar.imagen = imagen
+    db.session.commit()
+
+    idUsuarioDireccion = idUsuario
+
     for direcciones in data['direcciones']:
 
-
-        idUsuario = direcciones['idUsuario']
-        print(idUsuario)
+        idUsuario = idUsuarioDireccion
         direccion = direcciones['direccion']
-        print(direccion)
         latitud = direcciones['latitud']
-        print(latitud)
         longitud = direcciones['longitud']
-        print(longitud)
 
         print('entrando al try')
         try:
@@ -209,10 +240,17 @@ def put_Comprador():
         except:
             print('Error al agregar direccion')
 
-    return ('Usuario registrado correctamente')
+    return ('Usuario editado correctamente')
+
+@app.route('/tasks/<id>', methods=['DELETE'])
+def delete_task(id):
+  task = Task.query.get(id)
+  db.session.delete(task)
+  db.session.commit()
+  return task_schema.jsonify(task)
 
 
-@app.route('/api/EditarUsuarioBodeguero/<idUsuario>', methods=['PUT'])
+@app.route('/api/EditarUsuarioBodeguero/', methods=['PUT'])
 def put_Bodeguero(idUsuario):
     usuario = Usuarios.query.get(idUsuario)
     nombreUsuario = request.json['nombreUsuario']

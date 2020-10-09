@@ -23,5 +23,5 @@ api.add_resource(compararProductosSupermercados, '/api/ComparacionSupermercados/
 api.add_resource(obtenerRol, '/api/ObtenerRol/', endpoint='ObtenerRol')
 api.add_resource(guardarUsuario, '/api/GuardarUsuario/', endpoint='GuardarUsuario')
 api.add_resource(buscarUsuario, '/api/BuscarUsuario/<int:idUsuario>', endpoint='buscarUsuario')
-api.add_resource(editarUsuarioComprador, '/api/EditarUsuarioComprador/<int:idUsuario>', endpoint='editarUsuarioComprador')
+api.add_resource(editarUsuarioComprador, '/api/EditarUsuarioComprador/', endpoint='editarUsuarioComprador')
 api.add_resource(loginUsuario, '/api/LoginUsuario/', endpoint='LoginUsuario')
