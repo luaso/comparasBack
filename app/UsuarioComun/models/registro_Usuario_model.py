@@ -242,12 +242,12 @@ def put_Comprador():
 
     return ('Usuario editado correctamente')
 
-@app.route('/tasks/<id>', methods=['DELETE'])
-def delete_task(id):
-  task = Task.query.get(id)
-  db.session.delete(task)
+@app.route('/EliminarDireccion/<idDireccion>', methods=['DELETE'])
+def delete_task(idDireccion):
+  direcciones = Direcciones.query.get(idDireccion)
+  db.session.delete(direcciones)
   db.session.commit()
-  return task_schema.jsonify(task)
+  return ('Registro eliminado')
 
 
 @app.route('/api/EditarUsuarioBodeguero/', methods=['PUT'])
