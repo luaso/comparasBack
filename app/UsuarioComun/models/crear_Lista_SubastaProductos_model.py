@@ -1,18 +1,27 @@
-from flask import Flask, request, jsonify
-from flask_marshmallow import Marshmallow
+#from flask import Flask, request, jsonify
+#from flask_marshmallow import Marshmallow
+#from flask_sqlalchemy import SQLAlchemy
+#from sqlalchemy import Column, Integer, String, func
+
+#import json
+
+
+#app = Flask(__name__)
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://desarrollador3:VzXY#FP$AqNI@64.227.98.56:5432/comparas'
+#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+#db = SQLAlchemy(app)
+#ma = Marshmallow(app)
+
+
+
+from app.db import db, BaseModelMixin
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String, func
+from flask_marshmallow import Marshmallow
+from sqlalchemy import Column, Integer, String, Date
 
-import json
-
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://desarrollador3:VzXY#FP$AqNI@64.227.98.56:5432/comparas'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy(app)
-ma = Marshmallow(app)
-
+db = SQLAlchemy()
+ma = Marshmallow()
 class Supermercados(db.Model):
     __tablename__ = "SUPERMERCADOS"
     idSupermercado = db.Column(db.Integer, primary_key=True)
@@ -130,22 +139,22 @@ class ProductosSchema(ma.Schema):
             model = Productos
 
 
-@app.route('/api/SubastaProductos', methods=['POST'])
-def post_Subasta_Productos():
-    idSubasta = request.json['idSubasta']
-    idProducto = request.json['idProducto']
-    Cantidad = request.json['Cantidad']
-    new_task = Subastas_Productos(idSubasta, idProducto,Cantidad)
-    db.session.add(new_task)
-    db.session.commit()
-    return task_schema.jsonify(new_task)
+#@app.route('/api/SubastaProductos', methods=['POST'])
+#def post_Subasta_Productos():
+#    idSubasta = request.json['idSubasta']
+#    idProducto = request.json['idProducto']
+#    Cantidad = request.json['Cantidad']
+#    new_task = Subastas_Productos(idSubasta, idProducto,Cantidad)
+#    db.session.add(new_task)
+#    db.session.commit()
+#    return task_schema.jsonify(new_task)
 
 
-@app.route('/api/SubastaProductos', methods=['GET'])
-def get_Subasta_Productos():
-   task =  Subastas_Productos.query.all()
-   result = tasks_schema.dump(task)
-   return jsonify(result)
+#@app.route('/api/SubastaProductos', methods=['GET'])
+#def get_Subasta_Productos():
+#   task =  Subastas_Productos.query.all()
+#   result = tasks_schema.dump(task)
+#   return jsonify(result)
 
 
 # FILTRAR LISTA DE PRODUCTOS DE SUBASTA_PRODUCTOS MEDIANTE LA ID DE SUBASTA

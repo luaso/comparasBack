@@ -1,23 +1,23 @@
-from flask import Flask, request, jsonify
+"""from flask import Flask, request, jsonify
 from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 from datetime import datetime
-
-#import crypt
-
-#import os
-#import binascii
-#from Crypto.PublicKey import RSA
-#from Crypto.Cipher import PKCS1_OAEP
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://desarrollador3:VzXY#FP$AqNI@64.227.98.56:5432/comparas'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-ma = Marshmallow(app)
+ma = Marshmallow(app)"""
 
+from app.db import db, BaseModelMixin
+from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
+from sqlalchemy import Column, Integer, String, Date
+
+db = SQLAlchemy()
+ma = Marshmallow()
 class Rol(db.Model):
     __tablename__ = "ROL"
     idRol = db.Column(db.Integer, primary_key=True)
@@ -89,7 +89,7 @@ rolSchema = RolSchema()
 #rolsSchema = rolSchema(many=True)
 
 
-@app.route('/api/ObtenerRol/', methods=['GET'])
+"""@app.route('/api/ObtenerRol/', methods=['GET'])
 def get1():
     print('22222')
     filtro=Rol.query.filter(Rol.idRol.in_((3,4)))
@@ -337,5 +337,5 @@ def get_email():
 
 
 if __name__ =="__main__":
-   app.run(debug=True)
+   app.run(debug=True)"""
 

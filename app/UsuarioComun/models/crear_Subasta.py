@@ -1,15 +1,22 @@
-from flask import Flask, request, jsonify
-from flask_marshmallow import Marshmallow
+#from flask import Flask, request, jsonify
+#from flask_marshmallow import Marshmallow
+#from flask_sqlalchemy import SQLAlchemy
+#from sqlalchemy import Column, Integer, String
+#from datetime import datetime
+#app = Flask(__name__)
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://desarrollador3:VzXY#FP$AqNI@64.227.98.56:5432/comparas'
+#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+#db = SQLAlchemy(app)
+#ma = Marshmallow(app)
+
+from app.db import db, BaseModelMixin
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String
-from datetime import datetime
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://desarrollador3:VzXY#FP$AqNI@64.227.98.56:5432/comparas'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+from flask_marshmallow import Marshmallow
+from sqlalchemy import Column, Integer, String, Date
 
-db = SQLAlchemy(app)
-ma = Marshmallow(app)
-
+db = SQLAlchemy()
+ma = Marshmallow()
 class Estado(db.Model):
     __tablename__ = "ESTADO"
     idEstado = db.Column(db.Integer, primary_key=True)
@@ -110,7 +117,7 @@ task_schema = TaskSchema()
 tasks_schema = TaskSchema(many=True)
 
 
-@app.route('/api/subastasUsuario', methods=['GET'])
+"""@app.route('/api/subastasUsuario', methods=['GET'])
 def get_subastas_usuarios():
     idUsuario = request.json['idUsuario']
     idEstado = 1
@@ -170,4 +177,4 @@ def put_Bodeguero(idUsuario):
 
 
 if __name__ =="__main__":
-   app.run(debug=True)
+   app.run(debug=True)"""

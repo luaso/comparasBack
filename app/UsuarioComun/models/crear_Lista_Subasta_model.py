@@ -1,15 +1,10 @@
-from flask import Flask, request, jsonify
-from flask_marshmallow import Marshmallow
+from app.db import db, BaseModelMixin
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String
-from datetime import datetime
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://desarrollador3:VzXY#FP$AqNI@64.227.98.56:5432/comparas'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+from flask_marshmallow import Marshmallow
+from sqlalchemy import Column, Integer, String, Date
 
-db = SQLAlchemy(app)
-ma = Marshmallow(app)
-
+db = SQLAlchemy()
+ma = Marshmallow()
 class Estado(db.Model):
     __tablename__ = "ESTADO"
     idEstado = db.Column(db.Integer, primary_key=True)
