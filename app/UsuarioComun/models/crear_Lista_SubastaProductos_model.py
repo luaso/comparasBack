@@ -1,19 +1,3 @@
-#from flask import Flask, request, jsonify
-#from flask_marshmallow import Marshmallow
-#from flask_sqlalchemy import SQLAlchemy
-#from sqlalchemy import Column, Integer, String, func
-
-#import json
-
-
-#app = Flask(__name__)
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://desarrollador3:VzXY#FP$AqNI@64.227.98.56:5432/comparas'
-#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-#db = SQLAlchemy(app)
-#ma = Marshmallow(app)
-
-
 
 from app.db import db, BaseModelMixin
 from flask_sqlalchemy import SQLAlchemy

@@ -11,10 +11,6 @@ from sqlalchemy import Column, Integer, String, func
 import json
 
 
-#app = Flask(__name__)
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://desarrollador3:VzXY#FP$AqNI@64.227.98.56:5432/comparas'
-#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 db = SQLAlchemy()
 task_schema = TaskSchema()
 tasks_schema = TaskSchema(many=True)
