@@ -10,15 +10,13 @@ from sqlalchemy import Column, Integer, String
 db = SQLAlchemy()
 
 task_schema = TaskSchema()
+
 class obtenerProductosSubasta(Resource):
     def get(self):
         try:
             print('Intentado ingreso')
             idSubasta = request.json['idSubasta']
-            filtro = db.session.query(Subastas, Subastas_Productos, Productos). \
-                     outerjoin(Subastas_Productos, Subastas.idSubasta == Subastas_Productos.idSubasta). \
-                     outerjoin(Productos, Subastas_Productos.idProducto == Productos.idProducto). \
-                     filter(Subastas.idSubasta == idSubasta)
+            filtro =  Subastas.get_joins(idSubasta)
             result = task_schema.dump(filtro, many=True)
             return {"producto": result}, 200
 

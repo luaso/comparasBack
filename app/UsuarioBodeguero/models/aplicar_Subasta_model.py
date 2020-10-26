@@ -91,6 +91,16 @@ class Subastas(db.Model, BaseModelMixin):
         self.idDireccion = idDireccion
         self.fechaSubasta = fechaSubasta
 
+    @classmethod
+    def get_joins(self, idSubasta):
+
+       filtro =  db.session.query(Subastas, Subastas_Productos, Productos). \
+                 outerjoin(Subastas_Productos, Subastas.idSubasta == Subastas_Productos.idSubasta). \
+                 outerjoin(Productos, Subastas_Productos.idProducto == Productos.idProducto). \
+                 filter(Subastas.idSubasta == idSubasta)
+       return filtro
+
+
 class Subastas_Productos(db.Model, BaseModelMixin):
     __tablename__= "SUBASTAS_PRODUCTOS"
     idSubastasProductos = db.Column(db.Integer, primary_key=True)
@@ -110,6 +120,10 @@ class Pujas(db.Model, BaseModelMixin):
     idSubasta = db.Column(db.Integer, db.ForeignKey(Subastas.idSubasta), nullable=False)
     idUsuario = db.Column(db.Integer, db.ForeignKey(Usuarios.idUsuario), nullable=False)
     precioPuja = db.Column(db.Float)
+
+
+
+
 
 
 #task_schema = TaskSchema()

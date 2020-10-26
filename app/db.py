@@ -14,11 +14,14 @@ class BaseModelMixin:
         print("netro al delete ")
         db.session.commit()
 
+    def update(self):
+        print("netro al delete ")
+        db.session.commit()
+
 
     @classmethod
-    def get_joins(**kwargs):
-        print("entro al get_joins")
-        return db.session.query(**kwargs)
+    def get_joins():
+        return db.session.query()
 
     @classmethod
     def get_all(cls):
@@ -34,3 +37,4 @@ class BaseModelMixin:
     @classmethod
     def simple_filter(cls, **kwargs):
         return cls.query.filter_by(**kwargs).all()
+
