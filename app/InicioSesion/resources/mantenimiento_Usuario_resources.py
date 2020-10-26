@@ -6,7 +6,7 @@ from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 from app import ObjectNotFound
-from app.InicioSesion.models.registro_Usuario_model import Rol, Usuarios, RolSchema, Direcciones
+from app.InicioSesion.models.mantenimiento_Usuario_model import Rol, Usuarios, RolSchema, Direcciones
 
 
 db = SQLAlchemy()
@@ -148,20 +148,3 @@ class editarUsuarioComprador(Resource):
 
         return ('Usuario editado correctamente')
 
-class loginUsuario(Resource):
-    def post(self):
-        email = request.json['email']
-        password = request.json['password']
-        try:
-            task = db.session.query(Usuarios).filter_by(email=email).first()
-            repuesta = '0'
-            if task.password == password:
-                repuesta = 'ok'
-                idusuario = task.idUsuario
-                idRol = task.idRol
-            else:
-                repuesta = 'nok'
-                idusuario = 'Usuario no encontrado'
-            return {"respuesta": repuesta, "idUsuario": idusuario, "idRol": idRol}
-        except:
-            return {"respuesta": "Correo no encontrado"}

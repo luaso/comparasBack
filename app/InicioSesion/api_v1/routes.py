@@ -1,7 +1,8 @@
 from flask import Blueprint
 from flask_restful import Api
 
-from app.InicioSesion.resources.registro_Usuario_resources import obtenerRol,guardarUsuario,buscarUsuario,editarUsuarioComprador,loginUsuario
+from app.InicioSesion.resources.mantenimiento_Usuario_resources import obtenerRol,guardarUsuario,buscarUsuario,editarUsuarioComprador
+from app.InicioSesion.resources.sesion_Usuario_resources import loginUsuario
 
 InicioSesion = Blueprint('InicioSesion', __name__)
 
