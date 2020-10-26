@@ -16,6 +16,11 @@ class BaseModelMixin:
 
 
     @classmethod
+    def get_joins(**kwargs):
+        print("entro al get_joins")
+        return db.session.query(**kwargs)
+
+    @classmethod
     def get_all(cls):
         print("entro al get_all")
         return cls.query.all()
@@ -24,6 +29,7 @@ class BaseModelMixin:
     def get_by_id(cls, id):
         print("entro al get_by_id")
         return cls.query.get(id)
+
 
     @classmethod
     def simple_filter(cls, **kwargs):

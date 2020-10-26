@@ -5,20 +5,57 @@ from sqlalchemy import Column, Integer, String, Date
 
 db = SQLAlchemy()
 ma = Marshmallow()
-class Estado(db.Model):
+
+class Categorias(db.Model, BaseModelMixin):
+    __tablename__= "CATEGORIAS"
+    idCategoria = db.Column(db.Integer, primary_key=True)
+    nombreCategoria = db.Column(db.String)
+    fechaCreacion = db.Column(db.Date)
+    sub_categorias = db.relationship('Sub_Categorias', backref='Categorias', lazy=True)
+
+class Sub_Categorias(db.Model, BaseModelMixin):
+    __tablename__= "SUB_CATEGORIAS"
+    idSubCategorias = db.Column(db.Integer, primary_key=True)
+    nombreSubCategoria = db.Column(db.String)
+    idCategoria = db.Column(db.Integer, db.ForeignKey(Categorias.idCategoria), nullable=False)
+    categoria = db.relationship('Tipos_Productos', backref='Sub_Categorias', lazy=True)
+
+class Tipos_Productos(db.Model, BaseModelMixin):
+    __tablename__= "TIPOS_PRODUCTOS"
+    idTipoProducto = db.Column(db.Integer, primary_key=True)
+    nombreProducto = db.Column(db.String)
+    idSubCategorias = db.Column(db.Integer, db.ForeignKey(Sub_Categorias.idSubCategorias), nullable=False)
+    productos = db.relationship('Productos', backref='Tipos_Productos', lazy=True)
+
+
+class Productos(db.Model, BaseModelMixin):
+    __tablename__ = "PRODUCTOS"
+    idProducto = db.Column(db.Integer, primary_key=True)
+    idTipoProducto = db.Column(db.Integer, db.ForeignKey(Tipos_Productos.idTipoProducto), nullable=False)
+    nombreProducto = db.Column(db.String)
+    contenidoProducto = db.Column(db.String)
+    Imagen = db.Column(db.String)
+    codProducto = db.Column(db.String)
+    marca = db.Column(db.String)
+    presentacion = db.Column(db.String)
+    unidadMedida = db.Column(db.String)
+    cantidadPaquete = db.Column(db.Integer)
+    subastas_productos = db.relationship('Subastas_Productos', backref='Productos', lazy=True)
+
+class Estado(db.Model, BaseModelMixin):
     __tablename__ = "ESTADO"
     idEstado = db.Column(db.Integer, primary_key=True)
     nombreEstado = db.Column(db.String)
     subastas = db.relationship('Subastas', backref='Estado', lazy=True)
 
 
-class Rol(db.Model):
+class Rol(db.Model, BaseModelMixin):
     __tablename__ = "ROL"
     idRol = db.Column(db.Integer, primary_key=True)
     nombreRol = db.Column(db.String)
     usuarios = db.relationship('Usuarios', backref='Rol', lazy=True)
 
-class Usuarios(db.Model):
+class Usuarios(db.Model, BaseModelMixin):
     __tablename__ = "USUARIOS"
     idUsuario = db.Column(db.Integer, primary_key=True)
     nombreUsuario = db.Column(db.String)
@@ -29,41 +66,12 @@ class Usuarios(db.Model):
     codigoPostalPais = db.Column(db.String)
     telefono = db.Column(db.String)
     celular = db.Column(db.String)
+    direccion = db.Column(db.String)
     email = db.Column(db.String)
     password = db.Column(db.String)
     subastas = db.relationship('Subastas', backref='Usuarios', lazy=True)
 
-class Categorias(db.Model):
-    __tablename__= "CATEGORIAS"
-    idCategoria = db.Column(db.Integer, primary_key=True)
-    nombreCategoria = db.Column(db.String)
-    productos = db.relationship('Productos', backref='Categorias', lazy=True)
-
-
-class Productos(db.Model):
-    __tablename__ = "PRODUCTOS"
-    idProducto = db.Column(db.Integer, primary_key=True)
-    idCategoria = db.Column(db.Integer, db.ForeignKey(Categorias.idCategoria), nullable=False)
-    nombreProducto = db.Column(db.String)
-    contenidoProducto = db.Column(db.String)
-    subastas_productos = db.relationship('Subastas_Productos', backref='Productos', lazy=True)
-
-class Direcciones(db.Model):
-    __tablename__="DIRECCIONES"
-    idDireccion = db.Column(db.Integer, primary_key=True)
-    idUsuario = db.Column(db.Integer,db.ForeignKey(Usuarios.idUsuario), nullable=False)
-    direccion = db.Column(db.String)
-    latitud = db.Column(db.String)
-    longitud = db.Column(db.String)
-    subastas = db.relationship('Subastas', backref='Direcciones', lazy=True)
-    def __init__(self, idUsuario,direccion,latitud,longitud):
-        #self.idDireccion=idDireccion
-        self.idUsuario =idUsuario
-        self.direccion= direccion
-        self.latitud = latitud
-        self.longitud = longitud
-
-class Subastas(db.Model):
+class Subastas(db.Model, BaseModelMixin):
     __tablename__= "SUBASTAS"
     idSubasta = db.Column(db.Integer, primary_key=True)
     idUsuario = db.Column(db.Integer,db.ForeignKey(Usuarios.idUsuario), nullable=False)
@@ -71,20 +79,20 @@ class Subastas(db.Model):
     tiempoInicial = db.Column(db.Date)
     nombreSubasta = db.Column(db.String)
     precioIdeal = db.Column(db.Float)
-    fechaSubasta = db.Column(db.String)
-    idDireccion = db.Column(db.Integer, db.ForeignKey(Direcciones.idDireccion), nullable=False)
+    idDireccion = db.Column(db.Integer)
+    fechaSubasta = db.Column(db.Date)
+    subastas_productos = db.relationship('Subastas_Productos', backref='Subastas', lazy=True)
 
-    def __init__(self, idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, fechaSubasta,idDireccion):
+    def __init__(self, idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, idDireccion, fechaSubasta):
         self.idUsuario = idUsuario
         self.idEstado = idEstado
         self.tiempoInicial = tiempoInicial
         self.nombreSubasta = nombreSubasta
         self.precioIdeal = precioIdeal
-        self.fechaSubasta = fechaSubasta
         self.idDireccion = idDireccion
+        self.fechaSubasta = fechaSubasta
 
-
-class Subastas_Productos(db.Model):
+class Subastas_Productos(db.Model, BaseModelMixin):
     __tablename__= "SUBASTAS_PRODUCTOS"
     idSubastasProductos = db.Column(db.Integer, primary_key=True)
     idSubasta = db.Column(db.Integer,db.ForeignKey(Subastas.idSubasta), nullable=False)
@@ -97,60 +105,80 @@ class Subastas_Productos(db.Model):
         self.idProducto = idProducto
         self.Cantidad = Cantidad
 
+
+
+
+
 class TaskSchema(ma.Schema):
     class Meta:
-        fields = ('idUsuario', 'idEstado', 'tiempoInicial','nombreSubasta','precioIdeal','fechaSubasta','idSubasta','idProducto','Cantidad')
+        fields = ('idSubastasProductos',
+                  'idSubasta',
+                  'idProducto',
+                  'Cantidad',
+                  'idProducto',
+                  'idCategoria',
+                  'nombreProducto',
+                  'contenidoProducto',
+                  'Subastas_Productos.idSubasta',
+                  'Productos.idProducto',
+                  'Productos.nombreProducto',
+                  'Subastas_Productos.Cantidad',
+                  'Productos_Supermercados.idSupermercado',
+                  'Supermercados.nombreSupermercado',
+                  'Productos_Supermercados.precio',
+                  'anon_1')
+
+
 
 task_schema = TaskSchema()
 tasks_schema = TaskSchema(many=True)
 
 #@app.route('/api/Subasta', methods=['POST'])
 #def create_task():
-#
-#
-#   idUsuario = 1
-#   idEstado = 1
-#   tiempoInicial = datetime.now()
-#   nombreSubasta = 'Creación de lista'
-#   precioIdeal = 0.0
-#   fechaSubasta = 'Por definir'
-#
-#   crearSubasta = Subastas(idUsuario, idEstado,tiempoInicial,nombreSubasta,precioIdeal,fechaSubasta)
-#   db.session.add(crearSubasta)
-#   idSubastaCreada = 0
-#   try:
-#       db.session.commit()
-#       print('Crear Subasta')
-#       intCreacion = 1
-#       idSubastaCreada = crearSubasta.idSubasta
-#       print('ID :', idSubastaCreada)
- #   except:
-#      print('Error al Crear Subasta')
-#
-#   data = request.get_json()
-#   #categoria_dict = task_schema.load(data)
-#
-#   print(data)
-#
-#   for productos in data['productos']:
-#       print('idProducto:', productos['idProducto'])
-#       print('Cantidad:', productos['Cantidad'])
-#       if  intCreacion == 1:
-#           idSubasta = idSubastaCreada
-#           idProducto = productos['idProducto']
-#           Cantidad = productos['Cantidad']
-#           new_task = Subastas_Productos(idSubasta, idProducto, Cantidad)
-#           db.session.add(new_task)
-#       try:
-#          db.session.commit()
-#          print('Productos Agregados a la subasta')
- #       except:
-#         print('Error al agregar productos')
-#   #return (data)
-#
-#   return jsonify(idSubastaCreada)
-#
-#
+#    idUsuario = 1
+#    idEstado = 1
+#    tiempoInicial = datetime.now()
+#    nombreSubasta = 'Creación de lista'
+#    precioIdeal = 0.0
+#    fechaSubasta = datetime.now()
+    # ESTE DATO (DEFAULT) PUEDE VARIAR SEGUN EL REGISTRO DE LA TABLA DIRECCIONES
+    # =================================================================
+#    idDireccion = 24
+#    # =================================================================
+#    print('Selección de datos completado')
+#    crearSubasta = Subastas(idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, fechaSubasta, idDireccion)
+#    print('Agrupación de datos completado')
+#    db.session.add(crearSubasta)
+#    print('Sessión aperturada')
+#    idSubastaCreada = 0
+#    try:
+#        db.session.commit()
+#        print('Creación de SUBASTA completada')
+#        intCreacion = 1
+#        idSubastaCreada = crearSubasta.idSubasta
+#        print('ID :', idSubastaCreada)
+#    except:
+#        print('Error al Crear Subasta')
+
+#    data = request.get_json()
+#    print(data)
+#    for productos in data['productos']:
+#        print('idProducto:', productos['idProducto'])
+#        print('Cantidad:', productos['Cantidad'])
+#        if intCreacion == 1:
+#            idSubasta = idSubastaCreada
+#            idProducto = productos['idProducto']
+#            Cantidad = productos['Cantidad']
+#            new_task = Subastas_Productos(idSubasta, idProducto, Cantidad)
+#            db.session.add(new_task)
+#        try:
+#            db.session.commit()
+#            print('Productos Agregados a la subasta con exito')
+#        except:
+#            print('Error al agregar productos')
+#    return jsonify(idSubastaCreada)
+
+
 #if __name__ =="__main__":
 #    app.run(debug=True)
 
