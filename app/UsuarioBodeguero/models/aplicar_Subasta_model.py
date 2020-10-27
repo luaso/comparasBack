@@ -1,7 +1,7 @@
 from app.db import db, BaseModelMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
-
+from sqlalchemy import or_
 
 db = SQLAlchemy()
 

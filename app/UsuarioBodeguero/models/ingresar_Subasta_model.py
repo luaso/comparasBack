@@ -1,16 +1,9 @@
-from flask import Flask, request, jsonify
-from flask_marshmallow import Marshmallow
+from app.db import db, BaseModelMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
-from datetime import datetime
 from sqlalchemy import or_
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://desarrollador3:VzXY#FP$AqNI@64.227.98.56:5432/comparas'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy(app)
-ma = Marshmallow(app)
+db = SQLAlchemy()
 
 class Estado(db.Model):
     __tablename__ = "ESTADO"
@@ -36,14 +29,19 @@ class Usuarios(db.Model):
     codigoPostalPais = db.Column(db.String)
     telefono = db.Column(db.String)
     celular = db.Column(db.String)
-    direccion = db.Column(db.String)
     email = db.Column(db.String)
     password = db.Column(db.String)
-    direccionOpcional1 = db.Column(db.String)
-    direccionOpcional2 = db.Column(db.String)
+    subastas = db.relationship('Subastas', backref='Usuarios', lazy=True)
+    subastas = db.relationship('Direcciones', backref='Usuarios', lazy=True)
+
+class Direcciones(db.Model):
+    __tablename__ = "DIRECCIONES"
+    idDireccion = db.Column(db.Integer, primary_key=True)
+    idUsuario = db.Column(db.Integer, db.ForeignKey(Usuarios.idUsuario), nullable=False)
+    direccion = db.Column(db.String)
     latitud = db.Column(db.String)
     longitud = db.Column(db.String)
-    subastas = db.relationship('Subastas', backref='Usuarios', lazy=True)
+
 
 class Categorias(db.Model):
     __tablename__= "CATEGORIAS"
@@ -70,6 +68,14 @@ class Subastas(db.Model):
     precioIdeal = db.Column(db.Float)
     fechaSubasta = db.Column(db.String)
 
+    @classmethod
+    def get_join_filter(self):
+        filtro = db.session.query(Subastas, Usuarios, Estado). \
+                 outerjoin(Usuarios, Subastas.idUsuario == Usuarios.idUsuario). \
+                 outerjoin(Estado, Subastas.idEstado == Estado.idEstado). \
+                 filter(Estado.idEstado.in_((1, 2)))
+        return filtro
+
     def __init__(self, idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, fechaSubasta):
         self.idUsuario = idUsuario
         self.idEstado = idEstado
@@ -92,39 +98,20 @@ class Subastas_Productos(db.Model):
         self.idProducto = idProducto
         self.Cantidad = Cantidad
 
-class TaskSchema(ma.Schema):
-    class Meta:
-        fields = ('direccion',
-                  'direccionOpcional1',
-                  'direccionOpcional2',
-                  'Subastas.idSubasta',
-                  'Subastas.idUsuario',
-                  'Subastas.idEstado',
-                  'Subastas.tiempoInicial',
-                  'Subastas.nombreSubasta',
-                  'Subastas.precioIdeal',
-                  'Subastas.fechaSubasta',
-                  'Subastas_Productos.idSubasta',
-                  'Subastas_Productos.idProducto',
-                  'Subastas_Productos.Cantidad',
-                  'Productos.nombreProducto',
-                  'idProducto',
-                  'idCategoria',
-                  'nombreProducto',
-                  'contenidoProducto')
 
 
-task_schema = TaskSchema()
-tasks_schema = TaskSchema(many=True)
+
+
 
 #Listar subastas de Usuario que podria escoger el bodeguero
-@app.route('/api/listasUsuario/', methods=['GET'])
-def get_subastas():
-    idUsuario = request.json['idUsuario']
-    filtro = db.session.query(Subastas, Usuarios, Estado). \
-             outerjoin(Usuarios, Subastas.idUsuario == Usuarios.idUsuario). \
-             outerjoin(Estado, Subastas.idEstado == Estado.idEstado). \
-             filter(Estado.idEstado.in_((1,2)))
+#@app.route('/api/listasUsuario/', methods=['GET'])
+#def get_subastas():
+#    idUsuario = request.json['idUsuario']
+#    filtro = db.session.query(Subastas, Usuarios, Estado). \
+#             outerjoin(Usuarios, Subastas.idUsuario == Usuarios.idUsuario). \
+#             outerjoin(Estado, Subastas.idEstado == Estado.idEstado). \
+#             filter(Estado.idEstado.in_((1,2)))
+
 
 
 

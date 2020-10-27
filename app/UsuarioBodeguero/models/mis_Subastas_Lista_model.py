@@ -1,16 +1,9 @@
-from flask import Flask, request, jsonify
-from flask_marshmallow import Marshmallow
+from app.db import db, BaseModelMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
-from datetime import datetime
 from sqlalchemy import or_
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://desarrollador3:VzXY#FP$AqNI@64.227.98.56:5432/comparas'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy(app)
-ma = Marshmallow(app)
+db = SQLAlchemy()
 
 class Estado(db.Model):
     __tablename__ = "ESTADO"
@@ -70,6 +63,15 @@ class Subastas(db.Model):
     precioIdeal = db.Column(db.Float)
     fechaSubasta = db.Column(db.String)
 
+    @classmethod
+    def get_join_filter(self):
+        filtro = db.session.query(Subastas, Subastas_Productos, Productos, Pujas). \
+            outerjoin(Subastas_Productos, Subastas.idSubasta == Subastas_Productos.idSubasta). \
+            outerjoin(Productos, Subastas_Productos.idProducto == Productos.idProducto). \
+            outerjoin(Pujas, Subastas.idSubasta == Pujas.idSubasta). \
+            filter(Subastas.idUsuario == idUsuario).all()
+        return filtro
+
     def __init__(self, idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, fechaSubasta):
         self.idUsuario = idUsuario
         self.idEstado = idEstado
@@ -92,38 +94,17 @@ class Subastas_Productos(db.Model):
         self.idProducto = idProducto
         self.Cantidad = Cantidad
 
-class TaskSchema(ma.Schema):
-    class Meta:
-        fields = ('direccion',
-                  'direccionOpcional1',
-                  'direccionOpcional2',
-                  'Subastas.idSubasta',
-                  'Subastas.idUsuario',
-                  'Subastas.idEstado',
-                  'Subastas.tiempoInicial',
-                  'Subastas.nombreSubasta',
-                  'Subastas.precioIdeal',
-                  'Subastas.fechaSubasta',
-                  'Subastas_Productos.idSubasta',
-                  'Subastas_Productos.idProducto',
-                  'Subastas_Productos.Cantidad',
-                  'Productos.nombreProducto',
-                  'idProducto',
-                  'idCategoria',
-                  'nombreProducto',
-                  'contenidoProducto')
 
 
-task_schema = TaskSchema()
-tasks_schema = TaskSchema(many=True)
 
-@app.route('/api/misSubastasBodeguero/', methods=['GET'])
-def get_Subastas():
-    idUsuario = request.json['idUsuario']
 
-    filtro = db.session.query(Subastas, Subastas_Productos, Productos, Pujas). \
-             outerjoin(Subastas_Productos, Subastas.idSubasta == Subastas_Productos.idSubasta). \
-             outerjoin(Productos, Subastas_Productos.idProducto == Productos.idProducto). \
-             outerjoin(Pujas, Subastas.idSubasta == Pujas.idSubasta). \
-             filter(Subastas.idUsuario == idUsuario).all()
+#@app.route('/api/misSubastasBodeguero/', methods=['GET'])
+#def get_Subastas():
+#    idUsuario = request.json['idUsuario']
+
+#    filtro = db.session.query(Subastas, Subastas_Productos, Productos, Pujas). \
+#             outerjoin(Subastas_Productos, Subastas.idSubasta == Subastas_Productos.idSubasta). \
+#             outerjoin(Productos, Subastas_Productos.idProducto == Productos.idProducto). \
+#             outerjoin(Pujas, Subastas.idSubasta == Pujas.idSubasta). \
+#             filter(Subastas.idUsuario == idUsuario).all()
 
