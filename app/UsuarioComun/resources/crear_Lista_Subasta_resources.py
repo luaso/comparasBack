@@ -1,6 +1,6 @@
 from flask_restful import Api, Resource
 from sqlalchemy import or_
-from app.UsuarioComun.models.crear_Lista_Subasta_model import Subastas, TaskSchema, Subastas_Productos
+from app.UsuarioComun.models.crear_Lista_Subasta_model import Subastas, Subastas_Productos
 from app.UsuarioComun.schemas.crear_Lista_Subasta_schema import TaskSchema
 from datetime import datetime
 from app import ObjectNotFound
