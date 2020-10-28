@@ -6,7 +6,8 @@ from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 from app import ObjectNotFound
-from app.InicioSesion.models.mantenimiento_Usuario_model import Rol, Usuarios, RolSchema, Direcciones
+from app.InicioSesion.models.mantenimiento_Usuario_model import Rol, Usuarios, Direcciones
+from app.InicioSesion.schemas.mantenimiento_Usuario_schema import RolSchema
 
 
 db = SQLAlchemy()
@@ -48,9 +49,10 @@ class guardarUsuario(Resource):
             CrearUsuario = Usuarios(nombreUsuario, apellidoPatUsuario, apellidoMatUsuario, idRol, Ruc, razonSocial,
                                     nombreComercial, codigoPostalPais, telefono, celular, email, password, imagen)
             print(CrearUsuario)
-            db.session.add(CrearUsuario)
             try:
-                db.session.commit()
+                #db.session.add(CrearUsuario)
+                #db.session.commit()
+                CrearUsuario.save()
                 idUsuarioFK = CrearUsuario.idUsuario
                 print('Usuario agregado correctamente')
             except:
@@ -70,8 +72,9 @@ class guardarUsuario(Resource):
             try:
                 CrearDireccion = Direcciones(idUsuario, direccion, latitud, longitud)
                 print(CrearDireccion)
-                db.session.add(CrearDireccion)
-                db.session.commit()
+                #db.session.add(CrearDireccion)
+                #db.session.commit()
+                CrearDireccion.save()
                 print('Direcciones agregadas correctamente')
             except:
                 print('Error al agregar direccion')

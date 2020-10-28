@@ -6,7 +6,7 @@ from sqlalchemy import Column, Integer, String, Date
 
 db = SQLAlchemy()
 ma = Marshmallow()
-class Rol(db.Model):
+class Rol(db.Model, BaseModelMixin):
     __tablename__ = "ROL"
     idRol = db.Column(db.Integer, primary_key=True)
     nombreRol = db.Column(db.String)
@@ -18,7 +18,7 @@ class Rol(db.Model):
 
 
 
-class Usuarios(db.Model):
+class Usuarios(db.Model, BaseModelMixin):
     __tablename__ = "USUARIOS"
     idUsuario = db.Column(db.Integer, primary_key=True)
     nombreUsuario = db.Column(db.String)
@@ -51,7 +51,7 @@ class Usuarios(db.Model):
         self.password = password
         self.imagen = imagen
 
-class Direcciones(db.Model):
+class Direcciones(db.Model, BaseModelMixin):
     __tablename__="DIRECCIONES"
     idDireccion = db.Column(db.Integer, primary_key=True)
     idUsuario = db.Column(db.Integer,db.ForeignKey(Usuarios.idUsuario), nullable=False)
@@ -65,12 +65,6 @@ class Direcciones(db.Model):
         self.latitud = latitud
         self.longitud = longitud
 
-
-class RolSchema(ma.Schema):
-    class Meta:
-        fields = ('Rol.idRol', 'Rol.nombreRol','Usuarios.nombreUsuario','Usuarios.apellidoPatUsuario','Usuarios.apellidoMatUsuario','Usuarios.Ruc','Usuarios.razonSocial','Usuarios.nombreComercial','Usuarios.codigoPostalPais','Usuarios.telefono','Usuarios.celular','Usuarios.email','Usuarios.imagen','Usuarios.idUsuario','Direcciones.idDireccion','Direcciones.latitud','Direcciones.longitud', 'Direcciones.direccion')
-
-rolSchema = RolSchema()
 
 
 #db.create_all()
