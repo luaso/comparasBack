@@ -107,32 +107,6 @@ class Subastas_Productos(db.Model, BaseModelMixin):
 
 
 
-
-
-class TaskSchema(ma.Schema):
-    class Meta:
-        fields = ('idSubastasProductos',
-                  'idSubasta',
-                  'idProducto',
-                  'Cantidad',
-                  'idProducto',
-                  'idCategoria',
-                  'nombreProducto',
-                  'contenidoProducto',
-                  'Subastas_Productos.idSubasta',
-                  'Productos.idProducto',
-                  'Productos.nombreProducto',
-                  'Subastas_Productos.Cantidad',
-                  'Productos_Supermercados.idSupermercado',
-                  'Supermercados.nombreSupermercado',
-                  'Productos_Supermercados.precio',
-                  'anon_1')
-
-
-
-task_schema = TaskSchema()
-tasks_schema = TaskSchema(many=True)
-
 #@app.route('/api/Subasta', methods=['POST'])
 #def create_task():
 #    idUsuario = 1

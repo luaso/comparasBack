@@ -1,7 +1,7 @@
 from flask_restful import Api, Resource
 from sqlalchemy import or_
-from app.UsuarioComun.schemas.crear_Lista_Subasta_schema import TaskSchema
-from app.UsuarioComun.models.crear_Lista_SubastaProductos_model import Supermercados, Subastas,Productos,Productos_Supermercados,Subastas_Productos,TaskSchema
+from app.UsuarioComun.models.crear_Lista_SubastaProductos_model import Supermercados, Subastas,Productos,Productos_Supermercados,Subastas_Productos
+from app.UsuarioComun.schemas.crear_Lista_SubastaProductos_schema import TaskSchema
 from datetime import datetime
 from app import ObjectNotFound
 from flask import Flask, request, jsonify
@@ -15,15 +15,15 @@ db = SQLAlchemy()
 task_schema = TaskSchema()
 tasks_schema = TaskSchema(many=True)
 
+task_schema = TaskSchema()
+
 class buscarProductosSubastaEjecucion(Resource):
     def get(self, idSubasta):
         try:
-            filtro = db.session.query(Subastas_Productos, Productos).\
-                     outerjoin(Productos,Subastas_Productos.idProducto == Productos.idProducto).\
-                     filter(Subastas_Productos.idSubasta == idSubasta).all()
+            filtro = Subastas_Productos.get_joins_filter(idSubasta)
 
             for subastas_Productos, productos in filtro:
-                print(productos.idProducto, productos.nombreProducto)
+                print(productos.idProducto, productos.nombreProducto, subastas_Productos.idSubasta)
             resultado = task_schema.dump(filtro, many=True)
             #print(resultado)
         except Exception as ex:
@@ -33,11 +33,7 @@ class buscarProductosSubastaEjecucion(Resource):
 class compararProductosSupermercados(Resource):
     def get(self, idSubasta):
         try:
-            filtro = db.session.query(Subastas_Productos, Productos_Supermercados, Productos, Supermercados). \
-                outerjoin(Productos, Subastas_Productos.idProducto == Productos.idProducto). \
-                outerjoin(Productos_Supermercados, Productos.idProducto == Productos_Supermercados.idProducto). \
-                outerjoin(Supermercados, Productos_Supermercados.idSupermercado == Supermercados.idSupermercado). \
-                filter(Subastas_Productos.idSubasta == idSubasta).all()
+            filtro = Subastas_Productos.get_joins_filter_supermercados(idSubasta)
             #print(filtro)
         except Exception as ex:
             raise ObjectNotFound(ex)

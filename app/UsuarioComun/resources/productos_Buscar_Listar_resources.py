@@ -26,25 +26,16 @@ class Producto(Resource):
         #producto = Productos.query.filter_by(nombreProducto=nombreProducto).first()
         print('entrando a get productos')
         try:
-            producto = Productos.query.filter(or_(Productos.nombreProducto.ilike('%'+ nombreProducto +'%'), Productos.contenidoProducto.ilike('%'+ nombreProducto +'%')))
+            filtro = Productos.get_filter(nombreProducto)
             print('Selección de datos completado')
         except Exception as ex:
             raise ObjectNotFound(ex)
-            print('Error')
-        print(producto)
 
-        try:
-            for resultado1 in producto:
-                print(resultado1.nombreProducto)
-        except Exception as ex:
-            raise ObjectNotFound(ex)
-
-
-        if producto is None:
+        if filtro is None:
             raise ObjectNotFound('El producto no existe')
 
         print('=================================================')
-        result = productos_Buscar_Listar_schema.dump(producto, many=True)
+        result = productos_Buscar_Listar_schema.dump(filtro, many=True)
         print(result)
         print('=================================================')
         return {"producto": result}, 200
@@ -54,14 +45,14 @@ class Producto(Resource):
 
 
 
-class ProductosBuscados(Resource):
-    def get(self, idSubasta):
-        try:
-            #producto = Productos.get_all()
-            producto = Productos.query.filter(Productos.idSubasta.endswith('@example.com')).all()
-        except:
-            raise ObjectNotFound('error al buscar')
+#class ProductosBuscados(Resource):
+#    def get(self, idSubasta):
+#        try:
+#            #producto = Productos.get_all()
+#            producto = Productos.query.filter(Productos.idSubasta.endswith('@example.com')).all()
+#        except:
+#            raise ObjectNotFound('error al buscar')
 
-        print(producto)
-        result = productos_Buscar_Listar_schema.dump(producto, many=True)
-        return {"productos": result}, 200
+#        print(producto)
+#        result = productos_Buscar_Listar_schema.dump(producto, many=True)
+#        return {"productos": result}, 200

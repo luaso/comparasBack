@@ -100,6 +100,23 @@ class Subastas_Productos(db.Model, BaseModelMixin):
     idProducto = db.Column(db.Integer, db.ForeignKey(Productos.idProducto), nullable=False)
     Cantidad = db.Column(db.Float)
 
+    @classmethod
+    def get_joins_filter(self, idSubasta):
+        filtro = db.session.query(Subastas_Productos, Productos). \
+            outerjoin(Productos, Subastas_Productos.idProducto == Productos.idProducto). \
+            filter(Subastas_Productos.idSubasta == idSubasta).all()
+        return filtro
+
+    @classmethod
+    def get_joins_filter_supermercados(self, idSubasta):
+        filtro = db.session.query(Subastas_Productos, Productos_Supermercados, Productos, Supermercados). \
+            outerjoin(Productos, Subastas_Productos.idProducto == Productos.idProducto). \
+            outerjoin(Productos_Supermercados, Productos.idProducto == Productos_Supermercados.idProducto). \
+            outerjoin(Supermercados, Productos_Supermercados.idSupermercado == Supermercados.idSupermercado). \
+            filter(Subastas_Productos.idSubasta == idSubasta).all()
+        return filtro
+
+
     def __init__(self,idSubasta, idProducto, Cantidad):
 
         self.idSubasta = idSubasta
@@ -127,38 +144,11 @@ class Productos_Supermercados(db.Model, BaseModelMixin):
 
 
 
-class TaskSchema(ma.Schema):
-    class Meta:
-        fields = ('idSubastasProductos',
-                  'idSubasta',
-                  'idProducto',
-                  'Cantidad',
-                  'idProducto',
-                  'idCategoria',
-                  'nombreProducto',
-                  'contenidoProducto',
-                  'Subastas_Productos.idSubasta',
-                  'Productos.idProducto',
-                  'Productos.nombreProducto',
-                  'Subastas_Productos.Cantidad',
-                  'Productos_Supermercados.idSupermercado',
-                  'Supermercados.nombreSupermercado',
-                  'Productos_Supermercados.precio',
-                  'Productos_Supermercados.precioRegular',
-                  'Productos_Supermercados.precioOnline',
-                  'Productos_Supermercados.precioTarjeta',
-                  'Productos_Supermercados.nombreTarjeta',
-                  'anon_1')
 
 
 
-task_schema = TaskSchema()
-tasks_schema = TaskSchema(many=True)
 
 
-class ProductosSchema(ma.Schema):
-        class Meta:
-            model = Productos
 
 
 #@app.route('/api/SubastaProductos', methods=['POST'])

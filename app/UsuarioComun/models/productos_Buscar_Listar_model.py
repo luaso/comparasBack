@@ -1,7 +1,7 @@
 from app.db import db, BaseModelMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
-
+from sqlalchemy import or_
 
 db = SQLAlchemy()
 class Categorias(db.Model, BaseModelMixin):
@@ -39,6 +39,13 @@ class Productos(db.Model, BaseModelMixin):
     unidadMedida = db.Column(db.String)
     cantidadPaquete = db.Column(db.Integer)
     subastas_productos = db.relationship('Subastas_Productos', backref='Productos', lazy=True)
+
+    @classmethod
+    def get_filter(self, nombreProducto):
+        filtro = Productos.query.filter(or_(Productos.nombreProducto.ilike('%' + nombreProducto + '%'),
+                                            Productos.contenidoProducto.ilike('%' + nombreProducto + '%')))
+        return filtro
+
 
 class Estado(db.Model, BaseModelMixin):
     __tablename__ = "ESTADO"
