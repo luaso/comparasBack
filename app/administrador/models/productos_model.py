@@ -1,0 +1,80 @@
+from app.db import db, BaseModelMixin
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Column, Integer, String
+from sqlalchemy import or_
+
+db = SQLAlchemy()
+class Supermercados(db.Model, BaseModelMixin):
+    __tablename__="SUPERMERCADOS"
+    idSupermercado = db.Column(db.Integer, primary_key=True)
+    nombreSupermercado = db.Column(db.String)
+    imagenSupermercado = db.Column(db.String)
+    urlSupermercado = db.Column(db.String)
+    productos_supermercado = db.relationship('Productos_Supermercados', backref='Supermercados', lazy=True)
+
+
+class Categorias(db.Model, BaseModelMixin):
+    __tablename__= "CATEGORIAS"
+    idCategoria = db.Column(db.Integer, primary_key=True)
+    nombreCategoria = db.Column(db.String)
+    fechaCreacion = db.Column(db.Date)
+    sub_categorias = db.relationship('Sub_Categorias', backref='Categorias', lazy=True)
+
+class Sub_Categorias(db.Model, BaseModelMixin):
+    __tablename__= "SUB_CATEGORIAS"
+    idSubCategorias = db.Column(db.Integer, primary_key=True)
+    nombreSubCategorias = db.Column(db.String)
+    idCategoria = db.Column(db.Integer, db.ForeignKey(Categorias.idCategoria), nullable=False)
+    categoria = db.relationship('Tipos_Productos', backref='Sub_Categorias', lazy=True)
+
+class Tipos_Productos(db.Model, BaseModelMixin):
+    __tablename__= "TIPOS_PRODUCTOS"
+    idTipoProducto = db.Column(db.Integer, primary_key=True)
+    nombreProducto = db.Column(db.String)
+    idSubCategorias = db.Column(db.Integer, db.ForeignKey(Sub_Categorias.idSubCategorias), nullable=False)
+    productos = db.relationship('Productos', backref='Tipos_Productos', lazy=True)
+
+    @classmethod
+    def get_joins(self):
+        filtro = Tipos_Productos.query.all()
+
+
+        # print(filtro)
+        return filtro
+
+class Productos(db.Model, BaseModelMixin):
+    __tablename__ = "PRODUCTOS"
+    idProducto = db.Column(db.Integer, primary_key=True)
+    idTipoProducto = db.Column(db.Integer, db.ForeignKey(Tipos_Productos.idTipoProducto), nullable=False)
+    nombreProducto = db.Column(db.String)
+    contenidoProducto = db.Column(db.String)
+    Imagen = db.Column(db.String)
+    codProducto = db.Column(db.String)
+    marca = db.Column(db.String)
+    presentacion = db.Column(db.String)
+    unidadMedida = db.Column(db.String)
+    cantidadPaquete = db.Column(db.Integer)
+    productos_supermercado = db.relationship('Productos_Supermercados', backref='Productos', lazy=True)
+
+    @classmethod
+    def get_joins(self):
+        filtro = db.session.query(Categorias, Sub_Categorias, Tipos_Productos, Productos, Productos_Supermercados,Supermercados ). \
+                 outerjoin(Sub_Categorias, Categorias.idCategoria == Sub_Categorias.idCategoria). \
+                 outerjoin(Tipos_Productos, Sub_Categorias.idSubCategorias == Tipos_Productos.idSubCategorias). \
+                 outerjoin(Productos, Tipos_Productos.idTipoProducto == Productos.idTipoProducto). \
+                 outerjoin(Productos_Supermercados, Productos.idProducto == Productos_Supermercados.idProducto). \
+                 outerjoin(Supermercados, Productos_Supermercados.idSupermercado == Supermercados.idSupermercado)
+
+        # print(filtro)
+        return filtro
+
+class Productos_Supermercados(db.Model, BaseModelMixin):
+    __tablename__ = "PRODUCTOS_SUPERMERCADOS"
+    idProductoSupermercado = db.Column(db.Integer, primary_key=True)
+    idSupermercado = db.Column(db.Integer, db.ForeignKey(Supermercados.idSupermercado), nullable=False)
+    idProducto = db.Column(db.Integer, db.ForeignKey(Productos.idProducto), nullable=False)
+    fechaProducto = db.Column(db.Date)
+    precioRegular = db.Column(db.Float)
+    precioOnline = db.Column(db.Float)
+    precioTarjeta = db.Column(db.Float)
+    nombreTarjeta = db.Column(db.String)
