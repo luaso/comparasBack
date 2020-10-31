@@ -1,6 +1,6 @@
 from flask_restful import Api, Resource
 from sqlalchemy import or_
-from app.UsuarioBodeguero.models.aplicar_Subasta_model import Subastas, Productos, Subastas_Productos
+from app.UsuarioBodeguero.models.aplicar_Subasta_model import Subastas, Productos, Subastas_Productos, Pujas
 from app.UsuarioBodeguero.schemas.aplicar_Subasta_schema import TaskSchema
 from datetime import datetime
 from app import ObjectNotFound
@@ -25,10 +25,13 @@ class obtenerProductosSubasta(Resource):
 class guardarPuja(Resource):
      def post(self):
          try:
+            print('Ingresando a la puja')
             idSubasta = request.json['idSubasta']
             idUsuario = request.json['idUsuario']
             precioPuja = request.json['precioPuja']
-            puja = Puja(idSubasta, idUsuario, precioPuja)
+            fechaPuja = request.json['fechaPuja']
+            puja = Pujas(idSubasta, idUsuario, precioPuja, fechaPuja)
+            print('Intentado ingresar')
             puja.save()
             return {"Estado de puja": "Completado"}, 200
          except Exception as ex:

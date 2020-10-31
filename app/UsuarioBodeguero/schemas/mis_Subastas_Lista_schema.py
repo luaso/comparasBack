@@ -3,21 +3,11 @@ from app.ext import ma
 
 class TaskSchema(ma.Schema):
     class Meta:
-        fields = ('direccion',
-                  'direccionOpcional1',
-                  'direccionOpcional2',
-                  'Subastas.idSubasta',
-                  'Subastas.idUsuario',
-                  'Subastas.idEstado',
-                  'Subastas.tiempoInicial',
-                  'Subastas.nombreSubasta',
-                  'Subastas.precioIdeal',
+        fields = ('Subastas.idSubasta',
+                  'Usuarios.nombreUsuario',
+                  'Usuarios.apellidoPatUsuario',
+                  'Usuarios.apellidoMatUsuario',
                   'Subastas.fechaSubasta',
-                  'Subastas_Productos.idSubasta',
-                  'Subastas_Productos.idProducto',
-                  'Subastas_Productos.Cantidad',
-                  'Productos.nombreProducto',
-                  'idProducto',
-                  'idCategoria',
-                  'nombreProducto',
-                  'contenidoProducto')
+                  'Pujas.precioPuja',
+                  'Pujas.precioPuja',
+                  'Estado.nombreEstado')

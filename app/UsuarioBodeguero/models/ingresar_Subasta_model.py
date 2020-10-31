@@ -18,10 +18,12 @@ class Rol(db.Model):
     nombreRol = db.Column(db.String)
     usuarios = db.relationship('Usuarios', backref='Rol', lazy=True)
 
-class Usuarios(db.Model):
+class Usuarios(db.Model, BaseModelMixin):
     __tablename__ = "USUARIOS"
     idUsuario = db.Column(db.Integer, primary_key=True)
     nombreUsuario = db.Column(db.String)
+    apellidoPatUsuario = db.Column(db.String)
+    apellidoMatUsuario = db.Column(db.String)
     idRol = db.Column(db.Integer,db.ForeignKey(Rol.idRol), nullable=False)
     Ruc = db.Column(db.String)
     razonSocial = db.Column(db.String)
@@ -31,8 +33,10 @@ class Usuarios(db.Model):
     celular = db.Column(db.String)
     email = db.Column(db.String)
     password = db.Column(db.String)
+    imagen = db.Column(db.String)
     subastas = db.relationship('Subastas', backref='Usuarios', lazy=True)
-    subastas = db.relationship('Direcciones', backref='Usuarios', lazy=True)
+
+
 
 class Direcciones(db.Model):
     __tablename__ = "DIRECCIONES"

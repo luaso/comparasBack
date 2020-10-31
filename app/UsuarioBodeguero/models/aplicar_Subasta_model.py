@@ -58,6 +58,8 @@ class Usuarios(db.Model, BaseModelMixin):
     __tablename__ = "USUARIOS"
     idUsuario = db.Column(db.Integer, primary_key=True)
     nombreUsuario = db.Column(db.String)
+    apellidoPatUsuario = db.Column(db.String)
+    apellidoMatUsuario = db.Column(db.String)
     idRol = db.Column(db.Integer,db.ForeignKey(Rol.idRol), nullable=False)
     Ruc = db.Column(db.String)
     razonSocial = db.Column(db.String)
@@ -65,9 +67,9 @@ class Usuarios(db.Model, BaseModelMixin):
     codigoPostalPais = db.Column(db.String)
     telefono = db.Column(db.String)
     celular = db.Column(db.String)
-    direccion = db.Column(db.String)
     email = db.Column(db.String)
     password = db.Column(db.String)
+    imagen = db.Column(db.String)
     subastas = db.relationship('Subastas', backref='Usuarios', lazy=True)
 
 class Subastas(db.Model, BaseModelMixin):
@@ -120,7 +122,14 @@ class Pujas(db.Model, BaseModelMixin):
     idSubasta = db.Column(db.Integer, db.ForeignKey(Subastas.idSubasta), nullable=False)
     idUsuario = db.Column(db.Integer, db.ForeignKey(Usuarios.idUsuario), nullable=False)
     precioPuja = db.Column(db.Float)
+    fechaPuja = db.Column(db.DateTime)
 
+    def __init__(self,idSubasta, idUsuario, precioPuja, fechaPuja):
+
+        self.idSubasta = idSubasta
+        self.idUsuario = idUsuario
+        self.precioPuja = precioPuja
+        self.fechaPuja = fechaPuja
 
 
 

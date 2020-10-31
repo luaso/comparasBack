@@ -51,6 +51,15 @@ class Usuarios(db.Model, BaseModelMixin):
         self.password = password
         self.imagen = imagen
 
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def get_query(self, idUsuario):
+        filtro = Usuarios.query.get(idUsuario)
+        return filtro
+
 class Direcciones(db.Model, BaseModelMixin):
     __tablename__="DIRECCIONES"
     idDireccion = db.Column(db.Integer, primary_key=True)
@@ -65,7 +74,18 @@ class Direcciones(db.Model, BaseModelMixin):
         self.latitud = latitud
         self.longitud = longitud
 
+    def delete_from_db(self):
+        db.session.delete(self)
+        db.session.commit()
 
+    @classmethod
+    def get_query(self, idUsuarioDireccion):
+        filtro = Direcciones.query.filter(Direcciones.idUsuario == idUsuarioDireccion)
+        return filtro
+
+    @classmethod
+    def find_by_id(cls, id):
+        return cls.query.get(id)
 
 #db.create_all()
 #rolsSchema = rolSchema(many=True)

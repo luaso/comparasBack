@@ -28,12 +28,28 @@ class obtenerMiOferta(Resource):
     def get(self):
         try:
             idSubastaGet = request.json['idSubasta']
-            idUsuarioGet = request.json['idUsuarioGet']
+            idUsuarioGet = request.json['idUsuario']
 
             filtro = Pujas.get_filter_or(idSubastaGet,idUsuarioGet)
 
             result = task_schema.dump(filtro, many=True)
 
             return {"Resultado": result}, 200
+        except Exception as ex:
+            raise ObjectNotFound(ex)
+
+
+class guardarNuevaPuja(Resource):
+    def post(self):
+        try:
+            print('Ingresando a la puja')
+            idSubasta = request.json['idSubasta']
+            idUsuario = request.json['idUsuario']
+            precioPuja = request.json['precioPuja']
+            fechaPuja = request.json['fechaPuja']
+            puja = Pujas(idSubasta, idUsuario, precioPuja, fechaPuja)
+            print('Intentado ingresar')
+            puja.save()
+            return {"Estado de puja": "Completado"}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)

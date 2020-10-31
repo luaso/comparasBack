@@ -89,7 +89,7 @@ class buscarUsuario(Resource):
                  outerjoin(Direcciones, Usuarios.idUsuario == Direcciones.idUsuario). \
                  outerjoin(Rol, Usuarios.idRol == Rol.idRol). \
                  filter(Usuarios.idUsuario == idUsuario).all()
-        print(filtro)
+        #print(filtro)
 
         result = rolSchema.dump(filtro, many=True)
         print(result)
@@ -99,6 +99,10 @@ class buscarUsuario(Resource):
 class editarUsuarioComprador(Resource):
     def put(seft):
         data = request.get_json()
+        idUsuarioDireccion = 0
+
+
+
         for usuario in data['Datos']:
             idUsuario = usuario['idUsuario']
             nombreUsuario = usuario['nombreUsuario']
@@ -111,27 +115,38 @@ class editarUsuarioComprador(Resource):
             codigoPostalPais = usuario['codigoPostalPais']
             telefono = usuario['telefono']
             celular = usuario['celular']
-            direccion = usuario['direccion']
             email = usuario['email']
             imagen = usuario['imagen']
 
-        usuarioEditar = Usuarios.query.get(idUsuario)
-        usuarioEditar.nombreUsuario = nombreUsuario
-        usuarioEditar.apellidoPatUsuario = apellidoPatUsuario
-        usuarioEditar.apellidoMatUsuario = apellidoMatUsuario
-        usuarioEditar.idRol = idRol
-        usuarioEditar.Ruc = Ruc
-        usuarioEditar.razonSocial = razonSocial
-        usuarioEditar.nombreComercial = nombreComercial
-        usuarioEditar.codigoPostalPais = codigoPostalPais
-        usuarioEditar.telefono = telefono
-        usuarioEditar.celular = celular
-        usuarioEditar.direccion = direccion
-        usuarioEditar.email = email
-        usuarioEditar.imagen = imagen
-        db.session.commit()
+            usuarioEditar = Usuarios.get_query(idUsuario)
+            usuarioEditar.nombreUsuario = nombreUsuario
+            usuarioEditar.apellidoPatUsuario = apellidoPatUsuario
+            usuarioEditar.apellidoMatUsuario = apellidoMatUsuario
+            usuarioEditar.idRol = idRol
+            usuarioEditar.Ruc = Ruc
+            usuarioEditar.razonSocial = razonSocial
+            usuarioEditar.nombreComercial = nombreComercial
+            usuarioEditar.codigoPostalPais = codigoPostalPais
+            usuarioEditar.telefono = telefono
+            usuarioEditar.celular = celular
+            usuarioEditar.email = email
+            usuarioEditar.imagen = imagen
+            print('Ingresando al save to db')
+            try:
+                usuarioEditar.save_to_db()
+                print('realizado')
+            except Exception as ex:
+                print('error')
+                raise ObjectNotFound(ex)
+            #db.session.commit()
 
-        idUsuarioDireccion = idUsuario
+            idUsuarioDireccion = idUsuario
+
+        filtro = Direcciones.get_query(idUsuarioDireccion)
+        for direcciones in filtro:
+            print(direcciones.idDireccion)
+            direcciones = Direcciones.find_by_id(direcciones.idDireccion)
+            direcciones.delete_from_db()
 
         for direcciones in data['direcciones']:
 
@@ -144,10 +159,12 @@ class editarUsuarioComprador(Resource):
             try:
                 CrearDireccion = Direcciones(idUsuario, direccion, latitud, longitud)
                 print(CrearDireccion)
-                db.session.add(CrearDireccion)
-                db.session.commit()
+                CrearDireccion.save()
+
                 print('Direcciones agregadas correctamente')
-            except:
+            except Exception as ex:
+                raise ObjectNotFound(ex)
+
                 print('Error al agregar direccion')
 
         return ('Usuario editado correctamente')

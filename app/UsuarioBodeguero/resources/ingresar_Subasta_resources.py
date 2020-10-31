@@ -14,9 +14,9 @@ task_schema = TaskSchema()
 class obtenerPosiblesSubastasBodeguero(Resource):
     def get(self):
         try:
-
+            idUsuario = request.json['idUsuario']
             filtro = Subastas.get_join_filter()
-
+            #print(filtro)
             result = task_schema.dump(filtro, many=True)
 
             return {"Resultado": result}, 200
