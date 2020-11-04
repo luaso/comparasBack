@@ -8,7 +8,7 @@ from app.usuarioBodeguero.resources.mis_Subastas_Lista_resources import misSubas
 
 
 usuarioBodeguero = Blueprint('usuarioBodeguero', __name__)
-api = Api(UsuarioBodeguero)
+api = Api(usuarioBodeguero)
 
 api.add_resource(obtenerProductosSubasta, '/api/obtenerProductosSubasta/', endpoint='obtenerProductosSubasta')
 api.add_resource(guardarPuja, '/api/guardarPuja/', endpoint='guardarPuja')

@@ -8,7 +8,7 @@ from app.inicioSesion.resources.sesion_Usuario_resources import loginUsuario
 inicioSesion = Blueprint('inicioSesion', __name__)
 
 
-api = Api(InicioSesion)
+api = Api(inicioSesion)
 
 api.add_resource(obtenerRol, '/api/ObtenerRol/', endpoint='ObtenerRol')
 api.add_resource(guardarUsuario, '/api/GuardarUsuario/', endpoint='GuardarUsuario')

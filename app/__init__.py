@@ -4,10 +4,11 @@ from config.configuration import DevelopmentConfig
 
 from app.common.error_handling import ObjectNotFound, AppErrorBaseClass, PruebaExeption
 from app.db import db
-from app.administrador.api_v1.routes import Administrador
-from app.usuarioComun.api_v1.routes import UsuarioComun
-from app.inicioSesion.api_v1.routes import InicioSesion
-from app.usuarioBodeguero.api_v1.routes import UsuarioBodeguero
+from app.administrador.api_v1.routes import administrador
+from app.usuarioComun.api_v1.routes import usuarioComun
+from app.inicioSesion.api_v1.routes import inicioSesion
+from app.usuarioBodeguero.api_v1.routes import usuarioBodeguero
+from app.usuarioComprador.api_v1.routes import usuarioComprador
 
 from .ext import ma, migrate
 

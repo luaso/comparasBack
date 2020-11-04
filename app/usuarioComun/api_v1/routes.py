@@ -7,7 +7,7 @@ from app.usuarioComun.resources.crear_Lista_SubastaProductos_resources import bu
 
 usuarioComun = Blueprint('usuarioComun', __name__)
 
-api = Api(UsuarioComun)
+api = Api(usuarioComun)
 api.add_resource(ProductoList, '/api/producto/', endpoint='producto_list_resource')
 api.add_resource(Producto, '/api/producto/<string:nombreProducto>', endpoint='producto_resource')
 api.add_resource(subastasEjecucion, '/api/Subasta', endpoint='crearSubasta_resource')
