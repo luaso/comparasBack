@@ -6,7 +6,7 @@ from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 from app import ObjectNotFound
-from app.InicioSesion.models.mantenimiento_Usuario_model import Rol, Usuarios, Direcciones
+from app.inicioSesion.models.mantenimiento_Usuario_model import Rol, Usuarios, Direcciones
 
 db = SQLAlchemy()
 
