@@ -1,11 +1,11 @@
 from flask import Blueprint
 from flask_restful import Api
 
-from app.UsuarioComun.resources.productos_Buscar_Listar_resources import ProductoList, Producto
-from app.UsuarioComun.resources.crear_Lista_Subasta_resources import subastasEjecucion
-from app.UsuarioComun.resources.crear_Lista_SubastaProductos_resources import buscarProductosSubastaEjecucion, compararProductosSupermercados
+from app.usuarioComun.resources.productos_Buscar_Listar_resources import ProductoList, Producto
+from app.usuarioComun.resources.crear_Lista_Subasta_resources import subastasEjecucion
+from app.usuarioComun.resources.crear_Lista_SubastaProductos_resources import buscarProductosSubastaEjecucion, compararProductosSupermercados
 
-UsuarioComun = Blueprint('UsuarioComun', __name__)
+usuarioComun = Blueprint('usuarioComun', __name__)
 
 api = Api(UsuarioComun)
 api.add_resource(ProductoList, '/api/producto/', endpoint='producto_list_resource')

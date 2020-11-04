@@ -1,8 +1,8 @@
 from flask import request
 from flask_restful import Resource
 from sqlalchemy import or_
-from app.UsuarioComun.schemas.productos_Buscar_Listar_schema import ProductosBuscarListarSchema
-from app.UsuarioComun.models.productos_Buscar_Listar_model import Productos, Categorias, Sub_Categorias, Tipos_Productos
+from app.usuarioComun.schemas.productos_Buscar_Listar_schema import ProductosBuscarListarSchema
+from app.usuarioComun.models.productos_Buscar_Listar_model import Productos, Categorias, Sub_Categorias, Tipos_Productos
 from app import ObjectNotFound
 
 productos_Buscar_Listar_schema = ProductosBuscarListarSchema()

@@ -1,8 +1,8 @@
 from flask import request
 from flask_restful import Resource
 from sqlalchemy import or_
-from app.UsuarioComun.schemas.ver_Subastas_schema import TaskSchema
-from app.UsuarioComun.models.ver_Subastas_model import Subastas, Usuarios, Estado
+from app.usuarioComprador.schemas.ver_Subastas_schema import TaskSchema
+from app.usuarioComprador.models.ver_Subastas_model import Subastas, Usuarios, Estado
 from app import ObjectNotFound
 
 

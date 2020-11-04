@@ -1,13 +1,13 @@
 from flask import Blueprint
 from flask_restful import Api
 
-from app.UsuarioBodeguero.resources.aplicar_Subasta_resources import obtenerProductosSubasta, guardarPuja
-from app.UsuarioBodeguero.resources.detalle_Subasta_resources import detallePujasSubasta, obtenerMiOferta, guardarNuevaPuja
-from app.UsuarioBodeguero.resources.ingresar_Subasta_resources import obtenerPosiblesSubastasBodeguero
-from app.UsuarioBodeguero.resources.mis_Subastas_Lista_resources import misSubastasBodeguero
+from app.usuarioBodeguero.resources.aplicar_Subasta_resources import obtenerProductosSubasta, guardarPuja
+from app.usuarioBodeguero.resources.detalle_Subasta_resources import detallePujasSubasta, obtenerMiOferta, guardarNuevaPuja
+from app.usuarioBodeguero.resources.ingresar_Subasta_resources import obtenerPosiblesSubastasBodeguero
+from app.usuarioBodeguero.resources.mis_Subastas_Lista_resources import misSubastasBodeguero
 
 
-UsuarioBodeguero = Blueprint('UsuarioBodeguero', __name__)
+usuarioBodeguero = Blueprint('usuarioBodeguero', __name__)
 api = Api(UsuarioBodeguero)
 
 api.add_resource(obtenerProductosSubasta, '/api/obtenerProductosSubasta/', endpoint='obtenerProductosSubasta')

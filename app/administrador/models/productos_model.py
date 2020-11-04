@@ -2,8 +2,29 @@ from app.db import db, BaseModelMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 from sqlalchemy import or_
-
+from sqlalchemy.sql.expression import func
 db = SQLAlchemy()
+
+
+class Parametros(db.Model, BaseModelMixin):
+    __tablename__="PARAMETROS"
+    idParametros = db.Column(db.Integer, primary_key=True)
+    Descripcion = db.Column(db.String)
+    Estado = db.Column(db.Integer)
+    FecCrea = db.Column(db.Date)
+    FecModifica = db.Column(db.Date)
+    UsuCrea = db.Column(db.Integer)
+    UsuModifica = db.Column(db.Integer)
+    Valor = db.Column(db.String)
+
+    @classmethod
+    def get(self, idParametros):
+
+       filtro =  db.session.query(Parametros).filter(Parametros.idParametros == idParametros)
+
+       return filtro
+
+
 class Supermercados(db.Model, BaseModelMixin):
     __tablename__="SUPERMERCADOS"
     idSupermercado = db.Column(db.Integer, primary_key=True)
@@ -67,6 +88,29 @@ class Productos(db.Model, BaseModelMixin):
 
         # print(filtro)
         return filtro
+
+    @classmethod
+    def get(self, idProducto):
+        filtro = db.session.query(Productos).filter(Productos.idProducto == idProducto)
+
+        return filtro
+
+    @classmethod
+    def get_Max(self):
+        filtro = Productos.query.filter(Productos.idProducto == db.session.query(func.max(Productos.idProducto)))
+        return filtro
+
+    def __init__(self, idTipoProducto, nombreProducto, contenidoProducto, Imagen, codProducto, marca, presentacion,unidadMedida, cantidadPaquete):
+        #self.idProducto = idProducto
+        self.idTipoProducto = idTipoProducto
+        self.nombreProducto = nombreProducto
+        self.contenidoProducto = contenidoProducto
+        self.Imagen = Imagen
+        self.codProducto = codProducto
+        self.marca = marca
+        self.presentacion = presentacion
+        self.unidadMedida = unidadMedida
+        self.cantidadPaquete = cantidadPaquete
 
 class Productos_Supermercados(db.Model, BaseModelMixin):
     __tablename__ = "PRODUCTOS_SUPERMERCADOS"

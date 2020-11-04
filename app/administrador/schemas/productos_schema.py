@@ -9,7 +9,18 @@ class TaskSchema(ma.Schema):
                   'Productos_Supermercados.precioRegular',
                   'Categorias.nombreCategoria',
                   'Supermercados.nombreSupermercado',
-                  'nombreProducto')
+                  'nombreProducto',
+                  'idProducto',
+                  'idTipoProducto',
+                  'nombreProducto',
+                  'contenidoProducto',
+                  'Imagen',
+                  'codProducto',
+                  'marca',
+                  'presentacion',
+                  'unidadMedida',
+                  'cantidadPaquete',
+                  'Valor')
 
 
 class TaskSchema2(ma.Schema):

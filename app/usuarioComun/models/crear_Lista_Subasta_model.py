@@ -20,7 +20,7 @@ class Sub_Categorias(db.Model, BaseModelMixin):
     idCategoria = db.Column(db.Integer, db.ForeignKey(Categorias.idCategoria), nullable=False)
     categoria = db.relationship('Tipos_Productos', backref='Sub_Categorias', lazy=True)
 
-class Tipos_Productos(db.Model, BaseModelMixin):
+class Tipos_Productos(db.Model, BaseModelaaMixin):
     __tablename__= "TIPOS_PRODUCTOS"
     idTipoProducto = db.Column(db.Integer, primary_key=True)
     nombreProducto = db.Column(db.String)

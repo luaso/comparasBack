@@ -5,9 +5,9 @@ from config.configuration import DevelopmentConfig
 from app.common.error_handling import ObjectNotFound, AppErrorBaseClass, PruebaExeption
 from app.db import db
 from app.administrador.api_v1.routes import Administrador
-from app.UsuarioComun.api_v1.routes import UsuarioComun
-from app.InicioSesion.api_v1.routes import InicioSesion
-from app.UsuarioBodeguero.api_v1.routes import UsuarioBodeguero
+from app.usuarioComun.api_v1.routes import UsuarioComun
+from app.inicioSesion.api_v1.routes import InicioSesion
+from app.usuarioBodeguero.api_v1.routes import UsuarioBodeguero
 
 from .ext import ma, migrate
 
@@ -44,10 +44,11 @@ def create_app(config):
     app.url_map.strict_slashes = False
 
     # Registra los blueprints
-    app.register_blueprint(Administrador)
-    app.register_blueprint(UsuarioComun)
-    app.register_blueprint(InicioSesion)
-    app.register_blueprint(UsuarioBodeguero)
+    app.register_blueprint(administrador)
+    app.register_blueprint(usuarioComun)
+    app.register_blueprint(inicioSesion)
+    app.register_blueprint(usuarioBodeguero)
+    app.register_blueprint(usuarioComprador)
 
 
     # Registra manejadores de errores personalizados

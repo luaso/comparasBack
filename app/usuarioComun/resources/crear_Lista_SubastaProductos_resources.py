@@ -1,7 +1,7 @@
 from flask_restful import Api, Resource
 from sqlalchemy import or_
-from app.UsuarioComun.models.crear_Lista_SubastaProductos_model import Supermercados, Subastas,Productos,Productos_Supermercados,Subastas_Productos
-from app.UsuarioComun.schemas.crear_Lista_SubastaProductos_schema import TaskSchema
+from app.usuarioComun.models.crear_Lista_SubastaProductos_model import Supermercados, Subastas,Productos,Productos_Supermercados,Subastas_Productos
+from app.usuarioComun.schemas.crear_Lista_SubastaProductos_schema import TaskSchema
 from datetime import datetime
 from app import ObjectNotFound
 from flask import Flask, request, jsonify
