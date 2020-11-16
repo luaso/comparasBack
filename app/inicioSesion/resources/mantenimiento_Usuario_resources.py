@@ -98,10 +98,7 @@ class buscarUsuario(Resource):
     def get(seft, idUsuario):
         print('prueba entrada get')
         task = Usuarios.query.get(idUsuario)
-        filtro = db.session.query(Usuarios, Direcciones, Rol).\
-                 outerjoin(Direcciones, Usuarios.idUsuario == Direcciones.idUsuario). \
-                 outerjoin(Rol, Usuarios.idRol == Rol.idRol). \
-                 filter(Usuarios.idUsuario == idUsuario).all()
+        filtro = Usuarios.get_buscar_usuario(idUsuario)
         #print(filtro)
 
         result = rolSchema.dump(filtro, many=True)

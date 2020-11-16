@@ -60,6 +60,14 @@ class Usuarios(db.Model, BaseModelMixin):
         filtro = Usuarios.query.get(idUsuario)
         return filtro
 
+    @classmethod
+    def get_buscar_usuario(self, idUsuario):
+        filtro = db.session.query(Usuarios, Direcciones, Rol).\
+                 outerjoin(Direcciones, Usuarios.idUsuario == Direcciones.idUsuario). \
+                 outerjoin(Rol, Usuarios.idRol == Rol.idRol). \
+                 filter(Usuarios.idUsuario == idUsuario).all()
+        return  filtro
+
 class Direcciones(db.Model, BaseModelMixin):
     __tablename__="DIRECCIONES"
     idDireccion = db.Column(db.Integer, primary_key=True)
