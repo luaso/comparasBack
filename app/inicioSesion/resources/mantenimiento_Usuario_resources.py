@@ -1,3 +1,5 @@
+#pip install passlib
+from passlib.hash import sha256_crypt
 from flask_restful import Api, Resource
 from datetime import datetime
 from app import ObjectNotFound
@@ -8,7 +10,7 @@ from sqlalchemy import Column, Integer, String
 from app import ObjectNotFound
 from app.inicioSesion.models.mantenimiento_Usuario_model import Rol, Usuarios, Direcciones
 from app.inicioSesion.schemas.mantenimiento_Usuario_schema import RolSchema
-
+import bcrypt
 
 db = SQLAlchemy()
 
@@ -43,20 +45,31 @@ class guardarUsuario(Resource):
             telefono = usuarios['telefono']
             celular = usuarios['celular']
             email = usuarios['email']
+
+            ###############################
+            #Conversión de contraseña
             password = usuarios['password']
+
+            #password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+            #print('Contraseña creada', password)
+
+            password = sha256_crypt.encrypt(password)
+            print(password)
+            print(sha256_crypt.verify("password", password))
+            ###############################
+
             imagen = usuarios['imagen']
 
             CrearUsuario = Usuarios(nombreUsuario, apellidoPatUsuario, apellidoMatUsuario, idRol, Ruc, razonSocial,
                                     nombreComercial, codigoPostalPais, telefono, celular, email, password, imagen)
             print(CrearUsuario)
             try:
-                #db.session.add(CrearUsuario)
-                #db.session.commit()
+
                 CrearUsuario.save()
                 idUsuarioFK = CrearUsuario.idUsuario
                 print('Usuario agregado correctamente')
-            except:
-                print('Error al agregar usuario')
+            except Exception as ex:
+                raise ObjectNotFound(ex)
 
         for direcciones in data['direcciones']:
             idUsuario = idUsuarioFK

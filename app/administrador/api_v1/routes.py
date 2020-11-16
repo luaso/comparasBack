@@ -4,9 +4,9 @@ from flask_restful import Api
 from app.administrador.resources.categorias_resource import Categoria, CategoriaList
 from app.administrador.resources.supermercados_resources import Supermercado, SupermercadoList
 from app.administrador.resources.productos_resources import obtenerProductosTotal, obtenerTipoProduto, guardarproductoNuevo,\
-    mostrarProductoSeleccionado,mostrarParametros, editarProducto
-
-
+    mostrarProductoSeleccionado,mostrarParametros, editarProducto, eliminarProducto
+from app.administrador.resources.parametros_resources import guardarParametro, obtenerParametro
+from app.administrador.resources.productos_supermercados_resources import obtenerProductosSupermercado
 administrador = Blueprint('administrador', __name__)
 
 
@@ -23,3 +23,8 @@ api.add_resource(guardarproductoNuevo, '/api/guardarproductoNuevo/', endpoint='g
 api.add_resource(mostrarProductoSeleccionado, '/api/mostrarProductoSeleccionado/', endpoint='mostrarProductoSeleccionado')
 api.add_resource(mostrarParametros, '/api/mostrarParametros/', endpoint='mostrarParametros')
 api.add_resource(editarProducto, '/api/editarProducto/', endpoint='editarProducto')
+api.add_resource(eliminarProducto, '/api/eliminarProducto/', endpoint='eliminarProducto')
+api.add_resource(obtenerParametro, '/api/obtenerParametro/', endpoint='obtenerParametro')
+api.add_resource(guardarParametro, '/api/guardarParametro/', endpoint='guardarParametro')
+api.add_resource(obtenerProductosSupermercado, '/api/obtenerProductosSupermercado/', endpoint='obtenerProductosSupermercado')
+

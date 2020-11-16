@@ -19,7 +19,7 @@ class Rol(db.Model):
 
 
 
-class Usuarios(db.Model):
+class Usuarios(db.Model, BaseModelMixin):
     __tablename__ = "USUARIOS"
     idUsuario = db.Column(db.Integer, primary_key=True)
     nombreUsuario = db.Column(db.String)
@@ -33,9 +33,11 @@ class Usuarios(db.Model):
     telefono = db.Column(db.String)
     celular = db.Column(db.String)
     email = db.Column(db.String)
-    password = db.Column(db.String)
+    password = db.Column(db.Text)
     imagen = db.Column(db.String)
     direcciones = db.relationship('Direcciones', backref='Usuarios', lazy=True)
+
+
 
     def __init__(self, nombreUsuario,apellidoPatUsuario,apellidoMatUsuario,idRol,Ruc,razonSocial,nombreComercial,codigoPostalPais,telefono,celular,email,password,imagen):
         self.nombreUsuario = nombreUsuario
@@ -52,6 +54,10 @@ class Usuarios(db.Model):
         self.password = password
         self.imagen = imagen
 
+    def get_dato(email):
+        filtro = db.session.query(Usuarios).filter(Usuarios.email == email)
+
+        return filtro
 class Direcciones(db.Model):
     __tablename__="DIRECCIONES"
     idDireccion = db.Column(db.Integer, primary_key=True)

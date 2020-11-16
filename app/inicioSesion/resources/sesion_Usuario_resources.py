@@ -1,3 +1,5 @@
+#pip install passlib
+from passlib.hash import sha256_crypt
 from flask_restful import Api, Resource
 from datetime import datetime
 from app import ObjectNotFound
@@ -6,26 +8,29 @@ from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 from app import ObjectNotFound
-from app.inicioSesion.models.mantenimiento_Usuario_model import Rol, Usuarios, Direcciones
-
+from app.inicioSesion.models.sesion_Usuario_model import Rol, Usuarios, Direcciones
+import bcrypt
 db = SQLAlchemy()
 
 
 
 class loginUsuario(Resource):
     def post(self):
-        email = request.json['email']
-        password = request.json['password']
         try:
-            task = db.session.query(Usuarios).filter_by(email=email).first()
+            email = request.json['email']
+            password = request.json['password']
+            psw = ''
+            task = Usuarios.get_dato(email)
+            for dato in task:
+                psw = dato.password
+                idUsuario = dato.idUsuario
+                idRol = dato.idRol
             repuesta = '0'
-            if task.password == password:
-                repuesta = 'ok'
-                idusuario = task.idUsuario
-                idRol = task.idRol
+            print('Validando pass text y pass cod')
+            print(sha256_crypt.verify(password, psw))
+            if sha256_crypt.verify(password, psw):
+                return {"respuesta": "ok", "idUsuario": idUsuario, "idRol": idRol}
             else:
-                repuesta = 'nok'
-                idusuario = 'Usuario no encontrado'
-            return {"respuesta": repuesta, "idUsuario": idusuario, "idRol": idRol}
-        except:
-            return {"respuesta": "Correo no encontrado"}
+                return {"respuesta": "no", "idUsuario": 0, "idRol": 0}
+        except Exception as ex:
+            raise ObjectNotFound(ex)

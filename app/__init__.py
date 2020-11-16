@@ -9,12 +9,14 @@ from app.usuarioComun.api_v1.routes import usuarioComun
 from app.inicioSesion.api_v1.routes import inicioSesion
 from app.usuarioBodeguero.api_v1.routes import usuarioBodeguero
 from app.usuarioComprador.api_v1.routes import usuarioComprador
+from flask_cors import CORS
 
 from .ext import ma, migrate
 
 
 def create_app(config):
     app = Flask(__name__)
+    CORS(app)
     #app.config.from_object(DevelopmentConfig)
 
     #inicializacion de la configuracion(cambiar)

@@ -33,6 +33,10 @@ class Supermercados(db.Model, BaseModelMixin):
     urlSupermercado = db.Column(db.String)
     productos_supermercado = db.relationship('Productos_Supermercados', backref='Supermercados', lazy=True)
 
+    @classmethod
+    def get_Supermercado(self, nombreSupermercado):
+        filtro = Supermercados.query.filter(Supermercados.nombreSupermercado.ilike('%' + nombreSupermercado + '%'))
+        return filtro
 
 class Categorias(db.Model, BaseModelMixin):
     __tablename__= "CATEGORIAS"
@@ -115,6 +119,13 @@ class Productos(db.Model, BaseModelMixin):
         filtro = Productos.query.filter(Productos.idProducto == db.session.query(func.max(Productos.idProducto)))
         return filtro
 
+    @classmethod
+    def get_productos(self, nombreProducto):
+        filtro = Productos.query.filter(or_(Productos.nombreProducto.ilike('%' + nombreProducto + '%'),
+                                            Productos.contenidoProducto.ilike('%' + nombreProducto + '%')))
+        return filtro
+
+
     def __init__(self, idTipoProducto, nombreProducto, contenidoProducto, Imagen, codProducto, marca, presentacion,unidadMedida, cantidadPaquete):
         #self.idProducto = idProducto
         self.idTipoProducto = idTipoProducto
@@ -137,3 +148,35 @@ class Productos_Supermercados(db.Model, BaseModelMixin):
     precioOnline = db.Column(db.Float)
     precioTarjeta = db.Column(db.Float)
     nombreTarjeta = db.Column(db.String)
+
+    #Guardar
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+
+    #Eliminar
+    def delete_pro(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    #Filtrar por ID
+    @classmethod
+    def get_query(self, idProductoSupermercado):
+        filtro = Productos_Supermercados.query.get(idProductoSupermercado)
+        return filtro
+
+    #Obtener todos los Registros
+    @classmethod
+    def get(self):
+        filtro = db.session.query(Productos_Supermercados)
+        return filtro
+
+    def __init__(self, idSupermercado, idProducto, fechaProducto, precioRegular, precioOnline, precioTarjeta, nombreTarjeta):
+        # self.idProducto = idProducto
+        self.idSupermercado = idSupermercado
+        self.idProducto = idProducto
+        self.fechaProducto = fechaProducto
+        self.precioRegular = precioRegular
+        self.precioOnline = precioOnline
+        self.precioTarjeta = precioTarjeta
+        self.nombreTarjeta = nombreTarjeta
