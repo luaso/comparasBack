@@ -97,7 +97,7 @@ class guardarUsuario(Resource):
 class buscarUsuario(Resource):
     def get(seft, idUsuario):
         print('prueba entrada get')
-        task = Usuarios.query.get(idUsuario)
+        #task = Usuarios.query.get(idUsuario)
         filtro = Usuarios.get_buscar_usuario(idUsuario)
         #print(filtro)
 
