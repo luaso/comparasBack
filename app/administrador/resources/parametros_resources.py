@@ -84,3 +84,15 @@ class eliminarParametro(Resource):
         idParametros = request.json['idParametros']
         parametro = Parametros.get(idParametros)
         parametro.delete_pro()
+
+
+class mostrarParametrosTotal(Resource):
+    def get(self):
+        try:
+
+            filtro =  Parametros.get_all()
+            result = task_schema.dump(filtro, many=True)
+            return {"Parametro": result}, 200
+
+        except Exception as ex:
+            raise ObjectNotFound(ex)

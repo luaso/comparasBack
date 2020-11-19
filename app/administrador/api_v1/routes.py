@@ -5,7 +5,7 @@ from app.administrador.resources.categorias_resource import Categoria, Categoria
 from app.administrador.resources.supermercados_resources import Supermercado, SupermercadoList
 from app.administrador.resources.productos_resources import obtenerProductosTotal, obtenerTipoProduto, guardarproductoNuevo,\
     mostrarProductoSeleccionado,mostrarParametros, editarProducto, eliminarProducto
-from app.administrador.resources.parametros_resources import guardarParametro, obtenerParametro
+from app.administrador.resources.parametros_resources import guardarParametro, obtenerParametro, mostrarParametrosTotal
 from app.administrador.resources.productos_supermercados_resources import obtenerProductosSupermercado
 administrador = Blueprint('administrador', __name__)
 
@@ -27,4 +27,5 @@ api.add_resource(eliminarProducto, '/api/eliminarProducto/', endpoint='eliminarP
 api.add_resource(obtenerParametro, '/api/obtenerParametro/', endpoint='obtenerParametro')
 api.add_resource(guardarParametro, '/api/guardarParametro/', endpoint='guardarParametro')
 api.add_resource(obtenerProductosSupermercado, '/api/obtenerProductosSupermercado/', endpoint='obtenerProductosSupermercado')
+api.add_resource(mostrarParametrosTotal, '/api/mostrarParametrosTotal/', endpoint='mostrarParametrosTotal')
 

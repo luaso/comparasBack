@@ -18,6 +18,11 @@ class Parametros(db.Model, BaseModelMixin):
     Valor = db.Column(db.String)
 
 
+    @classmethod
+    def get_all(self):
+        filtro = db.session.query(Parametros)
+        return filtro
+
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
