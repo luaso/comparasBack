@@ -68,3 +68,4 @@ class eliminarTiposproductos(Resource):
         idTipoProducto = request.json['idTipoProducto']
         tipos_Productos = Tipos_Productos.get(idTipoProducto)
         tipos_Productos.delete_pro()
+

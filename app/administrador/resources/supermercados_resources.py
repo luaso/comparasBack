@@ -82,3 +82,14 @@ class Supermercado(Resource):
             raise ObjectNotFound('error al agregar a la BD')
         result = supermercado_schema.dump(supermercado)
         return {"supermercado": result}, 201
+
+class SupermercadoBuscar(Resource):
+    def get(self):
+        try:
+            nombreSupermercado = request.json['nombreSupermercado']
+            filtro = Supermercados.get_filter(nombreSupermercado)
+            result = supermercado_schema.dump(filtro, many=True)
+            return {"Supermercado": result}, 200
+
+        except Exception as ex:
+            raise ObjectNotFound(ex)

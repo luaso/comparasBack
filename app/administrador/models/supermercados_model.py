@@ -39,3 +39,8 @@ class Supermercados(db.Model, BaseModelMixin):
     def find_by_id(cls, id):
         print("entro a find_by_id")
         return cls.query.get(id)
+
+    @classmethod
+    def get_filter(self, nombreSupermercado):
+        filtro = Supermercados.query.filter(Supermercados.nombreSupermercado.ilike('%' + nombreSupermercado + '%'))
+        return filtro
