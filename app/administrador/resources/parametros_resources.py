@@ -45,7 +45,7 @@ class guardarParametro(Resource):
                 return 'Parámetro guardaro', 200
             except Exception as ex:
                 raise ObjectNotFound(ex)
-class editarParámetro(Resource):
+class editarParametro(Resource):
     def put(self):
         parametros = request.get_json()
         for datos in parametros['Parametro']:
@@ -81,9 +81,13 @@ class editarParámetro(Resource):
 
 class eliminarParametro(Resource):
     def delete(self):
-        idParametros = request.json['idParametros']
-        parametro = Parametros.get(idParametros)
-        parametro.delete_pro()
+        try:
+            idParametros = request.json['idParametros']
+            parametro = Parametros.get_query(idParametros)
+            parametro.delete_parametro()
+            return "Parámetro eliminado"
+        except Exception as ex:
+            raise ObjectNotFound(ex)
 
 
 class mostrarParametrosTotal(Resource):
