@@ -48,6 +48,7 @@ class crearSubasta(Resource):
 
         CrearSubasta.fechaSubasta = fechaSubasta
         CrearSubasta.idDireccion = idDireccion
-        #db.session.commit()
+        CrearSubasta.save_to_db()
+
 
         return {"Respuesta": 'Se creo la subasta correctamente'}

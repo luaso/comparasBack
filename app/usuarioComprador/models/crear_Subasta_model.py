@@ -106,6 +106,10 @@ class Subastas(db.Model, BaseModelMixin):
 
         return filtro
 
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+
     def __init__(self, idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, idDireccion, fechaSubasta):
         self.idUsuario = idUsuario
         self.idEstado = idEstado
