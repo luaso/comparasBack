@@ -11,15 +11,15 @@ class TaskSchema(ma.Schema):
                   'Supermercados.nombreSupermercado',
                   'nombreProducto',
                   'idProducto',
-                  'idTipoProducto',
+                  'Productos.idTipoProducto',
                   'nombreProducto',
                   'contenidoProducto',
-                  'Imagen',
+                  'Productos.Imagen',
                   'codProducto',
-                  'marca',
-                  'presentacion',
-                  'unidadMedida',
-                  'cantidadPaquete',
+                  'Productos.marca',
+                  'Productos.presentacion',
+                  'Productos.unidadMedida',
+                  'Productos.cantidadPaquete',
                   'Valor')
 
 
