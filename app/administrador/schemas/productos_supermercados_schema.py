@@ -26,4 +26,14 @@ class TaskSchema(ma.Schema):
                     'presentacion',
                     'unidadMedida',
                     'cantidadPaquete',
-                    'productos_supermercado')
+                    'productos_supermercado',
+                    'Productos_Supermercados.idProductoSupermercado',
+                    'Productos_Supermercados.idSupermercado',
+                    'Productos_Supermercados.idProducto',
+                    'Productos_Supermercados.fechaProducto',
+                    'Productos_Supermercados.precioRegular',
+                    'Productos_Supermercados.precioOnline',
+                    'Productos_Supermercados.precioTarjeta',
+                    'Productos_Supermercados.nombreTarjeta',
+                    'Productos.nombreProducto',
+                    'Supermercados.nombreSupermercado')

@@ -168,7 +168,11 @@ class Productos_Supermercados(db.Model, BaseModelMixin):
     #Obtener todos los Registros
     @classmethod
     def get(self):
-        filtro = db.session.query(Productos_Supermercados)
+        #filtro = db.session.query(Productos_Supermercados)
+
+        filtro = db.session.query(Productos_Supermercados, Productos, Supermercados).\
+                 join(Productos_Supermercados, Productos.idProducto == Productos_Supermercados.idProducto). \
+                 join(Supermercados, Productos_Supermercados.idSupermercado == Supermercados.idSupermercado)
         return filtro
 
     def __init__(self, idSupermercado, idProducto, fechaProducto, precioRegular, precioOnline, precioTarjeta, nombreTarjeta):
