@@ -110,8 +110,7 @@ class editarUsuarioComprador(Resource):
     def put(seft):
         data = request.get_json()
         idUsuarioDireccion = 0
-        print("datos entrada")
-        print(data['Datos'])
+
 
 
         for usuario in data['Datos']:
@@ -119,7 +118,7 @@ class editarUsuarioComprador(Resource):
             nombreUsuario = usuario['nombreUsuario']
             apellidoPatUsuario = usuario['apellidoPatUsuario']
             apellidoMatUsuario = usuario['apellidoMatUsuario']
-            idRol = usuario['tipoUsuario']
+            idRol = 3
             Ruc = usuario['Ruc']
             razonSocial = usuario['razonSocial']
             nombreComercial = usuario['nombreComercial']
