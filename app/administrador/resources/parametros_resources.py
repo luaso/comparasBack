@@ -5,6 +5,7 @@ from app.administrador.schemas.parametros_schema import TaskSchema
 from datetime import datetime
 from app import ObjectNotFound
 from flask import Flask, request, jsonify
+from datetime import date
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -31,8 +32,8 @@ class guardarParametro(Resource):
             try:
                 Descripcion = datos['Descripcion']
                 Estado = datos['Estado']
-                FecCrea = datos['FecCrea']
-                FecModifica = datos['FecModifica']
+                FecCrea = date.today()
+                FecModifica = date.today()
                 UsuCrea = datos['UsuCrea']
                 UsuModifica = datos['UsuModifica']
                 Valor = datos['Valor']
@@ -54,8 +55,8 @@ class editarParametro(Resource):
                 idParametros = datos['idParametros']
                 Descripcion = datos['Descripcion']
                 Estado = datos['Estado']
-                FecCrea = datos['FecCrea']
-                FecModifica = datos['FecModifica']
+
+                FecModifica = date.today()
                 UsuCrea = datos['UsuCrea']
                 UsuModifica = datos['UsuModifica']
                 Valor = datos['Valor']
@@ -63,7 +64,7 @@ class editarParametro(Resource):
                 parametroEditar = Parametros.get_query(idParametros)
                 parametroEditar.Descripcion = Descripcion
                 parametroEditar.Estado = Estado
-                parametroEditar.FecCrea = FecCrea
+
                 parametroEditar.FecModifica = FecModifica
                 parametroEditar.UsuCrea = UsuCrea
                 parametroEditar.UsuModifica = UsuModifica
