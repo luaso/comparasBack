@@ -35,6 +35,7 @@ class Producto(Resource):
             raise ObjectNotFound('El producto no existe')
 
         print('=================================================')
+
         result = productos_Buscar_Listar_schema.dump(filtro, many=True)
         print(result)
         print('=================================================')
