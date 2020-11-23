@@ -38,8 +38,13 @@ class Parametros(db.Model, BaseModelMixin):
 
     def get(self, idParametros):
         filtro = db.session.query(Parametros).filter(Parametros.idParametros == idParametros)
+        print(filtro)
 
         return filtro
+
+    def delete_parametro(self):
+        db.session.delete(self)
+        db.session.commit()
 
     def __init__(self, Descripcion, Estado,FecCrea,FecModifica,UsuCrea,UsuModifica,Valor):
         # self.idProducto = idProducto

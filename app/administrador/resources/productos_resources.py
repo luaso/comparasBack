@@ -21,8 +21,21 @@ class obtenerProductosTotal(Resource):
     def get(self):
         try:
             filtro =  Productos.get_joins()
+
+            filtroParam = Parametros.get(2)
+
+            direccion = ''
+
+            for datos in filtroParam:
+                print('impirmir valor')
+                print(datos.Valor)
+                direccion = datos.Valor
+                print('aquí termina')
+
+
             result = task_schema.dump(filtro, many=True)
-            return {"producto": result}, 200
+
+            return {"producto": result, "Parametro": [{ "url": direccion }]}, 200
 
         except Exception as ex:
             raise ObjectNotFound(ex)
@@ -215,8 +228,9 @@ class eliminarProducto(Resource):
                 try:
                     producto.delete_pro()
                     flagRemove = 1
+
                 except Exception as ex:
-                    print('No se pudo eliminar correctamente ')
+                    return 'No se pudo eliminar correctamente '
 
                 if flagRemove == 1:
                     try:
@@ -224,9 +238,9 @@ class eliminarProducto(Resource):
                         direccion = ''
                         imagen = ''
                         flagRemove = 0
-
+                        return 'successful'
                     except Exception as ex:
-                        print('No se encontró imagen o dirección')
+                        return 'No se encontró imagen o dirección'
 
 
 

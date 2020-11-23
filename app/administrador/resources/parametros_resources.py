@@ -5,6 +5,7 @@ from app.administrador.schemas.parametros_schema import TaskSchema
 from datetime import datetime
 from app import ObjectNotFound
 from flask import Flask, request, jsonify
+from datetime import date
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -31,8 +32,8 @@ class guardarParametro(Resource):
             try:
                 Descripcion = datos['Descripcion']
                 Estado = datos['Estado']
-                FecCrea = datos['FecCrea']
-                FecModifica = datos['FecModifica']
+                FecCrea = date.today()
+                FecModifica = date.today()
                 UsuCrea = datos['UsuCrea']
                 UsuModifica = datos['UsuModifica']
                 Valor = datos['Valor']
@@ -45,7 +46,7 @@ class guardarParametro(Resource):
                 return 'Parámetro guardaro', 200
             except Exception as ex:
                 raise ObjectNotFound(ex)
-class editarParámetro(Resource):
+class editarParametro(Resource):
     def put(self):
         parametros = request.get_json()
         for datos in parametros['Parametro']:
@@ -54,18 +55,18 @@ class editarParámetro(Resource):
                 idParametros = datos['idParametros']
                 Descripcion = datos['Descripcion']
                 Estado = datos['Estado']
-                FecCrea = datos['FecCrea']
-                FecModifica = datos['FecModifica']
-                UsuCrea = datos['UsuCrea']
+
+                FecModifica = date.today()
+
                 UsuModifica = datos['UsuModifica']
                 Valor = datos['Valor']
 
                 parametroEditar = Parametros.get_query(idParametros)
                 parametroEditar.Descripcion = Descripcion
                 parametroEditar.Estado = Estado
-                parametroEditar.FecCrea = FecCrea
+
                 parametroEditar.FecModifica = FecModifica
-                parametroEditar.UsuCrea = UsuCrea
+
                 parametroEditar.UsuModifica = UsuModifica
                 parametroEditar.Valor = Valor
 
@@ -81,9 +82,13 @@ class editarParámetro(Resource):
 
 class eliminarParametro(Resource):
     def delete(self):
-        idParametros = request.json['idParametros']
-        parametro = Parametros.get(idParametros)
-        parametro.delete_pro()
+        try:
+            idParametros = request.json['idParametros']
+            parametro = Parametros.get_query(idParametros)
+            parametro.delete_parametro()
+            return "Parámetro eliminado"
+        except Exception as ex:
+            raise ObjectNotFound(ex)
 
 
 class mostrarParametrosTotal(Resource):

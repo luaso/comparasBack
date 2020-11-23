@@ -92,12 +92,9 @@ class Productos(db.Model, BaseModelMixin):
 
     @classmethod
     def get_joins(self):
-        filtro = db.session.query(Categorias, Sub_Categorias, Tipos_Productos, Productos, Productos_Supermercados,Supermercados ). \
-                 outerjoin(Sub_Categorias, Categorias.idCategoria == Sub_Categorias.idCategoria). \
-                 outerjoin(Tipos_Productos, Sub_Categorias.idSubCategorias == Tipos_Productos.idSubCategorias). \
-                 outerjoin(Productos, Tipos_Productos.idTipoProducto == Productos.idTipoProducto). \
-                 outerjoin(Productos_Supermercados, Productos.idProducto == Productos_Supermercados.idProducto). \
-                 outerjoin(Supermercados, Productos_Supermercados.idSupermercado == Supermercados.idSupermercado)
+        filtro = db.session.query(Tipos_Productos, Productos). \
+                 outerjoin(Tipos_Productos, Productos.idTipoProducto == Tipos_Productos.idTipoProducto)
+
 
         # print(filtro)
         return filtro

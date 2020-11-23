@@ -20,6 +20,15 @@ class obtenerTiposProductos(Resource):
         except Exception as ex:
             raise ObjectNotFound(ex)
 
+class obtenerSubCategorias(Resource):
+    def get(self):
+        try:
+            filtro = Sub_Categorias.get_all()
+            result = task_schema.dump(filtro, many=True)
+            return {"Sub_Categorias": result}, 200
+        except Exception as ex:
+            raise ObjectNotFound(ex)
+
 class guardarTiposProductos(Resource):
     def post(self):
         tipos_productos = request.get_json()
@@ -38,6 +47,8 @@ class guardarTiposProductos(Resource):
                 return 'SubCategoria Guardada', 200
             except Exception as ex:
                 raise ObjectNotFound(ex)
+
+
 class editarTiposProductos(Resource):
     def put(self):
         tipos_productos = request.get_json()
