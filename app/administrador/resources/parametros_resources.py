@@ -57,7 +57,7 @@ class editarParametro(Resource):
                 Estado = datos['Estado']
 
                 FecModifica = date.today()
-                UsuCrea = datos['UsuCrea']
+
                 UsuModifica = datos['UsuModifica']
                 Valor = datos['Valor']
 
@@ -66,7 +66,7 @@ class editarParametro(Resource):
                 parametroEditar.Estado = Estado
 
                 parametroEditar.FecModifica = FecModifica
-                parametroEditar.UsuCrea = UsuCrea
+
                 parametroEditar.UsuModifica = UsuModifica
                 parametroEditar.Valor = Valor
 
