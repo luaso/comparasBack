@@ -46,6 +46,11 @@ class Direcciones(db.Model):
     latitud = db.Column(db.String)
     longitud = db.Column(db.String)
 
+    @classmethod
+    def get(self, idUsuario):
+        filtro = db.session.query(Direcciones).filter(Direcciones.idUsuario == idUsuario)
+        return filtro
+
 
 class Categorias(db.Model):
     __tablename__= "CATEGORIAS"

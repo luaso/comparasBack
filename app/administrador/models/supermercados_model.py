@@ -44,3 +44,21 @@ class Supermercados(db.Model, BaseModelMixin):
     def get_filter(self, nombreSupermercado):
         filtro = Supermercados.query.filter(Supermercados.nombreSupermercado.ilike('%' + nombreSupermercado + '%'))
         return filtro
+
+class Parametros(db.Model, BaseModelMixin):
+    __tablename__="PARAMETROS"
+    idParametros = db.Column(db.Integer, primary_key=True)
+    Descripcion = db.Column(db.String)
+    Estado = db.Column(db.Integer)
+    FecCrea = db.Column(db.Date)
+    FecModifica = db.Column(db.Date)
+    UsuCrea = db.Column(db.Integer)
+    UsuModifica = db.Column(db.Integer)
+    Valor = db.Column(db.String)
+
+    @classmethod
+    def get(self, idParametros):
+
+       filtro =  db.session.query(Parametros).filter(Parametros.idParametros == idParametros)
+
+       return filtro

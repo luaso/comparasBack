@@ -111,14 +111,75 @@ class editarUsuarioComprador(Resource):
         data = request.get_json()
         idUsuarioDireccion = 0
 
+        for usuario in data['Datos']:
+            idUsuario = usuario['idUsuario']
+            nombreUsuario = usuario['nombreUsuario']
+            apellidoPatUsuario = usuario['apellidoPatUsuario']
+            apellidoMatUsuario = usuario['apellidoMatUsuario']
+            idRol = usuario['idRol']
+            telefono = usuario['telefono']
+            celular = usuario['celular']
+            email = usuario['email']
+            imagen = usuario['imagen']
 
+            usuarioEditar = Usuarios.get_query(idUsuario)
+            usuarioEditar.nombreUsuario = nombreUsuario
+            usuarioEditar.apellidoPatUsuario = apellidoPatUsuario
+            usuarioEditar.apellidoMatUsuario = apellidoMatUsuario
+            usuarioEditar.idRol = idRol
+            usuarioEditar.telefono = telefono
+            usuarioEditar.celular = celular
+            usuarioEditar.email = email
+            usuarioEditar.imagen = imagen
+            print('Ingresando al save to db')
+            try:
+                usuarioEditar.save_to_db()
+                print('realizado')
+            except Exception as ex:
+                print('error')
+                raise ObjectNotFound(ex)
+            #db.session.commit()
+
+            idUsuarioDireccion = idUsuario
+
+        filtro = Direcciones.get_query(idUsuarioDireccion)
+        for direcciones in filtro:
+            print(direcciones.idDireccion)
+            direcciones = Direcciones.find_by_id(direcciones.idDireccion)
+            direcciones.delete_from_db()
+
+        for direcciones in data['direcciones']:
+
+            idUsuario = idUsuarioDireccion
+            direccion = direcciones['direccion']
+            latitud = direcciones['latitud']
+            longitud = direcciones['longitud']
+
+            print('entrando al try')
+            try:
+                CrearDireccion = Direcciones(idUsuario, direccion, latitud, longitud)
+                print(CrearDireccion)
+                CrearDireccion.save()
+
+                print('Direcciones agregadas correctamente')
+            except Exception as ex:
+                raise ObjectNotFound(ex)
+
+                print('Error al agregar direccion')
+
+        return ('Usuario editado correctamente')
+
+class editarUsuarioBodeguero(Resource):
+    def put(seft):
+        data = request.get_json()
+        idUsuarioDireccion = 0
 
         for usuario in data['Datos']:
             idUsuario = usuario['idUsuario']
             nombreUsuario = usuario['nombreUsuario']
             apellidoPatUsuario = usuario['apellidoPatUsuario']
             apellidoMatUsuario = usuario['apellidoMatUsuario']
-            idRol = 3
+            idRol = usuario['idRol']
             Ruc = usuario['Ruc']
             razonSocial = usuario['razonSocial']
             nombreComercial = usuario['nombreComercial']

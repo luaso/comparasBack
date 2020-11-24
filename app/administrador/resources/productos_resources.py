@@ -1,13 +1,10 @@
-from flask_restful import Api, Resource
-from sqlalchemy import or_
-from app.administrador.models.productos_model import  Productos, Tipos_Productos, Sub_Categorias, Categorias, Parametros
+from flask_restful import Resource
+from app.administrador.models.productos_model import  Productos, Tipos_Productos, Parametros
 from app.administrador.schemas.productos_schema import TaskSchema, TaskSchema2
-from datetime import datetime
 from app import ObjectNotFound
-from flask import Flask, request, jsonify
+from flask import request
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String
-import cv2
+
 import os
 import time
 from os import remove
@@ -158,7 +155,7 @@ class editarProducto(Resource):
             imagen = ''
             try:
                 if cambioImagen == 1 :
-                    print('hola')
+
                     filtro = Parametros.get(2)
 
                     for datos in filtro:
