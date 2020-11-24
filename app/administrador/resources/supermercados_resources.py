@@ -16,7 +16,7 @@ class SupermercadoList(Resource):
         try:
             supermercado = Supermercados.get_all()
 
-            filtroParam = Parametros.get(2)
+            filtroParam = Parametros.get(9)
 
             direccion = ''
 
@@ -36,7 +36,7 @@ class SupermercadoList(Resource):
     def post(self):
         data = request.get_json()
         imagen = request.files['pic']
-        filtro = Parametros.get(2)
+        filtro = Parametros.get(9)
 
         for datos in filtro:
            direccion = datos.Valor
@@ -115,7 +115,7 @@ class Supermercado(Resource):
         imagen = ''
 
         if cambioImagen == 0 :
-            filtro = Parametros.get(2)
+            filtro = Parametros.get(9)
 
             for datos in filtro:
                 print('impirmir valor')
