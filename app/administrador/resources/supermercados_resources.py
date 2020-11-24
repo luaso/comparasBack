@@ -51,6 +51,7 @@ class SupermercadoList(Resource):
             img_path = os.path.join(save_father_path + filename)
             imagen.save(img_path)
             print('cogimos datos de la imagen')
+            return 'Carga de imagen dada'
         except Exception as ex:
             raise ObjectNotFound(ex)
 
@@ -104,7 +105,11 @@ class Supermercado(Resource):
             raise ObjectNotFound(ex)
         print(idSupermercado)
         supermercado = Supermercados.find_by_id(idSupermercado)
+
         print(supermercado)
+
+
+
         if supermercado is None:
             supermercado = Supermercados(data['nombreSupermercado'])
         else:
