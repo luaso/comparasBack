@@ -59,8 +59,8 @@ class SupermercadoList(Resource):
         try:
             #data = request.json['prueba']
             #print(data)
-            nombreSupermercado=request.text['nombreSupermercado']
-            urlSupermercado=request.text['urlSupermercado']
+            nombreSupermercado=request.form['nombreSupermercado']
+            urlSupermercado=request.form['urlSupermercado']
             print('carga de datos de insomnia')
             print(nombreSupermercado)
             print(urlSupermercado)
