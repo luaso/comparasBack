@@ -4,7 +4,7 @@ from sqlalchemy import or_
 from app.usuarioComprador.schemas.crear_Subasta_schema import TaskSchema
 from app.usuarioComprador.models.crear_Subasta_model import Subastas, Usuarios,  Productos, Direcciones
 from app import ObjectNotFound
-
+import datetime
 taskSchema = TaskSchema()
 
 class listasUsuario(Resource):
@@ -38,17 +38,21 @@ class buscarProductos(Resource):
         except Exception as ex:
             raise ObjectNotFound(ex)
 
-class crearSubasta(Resource):
+class crearSubastaLista(Resource):
     def put(self):
-        idSubastaGet = request.json['idSubasta']
-        CrearSubasta = Subastas.query.get(idSubastaGet)
+        try:
+            idSubasta = request.json['idSubasta']
+            CrearSubasta = Subastas.query.get(idSubasta)
+            print(CrearSubasta)
+            fechaSubasta = request.json['Fecha'] + ' ' + request.json['Hora']
+            #fechaSubasta = datetime.datetime.now()
+            print(fechaSubasta)
+            idDireccion = request.json['idDireccion']
 
-        fechaSubasta = request.json['Fecha'] + ' ' + request.json['Hora']
-        idDireccion = request.json['idDireccion']
-
-        CrearSubasta.fechaSubasta = fechaSubasta
-        CrearSubasta.idDireccion = idDireccion
-        CrearSubasta.save_to_db()
-
+            CrearSubasta.fechaSubasta = fechaSubasta
+            CrearSubasta.idDireccion = idDireccion
+            CrearSubasta.save_to_db()
+        except Exception as ex:
+            raise ObjectNotFound(ex)
 
         return {"Respuesta": 'Se creo la subasta correctamente'}

@@ -105,7 +105,7 @@ class Subastas(db.Model, BaseModelMixin):
     nombreSubasta = db.Column(db.String)
     precioIdeal = db.Column(db.Float)
     idDireccion = db.Column(db.Integer)
-    fechaSubasta = db.Column(db.Date)
+    fechaSubasta = db.Column(db.DateTime)
     subastas_productos = db.relationship('Subastas_Productos', backref='Subastas', lazy=True)
 
     @classmethod
