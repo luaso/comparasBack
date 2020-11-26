@@ -105,27 +105,17 @@ class Supermercado(Resource):
         return {'msg': 'Supermercado eliminado con exito'}, 204
 
     def put(self, idSupermercado):
-        data = request.get_json()
-        print(data)
         print("put supermercado")
-        try:
-            supermercado_dict = supermercado_schema.load(data)
-        except Exception as ex:
-            raise ObjectNotFound(ex)
-        print(idSupermercado)
+        nombreSupermercado = request.form['nombreSupermercado']
+        urlSupermercado = request.form['urlSupermercado']
+
+
+
         supermercado = Supermercados.find_by_id(idSupermercado)
+        supermercado.nombreSupermercado = nombreSupermercado
+        supermercado.urlSupermercado = urlSupermercado
 
-        print(supermercado)
-
-
-
-        if supermercado is None:
-            supermercado = Supermercados(data['nombreSupermercado'])
-        else:
-            supermercado.nombreSupermercado = data['nombreSupermercado']
-        print(supermercado)
-
-        cambioImagen = data['cambioImagen']
+        cambioImagen = request.form['cambioImagen']
         imagen = ''
 
         if cambioImagen == 0 :
@@ -153,10 +143,11 @@ class Supermercado(Resource):
                 img_path = os.path.join(save_father_path + filename)
                 imagen.save(img_path)
                 imagen = filename
+                supermercado.imagenSupermercado = imagen
                 print('Se guardo la imagen correctamente')
             except Exception as ex:
                 raise ObjectNotFound(ex)
-            supermercado.imagenSupermercado = imagen
+
         try:
             supermercado.save_to_db()
         except:
