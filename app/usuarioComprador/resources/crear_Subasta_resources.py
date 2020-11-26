@@ -8,11 +8,11 @@ import datetime
 taskSchema = TaskSchema()
 
 class listasUsuario(Resource):
-    def get(self):
+    def get(self, idUsuario):
         try:
 
 
-            idUsuario = request.json['idUsuario']
+            #idUsuario = request.json['idUsuario']
             idEstado = 1
 
 
