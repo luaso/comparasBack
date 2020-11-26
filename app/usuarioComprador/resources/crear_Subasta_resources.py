@@ -10,8 +10,11 @@ taskSchema = TaskSchema()
 class listasUsuario(Resource):
     def get(self):
         try:
+
+
             idUsuario = request.json['idUsuario']
             idEstado = 1
+
 
             filtro = Subastas.get_joins_filter_ubastas_usuarios(idUsuario, idEstado)
             result = taskSchema.dump(filtro, many=True)
