@@ -93,8 +93,8 @@ class Direcciones(db.Model, BaseModelMixin):
     longitud = db.Column(db.String)
 
     @classmethod
-    def get_direcciones(self, idUsuarioGet):
-        filtro = Direcciones.query.filter(Direcciones.idUsuario.in_((idUsuarioGet)))
+    def get_direcciones(self, idUsuario):
+        filtro = Direcciones.query.filter(Direcciones.idUsuario.in_((idUsuario)))
         return filtro
 
 class Subastas(db.Model, BaseModelMixin):
