@@ -34,7 +34,7 @@ class SupermercadoList(Resource):
         return {"supermercados": result, "Parametro": [{ "url": direccion }]}, 200
 
     def post(self):
-        data = request.get_json()
+
         imagen = request.files['pic']
         filtro = Parametros.get(9)
 
@@ -51,27 +51,36 @@ class SupermercadoList(Resource):
             img_path = os.path.join(save_father_path + filename)
             imagen.save(img_path)
             print('cogimos datos de la imagen')
-            return 'Carga de imagen dada'
+            #return 'Carga de imagen dada'
         except Exception as ex:
             raise ObjectNotFound(ex)
 
+
         try:
-            supermercado_dict = supermercado_schema.load(data)
+            #data = request.json['prueba']
+            #print(data)
+            nombreSupermercado=request.text['nombreSupermercado']
+            urlSupermercado=request.text['urlSupermercado']
+            print('carga de datos de insomnia')
+            print(nombreSupermercado)
+            print(urlSupermercado)
+            #nombreSupermercado=request.form["nombreSupermercado"]
+            #urlSupermercado=request.form["urlSupermercado"]
         except Exception as ex:
             raise ObjectNotFound(ex)
 
-        print(supermercado_dict)
-        supermercado = Supermercados(nombreSupermercado=supermercado_dict['nombreSupermercado'],
-                                     imagenSupermercado=filename,
-                                     urlSupermercado=supermercado_dict['urlSupermercado'])
-        print(supermercado)
-        try:
-            supermercado.save()
-        except:
-            raise ObjectNotFound('error al agregar a la BD')
 
-        result = supermercado_schema.dump(supermercado)
-        return {"supermercado": result}, 201
+
+
+        try:
+            superPost = Supermercados(nombreSupermercado, filename, urlSupermercado)
+            superPost.save()
+            return "Datos Cargados"
+        except Exception as ex:
+            raise ObjectNotFound(ex)
+
+        #result = supermercado_schema.dump(superPost)
+
 
 
 class Supermercado(Resource):
