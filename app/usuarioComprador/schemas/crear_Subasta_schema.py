@@ -3,9 +3,8 @@ from app.ext import ma
 
 class TaskSchema(ma.Schema):
     class Meta:
-        fields = ('direccion',
-                  'direccionOpcional1',
-                  'direccionOpcional2',
+        fields = ('idDireccion',
+                  'direccion',
                   'Subastas.idSubasta',
                   'Subastas.idUsuario',
                   'Subastas.idEstado',
@@ -17,6 +16,7 @@ class TaskSchema(ma.Schema):
                   'Subastas_Productos.idProducto',
                   'Subastas_Productos.Cantidad',
                   'Productos.nombreProducto',
+                  'Productos.marca',
                   'idProducto',
                   'idCategoria',
                   'nombreProducto',

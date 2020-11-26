@@ -2,7 +2,7 @@ from flask import request
 from flask_restful import Resource
 from sqlalchemy import or_
 from app.usuarioComprador.schemas.crear_Subasta_schema import TaskSchema
-from app.usuarioComprador.models.ver_Subastas_model import Subastas, Usuarios,  Productos
+from app.usuarioComprador.models.crear_Subasta_model import Subastas, Usuarios,  Productos, Direcciones
 from app import ObjectNotFound
 
 taskSchema = TaskSchema()
@@ -23,7 +23,7 @@ class direccionSubasta(Resource):
     def get(self):
         try:
             idUsuarioGet = request.json['idUsuario']
-            filtro = Usuarios.get_joins_filter_obtener_direcciones(idUsuarioGet)
+            filtro = Direcciones.get_direcciones(idUsuarioGet)
             result = taskSchema.dump(filtro, many=True)
             return {"Direcciones": result}, 200
         except Exception as ex:

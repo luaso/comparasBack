@@ -74,7 +74,6 @@ class Usuarios(db.Model, BaseModelMixin):
     codigoPostalPais = db.Column(db.String)
     telefono = db.Column(db.String)
     celular = db.Column(db.String)
-    direccion = db.Column(db.String)
     email = db.Column(db.String)
     password = db.Column(db.String)
     subastas = db.relationship('Subastas', backref='Usuarios', lazy=True)
@@ -82,6 +81,19 @@ class Usuarios(db.Model, BaseModelMixin):
     @classmethod
     def get_joins_filter_obtener_direcciones(self, idUsuarioGet):
         filtro = Usuarios.query.filter(Usuarios.idUsuario.in_((idUsuarioGet)))
+        return filtro
+
+class Direcciones(db.Model, BaseModelMixin):
+    __tablename__="DIRECCIONES"
+    idDireccion = db.Column(db.Integer, primary_key=True)
+    idUsuario = db.Column(db.Integer,db.ForeignKey(Usuarios.idUsuario), nullable=False)
+    direccion = db.Column(db.String)
+    latitud = db.Column(db.String)
+    longitud = db.Column(db.String)
+
+    @classmethod
+    def get_direcciones(self, idUsuarioGet):
+        filtro = Direcciones.query.filter(Direcciones.idUsuario.in_((idUsuarioGet)))
         return filtro
 
 class Subastas(db.Model, BaseModelMixin):
