@@ -23,10 +23,10 @@ class listasUsuario(Resource):
             raise ObjectNotFound(ex)
 
 class direccionSubasta(Resource):
-    def get(self):
+    def get(self, idUsuario):
         try:
-            idUsuarioGet = request.json['idUsuario']
-            filtro = Direcciones.get_direcciones(idUsuarioGet)
+            #idUsuarioGet = request.json['idUsuario']
+            filtro = Direcciones.get_direcciones(idUsuario)
             result = taskSchema.dump(filtro, many=True)
             return {"Direcciones": result}, 200
         except Exception as ex:
