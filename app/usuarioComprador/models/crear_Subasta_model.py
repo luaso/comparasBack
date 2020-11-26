@@ -1,7 +1,8 @@
 from app.db import db, BaseModelMixin
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
-from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy import or_
+
 
 db = SQLAlchemy()
 ma = Marshmallow()
