@@ -18,10 +18,10 @@ class listasSubastasCreadas(Resource):
             raise ObjectNotFound(ex)
 
 class detalleSubasta(Resource):
-    def get(self):
+    def get(self, idSubasta):
         try:
-            idSubastaGet = request.json['idSubasta']
-            filtro = Subastas.get_joins_filter_Detalle_Subasta(idSubastaGet)
+            #idSubastaGet = request.json['idSubasta']
+            filtro = Subastas.get_joins_filter_Detalle_Subasta(idSubasta)
             result = taskSchema.dump(filtro, many=True)
             return {"producto": result}, 200
         except Exception as ex:
@@ -30,10 +30,19 @@ class seleccionarGanador(Resource):
     def put(self):
         try:
             idSubastaGet = request.json['idSubasta']
-            CrearSubasta = Subastas.query.get(idSubastaGet)
             idUsuarioGanador = request.json['idUsuarioGanador']
-            Subastas.idUsuarioGanador = idUsuarioGanador
-            db.session.commit()
+            ganador = Subastas.query.get(idSubastaGet)
+            ganador.idUsuarioGanador = idUsuarioGanador
+            ganador.save_to_db()
             return {"respuesta": 'Se guardo el ganador correctamente'}
+        except Exception as ex:
+            raise ObjectNotFound(ex)
+class productosSubastaComprador(Resource):
+    def get(self, idSubasta):
+        try:
+            #idSubastaGet = request.json['idSubasta']
+            filtro = Subastas.get_productos_subasta(idSubasta)
+            result = taskSchema.dump(filtro, many=True)
+            return {"producto": result}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)

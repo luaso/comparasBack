@@ -2,6 +2,7 @@ from app.db import db, BaseModelMixin
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy import func, and_
 
 db = SQLAlchemy()
 ma = Marshmallow()
@@ -92,13 +93,31 @@ class Subastas(db.Model, BaseModelMixin):
         return filtro
 
     @classmethod
-    def get_joins_filter_Detalle_Subasta(self, idSubastaGet):
+    def get_joins_filter_Detalle_Subasta(self, idSubasta):
         filtro = db.session.query(Subastas, Subastas_Productos, Productos, Pujas). \
-            outerjoin(Subastas_Productos, Subastas.idSubasta == Subastas_Productos.idSubasta). \
-            outerjoin(Productos, Subastas_Productos.idProducto == Productos.idProducto). \
-            outerjoin(Pujas, Subastas.idSubasta == Pujas.idSubasta). \
-            filter(Subastas.idSubasta == idSubastaGet).all()
+            join(Subastas_Productos, Subastas.idSubasta == Subastas_Productos.idSubasta). \
+            join(Productos, Subastas_Productos.idProducto == Productos.idProducto). \
+            join(Pujas, Subastas.idSubasta == Pujas.idSubasta). \
+            filter(Subastas.idSubasta == idSubasta).all()
+        #subq = db.session.query(Pujas.idSubasta,func.max(Pujas.precioPuja).label('maxprecio')).group_by(Pujas.idSubasta).subquery('t2')
+
+        #query = db.session.query(Pujas).join(subq, and_(Pujas.idSubasta == subq.c.idSubasta,Pujas.precioPuja == subq.c.maxprecio))
+
+
+
         return filtro
+
+    @classmethod
+    def get_productos_subasta(self, idSubasta):
+        filtro = db.session.query(Subastas_Productos, Productos). \
+                 join(Productos, Subastas_Productos.idProducto == Productos.idProducto). \
+                 filter(Subastas_Productos.idSubasta == idSubasta)
+        return filtro
+
+
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
 
     def __init__(self, idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, idDireccion, fechaSubasta):
         self.idUsuario = idUsuario
@@ -123,7 +142,13 @@ class Subastas_Productos(db.Model, BaseModelMixin):
         self.Cantidad = Cantidad
 
 
-
+class Pujas(db.Model, BaseModelMixin):
+    __tablename__ = "PUJAS"
+    idPuja = db.Column(db.Integer, primary_key=True)
+    idSubasta = db.Column(db.Integer, db.ForeignKey(Subastas.idSubasta), nullable=False)
+    idUsuario = db.Column(db.Integer, db.ForeignKey(Usuarios.idUsuario), nullable=False)
+    precioPuja = db.Column(db.Float)
+    fechaPuja = db.Column(db.DateTime)
 
 #Ver subastas
 #@app.route('/api/listasSubastasCreadas/', methods=['GET'])
