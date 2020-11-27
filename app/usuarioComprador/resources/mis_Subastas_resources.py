@@ -1,7 +1,7 @@
 from flask_restful import Api, Resource
 from sqlalchemy import or_
-from app.usuarioBodeguero.models.mis_Subastas_Lista_model import Subastas, Usuarios, Estado, Pujas
-from app.usuarioBodeguero.schemas.mis_Subastas_Lista_schema import TaskSchema
+from app.usuarioComprador.models.mis_Subastas_model import Subastas
+from app.usuarioComprador.schemas.mis_Subastas_schema import TaskSchema
 from datetime import datetime
 from app import ObjectNotFound
 from flask import Flask, request, jsonify
@@ -11,12 +11,12 @@ db = SQLAlchemy()
 
 task_schema = TaskSchema()
 
-class misSubastasBodeguero(Resource):
+class misSubastasComprador(Resource):
     def get(seft, idUsuario):
         try:
             #idUsuario = request.json['idUsuario']
 
-            filtro = Subastas.get_join_filter(idUsuario)
+            filtro = Subastas.get_mis_subastas(idUsuario)
 
 
             result = task_schema.dump(filtro, many=True)

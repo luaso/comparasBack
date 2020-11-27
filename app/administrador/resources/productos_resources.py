@@ -83,15 +83,15 @@ class guardarproductoNuevo(Resource):
         except Exception as ex:
             raise ObjectNotFound(ex)
 
-        idTipoProducto = request.json['idTipoProducto']
-        nombreProducto = request.json['nombreProducto']
-        contenidoProducto = request.json['contenidoProducto']
+        idTipoProducto = request.form['idTipoProducto']
+        nombreProducto = request.form['nombreProducto']
+        contenidoProducto = request.form['contenidoProducto']
         Imagen = filename
         codProducto = 'COD' + str(idProductoMax)
-        marca = request.json['marca']
-        presentacion = request.json['presentacion']
-        unidadMedida = request.json['unidadMedida']
-        cantidadPaquete = request.json['cantidadPaquete']
+        marca = request.form['marca']
+        presentacion = request.form['presentacion']
+        unidadMedida = request.form['unidadMedida']
+        cantidadPaquete = request.form['cantidadPaquete']
         try:
             productos = Productos(idTipoProducto,nombreProducto,contenidoProducto,Imagen,codProducto,marca,presentacion,unidadMedida,cantidadPaquete)
             productos.save()

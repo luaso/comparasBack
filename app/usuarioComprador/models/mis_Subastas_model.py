@@ -9,6 +9,7 @@ class Estado(db.Model):
     __tablename__ = "ESTADO"
     idEstado = db.Column(db.Integer, primary_key=True)
     nombreEstado = db.Column(db.String)
+    codEstado = db.Column(db.String)
     subastas = db.relationship('Subastas', backref='Estado', lazy=True)
 
 
@@ -104,7 +105,12 @@ class Subastas(db.Model):
             filtro = db.session.query(Subastas, Usuarios, Estado). \
                      join(Usuarios, Subastas.idUsuario == Usuarios.idUsuario). \
                      join(Estado, Subastas.idEstado == Estado.idEstado). \
-                     filter(Subastas.idUsuario == idUsuario).all()
+                     filter(Subastas.idUsuario == idUsuario). \
+                     filter(or_(Estado.codEstado == "Cod2",
+                                Estado.codEstado == "Cod3",
+                                Estado.codEstado == "Cod4"))
+            return filtro
+
 
 
     def __init__(self, idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, fechaSubasta):
