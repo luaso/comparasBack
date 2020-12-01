@@ -136,7 +136,7 @@ class mostrarParametros(Resource):
 
 class editarProducto(Resource):
     def put(self):
-        data = request.get_json()
+        #data = request.get_json()
         imagen=''
 
 
