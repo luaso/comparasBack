@@ -19,9 +19,11 @@ from flask_jwt_extended import (
 
 def create_app(config):
     app = Flask(__name__)
+
     db.init_app(app)
     app.config['JWT_SECRET_KEY'] = 'secret'
     jwt = JWTManager(app)
+
     CORS(app)
     #app.config.from_object(DevelopmentConfig)
 
