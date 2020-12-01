@@ -139,38 +139,40 @@ class editarProducto(Resource):
         #data = request.get_json()
         imagen=''
 
+        try:
+            idProducto = request.form['idProducto']
 
-        idProducto = request.form['idProducto']
+            filtroImagen = Productos.get(idProducto)
 
-        filtroImagen = Productos.get(idProducto)
+            for datos in filtroImagen:
+                    print('impirmir valor')
+                    print(datos.Imagen)
+                    imagen = datos.Imagen
+                    print('aquí termina')
 
-        for datos in filtroImagen:
-                print('impirmir valor')
-                print(datos.Imagen)
-                imagen = datos.Imagen
-                print('aquí termina')
+            idTipoProducto = request.form['idTipoProducto']
+            nombreProducto = request.form['nombreProducto']
+            contenidoProducto = request.form['contenidoProducto']
+            marca = request.form['marca']
+            presentacion = request.form['presentacion']
+            unidadMedida = request.form['unidadMedida']
+            cantidadPaquete = request.form['cantidadPaquete']
+            cambioImagen = request.form['cambioImagen']
 
-        idTipoProducto = request.form['idTipoProducto']
-        nombreProducto = request.form['nombreProducto']
-        contenidoProducto = request.form['contenidoProducto']
-        marca = request.form['marca']
-        presentacion = request.form['presentacion']
-        unidadMedida = request.form['unidadMedida']
-        cantidadPaquete = request.form['cantidadPaquete']
-        cambioImagen = request.form['cambioImagen']
+            productoEditar = Productos.get_query(idProducto)
+            productoEditar.idTipoProducto = idTipoProducto
+            productoEditar.nombreProducto = nombreProducto
+            productoEditar.contenidoProducto = contenidoProducto
+            productoEditar.marca = marca
+            productoEditar.presentacion = presentacion
+            productoEditar.unidadMedida = unidadMedida
+            productoEditar.cantidadPaquete = cantidadPaquete
 
-        productoEditar = Productos.get_query(idProducto)
-        productoEditar.idTipoProducto = idTipoProducto
-        productoEditar.nombreProducto = nombreProducto
-        productoEditar.contenidoProducto = contenidoProducto
-        productoEditar.marca = marca
-        productoEditar.presentacion = presentacion
-        productoEditar.unidadMedida = unidadMedida
-        productoEditar.cantidadPaquete = cantidadPaquete
-
-        slash = r'\''
-        direccion = ''
-        imagen = ''
+            slash = r'\''
+            direccion = ''
+            imagen = ''
+        except Exception as ex:
+            raise ObjectNotFound(ex)
         try:
             if cambioImagen == 1 :
 
