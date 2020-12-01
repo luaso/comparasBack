@@ -171,6 +171,7 @@ class editarProducto(Resource):
             slash = r'\''
             direccion = ''
             imagen = ''
+            print('Carga de datos completada')
         except Exception as ex:
             raise ObjectNotFound(ex)
         try:
@@ -179,10 +180,10 @@ class editarProducto(Resource):
                 filtro = Parametros.get(2)
 
                 for datos in filtro:
-                    print('impirmir valor')
+                    print('impirmir direccion valor')
                     print(datos.Valor)
                     direccion = datos.Valor
-                    print('aquí termina')
+                    print('aquí direccion termina')
 
                 print(direccion + imagen)
                 try:
