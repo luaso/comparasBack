@@ -1,6 +1,6 @@
 from flask_restful import Api, Resource
 from sqlalchemy import or_
-from app.administrador.models.tipos_productos_model import  Sub_Categorias, Categorias, Tipos_Productos
+from app.administrador.models.tipos_productos_model import Sub_Categorias, Categorias, Tipos_Productos
 from app.administrador.schemas.tipos_productos_schema import TaskSchema
 from app import ObjectNotFound
 from flask import Flask, request, jsonify
@@ -8,7 +8,10 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 
 db = SQLAlchemy()
-
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
 task_schema = TaskSchema()
 
 class obtenerTiposProductos(Resource):
@@ -16,7 +19,8 @@ class obtenerTiposProductos(Resource):
         try:
             filtro = Tipos_Productos.get_all()
             result = task_schema.dump(filtro, many=True)
-            return {"Tipos_Productos": result}, 200
+            access_token = create_access_token(identity={"productos": result})
+            return {"Tipos_Productos": access_token}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
 
@@ -25,7 +29,8 @@ class obtenerSubCategorias(Resource):
         try:
             filtro = Sub_Categorias.get_all()
             result = task_schema.dump(filtro, many=True)
-            return {"Sub_Categorias": result}, 200
+            access_token = create_access_token(identity={"productos": result})
+            return {"Sub_Categorias": access_token}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
 
@@ -41,10 +46,11 @@ class guardarTiposProductos(Resource):
                 try:
                     tipos_Productos = Tipos_Productos(nombreProducto,idSubCategorias)
                     tipos_Productos.save()
-
+                    result="ok"
                 except Exception as ex:
                     raise ObjectNotFound(ex)
-                return 'SubCategoria Guardada', 200
+                access_token = create_access_token(identity={"productos": result})
+                return {'SubCategoria Guardada':access_token}, 200
             except Exception as ex:
                 raise ObjectNotFound(ex)
 
@@ -67,16 +73,22 @@ class editarTiposProductos(Resource):
 
                 try:
                     tiposProductosEditar.save_to_db()
-
+                    result="ok"
                 except Exception as ex:
                     raise ObjectNotFound(ex)
-                return 'SubCategoria Editada', 200
+                access_token = create_access_token(identity={"productos": result})
+                return {'SubCategoria Editada':access_token}, 200
             except Exception as ex:
                 raise ObjectNotFound(ex)
 
 class eliminarTiposproductos(Resource):
-    def delete(self):
-        idTipoProducto = request.json['idTipoProducto']
-        tipos_Productos = Tipos_Productos.get(idTipoProducto)
-        tipos_Productos.delete_pro()
+    def delete(self, idTipoProducto):
 
+        try:
+            tipos_Productos = Tipos_Productos.find_by_id(idTipoProducto)
+            tipos_Productos.delete_type()
+            result="ok"
+            access_token = create_access_token(identity={"productos": result})
+            return access_token
+        except Exception as ex:
+            raise ObjectNotFound(ex)

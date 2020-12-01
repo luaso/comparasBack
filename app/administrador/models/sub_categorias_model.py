@@ -21,7 +21,7 @@ class Categorias(db.Model, BaseModelMixin):
 class Sub_Categorias(db.Model, BaseModelMixin):
     __tablename__= "SUB_CATEGORIAS"
     idSubCategorias = db.Column(db.Integer, primary_key=True)
-    nombreSubCategoria = db.Column(db.String)
+    nombreSubCategorias = db.Column(db.String)
     idCategoria = db.Column(db.Integer, db.ForeignKey(Categorias.idCategoria), nullable=False)
     categoria = db.relationship('Tipos_Productos', backref='Sub_Categorias', lazy=True)
 
@@ -35,6 +35,11 @@ class Sub_Categorias(db.Model, BaseModelMixin):
        filtro =  db.session.query(Sub_Categorias).filter(Sub_Categorias.idSubCategorias == idSubCategorias)
        return filtro
 
+    @classmethod
+    def get_all(self):
+        filtro = db.session.query(Sub_Categorias)
+        return filtro
+
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
@@ -43,6 +48,10 @@ class Sub_Categorias(db.Model, BaseModelMixin):
         db.session.delete(self)
         db.session.commit()
 
+    @classmethod
+    def find_by_id(cls, id):
+        print("entro a find_by_id")
+        return cls.query.get(id)
     @classmethod
     def get_query(self, idSubCategorias):
         filtro = Sub_Categorias.query.get(idSubCategorias)

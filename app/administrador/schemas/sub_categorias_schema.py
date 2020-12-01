@@ -3,4 +3,8 @@ from app.ext import ma
 
 class TaskSchema(ma.Schema):
     class Meta:
-        fields = ('idSubCategorias','nombreSubCategorias','idCategoria','nombreCategoria','fechaCreacion')
+        fields = ('idSubCategorias',
+                  'nombreSubCategorias',
+                  'idCategoria',
+                  'nombreCategoria',
+                  'fechaCreacion')

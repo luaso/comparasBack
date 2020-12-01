@@ -8,16 +8,26 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
-
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
 task_schema = TaskSchema()
-
+#Pruebas
+'''app = Flask(__name__)
+db.init_app(app)
+app.config['JWT_SECRET_KEY'] = 'secret'
+jwt = JWTManager(app)'''
 
 class obtenerProductosSupermercado(Resource):
     def get(self):
         try:
             filtro =  Productos_Supermercados.get()
             result = task_schema.dump(filtro, many=True)
-            return {"Productos_Supermercados": result}, 200
+
+            access_token = create_access_token(identity={"productos": result})
+
+            return {"Productos_Supermercados": access_token}, 200
 
         except Exception as ex:
             raise ObjectNotFound(ex)
@@ -29,7 +39,9 @@ class productoSupermercado(Resource):
             filtro = Productos_Supermercados.get_query(idProductoSupermercado)
             result = task_schema.dump(filtro, many=True)
 
-            return {"Producto": result}, 200
+            access_token = create_access_token(identity={"productos": result})
+
+            return {"Producto": access_token}, 200
 
         except Exception as ex:
             raise ObjectNotFound(ex)
@@ -43,7 +55,9 @@ class buscarSupermercado(Resource):
 
             result = task_schema.dump(filtro, many=True)
 
-            return {"Producto": result}, 200
+            access_token = create_access_token(identity={"productos": result})
+
+            return {"Producto": access_token}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
 
@@ -57,7 +71,9 @@ class buscarProducto(Resource):
 
             result = task_schema.dump(filtro, many=True)
 
-            return {"Producto": result}, 200
+            access_token = create_access_token(identity={"productos": result})
+
+            return {"Producto": access_token}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
 
@@ -78,17 +94,19 @@ class guardarProductosSupermercados(Resource):
                 try:
                     productos = Productos_Supermercados(idSupermercado,idProducto,fechaProducto,precioRegular,precioOnline,precioTarjeta,nombreTarjeta)
                     productos.save()
-
+                    result="ok"
                 except Exception as ex:
                     raise ObjectNotFound(ex)
-                return 'SubCategoria Guardada', 200
+                    result = "no"
+                access_token = create_access_token(identity={"resultado": result})
+                return {'SubCategoria Guardada':access_token}, 200
             except Exception as ex:
                 raise ObjectNotFound(ex)
 
 class editarProductosSupermercados(Resource):
     def put(self):
         productos_supermercados = request.get_json()
-        for datos in tipos_productos['productos']:
+        for datos in productos_supermercados['productos']:
 
             try:
                 idProductoSupermercado = datos['idProductoSupermercado']
@@ -113,15 +131,22 @@ class editarProductosSupermercados(Resource):
 
                 try:
                     productosSupermercadosEditar.save_to_db()
-
+                    result="ok"
                 except Exception as ex:
                     raise ObjectNotFound(ex)
-                return 'SubCategoria Editada', 200
+                    result = "no"
+                access_token = create_access_token(identity={"resultado": result})
+                return {'SubCategoria Editada': access_token}, 200
             except Exception as ex:
                 raise ObjectNotFound(ex)
 
 class eliminarProductosSupermercados(Resource):
-    def delete(self):
-        idProductoSupermercado = request.json['idProductoSupermercado']
-        productos = Productos_Supermercados.get(idProductoSupermercado)
-        productos.delete_pro()
+    def delete(self, idProductoSupermercado):
+        try:
+            productos = Productos_Supermercados.get(idProductoSupermercado)
+            productos.delete_pro()
+            result="eliminada"
+            access_token = create_access_token(identity={"resultado": result})
+            return {'SubCategoria': access_token}, 200
+        except Exception as ex:
+            raise ObjectNotFound(ex)

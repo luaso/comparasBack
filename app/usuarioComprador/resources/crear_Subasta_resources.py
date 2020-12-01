@@ -6,7 +6,10 @@ from app.usuarioComprador.models.crear_Subasta_model import Subastas, Usuarios, 
 from app import ObjectNotFound
 import datetime
 taskSchema = TaskSchema()
-
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
 class listasUsuario(Resource):
     def get(self, idUsuario):
         try:
@@ -14,7 +17,8 @@ class listasUsuario(Resource):
             idEstado = 1
             filtro = Subastas.get_joins_filter_ubastas_usuarios(idUsuario, idEstado)
             result = taskSchema.dump(filtro, many=True)
-            return {"Subastas": result}, 200
+            access_token = create_access_token(identity={"listas": result})
+            return {"Subastas": access_token}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
 
@@ -24,7 +28,8 @@ class direccionSubasta(Resource):
             #idUsuarioGet = request.json['idUsuario']
             filtro = Direcciones.get_direcciones(idUsuario)
             result = taskSchema.dump(filtro, many=True)
-            return {"Direcciones": result}, 200
+            access_token = create_access_token(identity={"direcciones": result})
+            return {"Direcciones": access_token}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
 
@@ -33,6 +38,7 @@ class buscarProductosCrearSubasta(Resource):
         try:
             filtro = Productos.get_filter_buscar_Productos(nombreProducto)
             result = taskSchema.dump(filtro, many=True)
+            access_token = create_access_token(identity={"productos": result})
             return {"Direcciones": result}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
@@ -51,10 +57,11 @@ class crearSubastaLista(Resource):
             CrearSubasta.fechaSubasta = fechaSubasta
             CrearSubasta.idDireccion = idDireccion
             CrearSubasta.save_to_db()
+            result="Se creo la subasta correctamente"
         except Exception as ex:
             raise ObjectNotFound(ex)
-
-        return {"Respuesta": 'Se creo la subasta correctamente'}
+        access_token = create_access_token(identity={"crearLista": result})
+        return {"Respuesta": access_token}
 
 class crearListaComprador(Resource):
     def post(self):
@@ -103,7 +110,8 @@ class crearListaComprador(Resource):
                     subasta_productos = Subastas_Productos(idSubasta, idProducto, Cantidad)
                     subasta_productos.save()
                     print('Productos Agregados a la subasta con exito')
+                    result = "Subasta creada"
             except Exception as ex:
                 raise ObjectNotFound(ex)
-
-        return "Subasta creada", 201
+        access_token = create_access_token(identity={"crearListaComprador": result})
+        return {"Subasta creada":access_token}, 201

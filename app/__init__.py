@@ -12,10 +12,16 @@ from app.usuarioComprador.api_v1.routes import usuarioComprador
 from flask_cors import CORS
 
 from .ext import ma, migrate
-
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
 
 def create_app(config):
     app = Flask(__name__)
+    db.init_app(app)
+    app.config['JWT_SECRET_KEY'] = 'secret'
+    jwt = JWTManager(app)
     CORS(app)
     #app.config.from_object(DevelopmentConfig)
 

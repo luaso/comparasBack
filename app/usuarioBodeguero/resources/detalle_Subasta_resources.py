@@ -8,7 +8,10 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 db = SQLAlchemy()
-
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
 task_schema = TaskSchema()
 
 class detallePujasSubasta(Resource):
@@ -19,8 +22,9 @@ class detallePujasSubasta(Resource):
             filtro = Subastas.get_joins(idSubasta)
 
             result = task_schema.dump(filtro, many=True)
+            access_token = create_access_token(identity={"productos": result})
 
-            return {"Resultado": result}, 200
+            return {"Resultado": access_token}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
 
@@ -33,8 +37,9 @@ class obtenerMiOferta(Resource):
             filtro = Pujas.get_filter_or(idSubastaGet,idUsuarioGet)
 
             result = task_schema.dump(filtro, many=True)
+            access_token = create_access_token(identity={"productos": result})
 
-            return {"Resultado": result}, 200
+            return {"Resultado": access_token}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
 
@@ -50,6 +55,8 @@ class guardarNuevaPuja(Resource):
             puja = Pujas(idSubasta, idUsuario, precioPuja, fechaPuja)
             print('Intentado ingresar')
             puja.save()
-            return {"Estado de puja": "Completado"}, 200
+            result="Completado"
+            access_token = create_access_token(identity={"productos": result})
+            return {"Estado de puja": access_token}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)

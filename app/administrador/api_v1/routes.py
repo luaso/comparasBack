@@ -6,8 +6,9 @@ from app.administrador.resources.supermercados_resources import Supermercado, Su
 from app.administrador.resources.productos_resources import obtenerProductosTotal, obtenerTipoProduto, guardarproductoNuevo,\
     mostrarProductoSeleccionado,mostrarParametros, editarProducto, eliminarProducto
 from app.administrador.resources.parametros_resources import guardarParametro, obtenerParametro, mostrarParametrosTotal, editarParametro, eliminarParametro
-from app.administrador.resources.productos_supermercados_resources import obtenerProductosSupermercado
-from app.administrador.resources.tipos_productos_resources import obtenerTiposProductos, guardarTiposProductos, obtenerSubCategorias
+from app.administrador.resources.productos_supermercados_resources import obtenerProductosSupermercado, eliminarProductosSupermercados, editarProductosSupermercados, guardarProductosSupermercados
+from app.administrador.resources.tipos_productos_resources import obtenerTiposProductos, guardarTiposProductos, obtenerSubCategorias, eliminarTiposproductos
+from app.administrador.resources.sub_categorias_resources import obtenerCategoria, obtenerSubCategoriaTotal, eliminarSubCategorias, editarSubCategoria, guardarSubCategoria
 administrador = Blueprint('administrador', __name__)
 
 
@@ -35,4 +36,14 @@ api.add_resource(guardarTiposProductos, '/api/guardarTiposProductos/', endpoint=
 api.add_resource(obtenerSubCategorias, '/api/obtenerSubCategorias/', endpoint='obtenerSubCategorias')
 api.add_resource(editarParametro, '/api/editarParametro/', endpoint='editarParametro')
 api.add_resource(eliminarParametro, '/api/eliminarParametro/', endpoint='eliminarParametro')
+api.add_resource(eliminarTiposproductos, '/api/eliminarTiposproductos/<int:idTipoProducto>', endpoint='eliminarTiposproductos')
+api.add_resource(obtenerCategoria, '/api/obtenerCategoria/', endpoint='obtenerCategoria')
+api.add_resource(obtenerSubCategoriaTotal, '/api/obtenerSubCategoriaTotal/', endpoint='obtenerSubCategoriaTotal')
+api.add_resource(eliminarSubCategorias, '/api/eliminarSubCategorias/<int:idSubCategorias>', endpoint='eliminarSubCategorias')
+api.add_resource(editarSubCategoria, '/api/editarSubCategoria/', endpoint='editarSubCategoria')
+api.add_resource(guardarSubCategoria, '/api/guardarSubCategoria/', endpoint='guardarSubCategoria')
+api.add_resource(eliminarProductosSupermercados, '/api/eliminarProductosSupermercados/<int:idProductoSupermercado>', endpoint='eliminarProductosSupermercados')
+api.add_resource(editarProductosSupermercados, '/api/editarProductosSupermercados/', endpoint='editarProductosSupermercados')
+api.add_resource(guardarProductosSupermercados, '/api/guardarProductosSupermercados/', endpoint='guardarProductosSupermercados')
+
 

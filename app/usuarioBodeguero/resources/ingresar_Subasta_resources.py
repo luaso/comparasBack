@@ -13,17 +13,21 @@ from geopy.distance import geodesic
 db = SQLAlchemy()
 
 task_schema = TaskSchema()
-
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
 class obtenerPosiblesSubastasBodeguero(Resource):
     def get(self):
         try:
-            idUsuario = request.json['idUsuario']
+            '''#idUsuario = request.json['idUsuario']
             try:
-                filtro = Direcciones.get(idUsuario)
+                filtro = Direcciones.get(43)
 
                 for data in filtro:
 
                     usuarioBodegueroCoor = ((data.latitud, data.longitud))
+                    print(usuarioBodegueroCoor)
 
             except Exception as ex:
                 raise ObjectNotFound(ex)
@@ -33,22 +37,28 @@ class obtenerPosiblesSubastasBodeguero(Resource):
                 for data in filtro:
 
                     usuarioCompradorCoor = ((data.latitud, data.longitud))
-
+                    print(usuarioCompradorCoor)
 
 
             except Exception as ex:
                 raise ObjectNotFound(ex)
 
             distancia = str(geodesic(usuarioBodegueroCoor, usuarioCompradorCoor).km)
+            print(float(distancia))
+            #filtro = Direcciones.get()
 
-            print("Distancia entre ny y tokyo:" + distancia + " km")
+            print("Distancia entre ny y tokyo:" + distancia + " km")'''
 
 
 
-            filtro = Subastas.get_join_filter()
+            filtro = Subastas.get_subastas_2km()
+
             #print(filtro)
+            for dato in filtro:
+                print(dato.idSubasta)
             result = task_schema.dump(filtro, many=True)
-
-            return {"Resultado": result}, 200
+            access_token = create_access_token(identity={"posibles_subastas": result})
+            return {"Resultado": access_token}, 200
+            #return "dato"
         except Exception as ex:
             raise ObjectNotFound(ex)

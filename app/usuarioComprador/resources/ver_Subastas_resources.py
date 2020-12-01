@@ -5,7 +5,10 @@ from app.usuarioComprador.schemas.ver_Subastas_schema import TaskSchema
 from app.usuarioComprador.models.ver_Subastas_model import Subastas, Usuarios, Estado
 from app import ObjectNotFound
 
-
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
 taskSchema = TaskSchema()
 class listasSubastasCreadas(Resource):
     def get(self):
@@ -13,7 +16,8 @@ class listasSubastasCreadas(Resource):
             idUsuarioGet = request.json['idUsuario']
             filtro = Subastas.get_joins_filter_Subastas_Creadas(idUsuarioGet)
             result = taskSchema.dump(filtro, many=True)
-            return {"producto": result}, 200
+            access_token = create_access_token(identity={"listasSubastasCreadas": result})
+            return {"producto": access_token}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
 
@@ -23,7 +27,8 @@ class detalleSubasta(Resource):
             #idSubastaGet = request.json['idSubasta']
             filtro = Subastas.get_joins_filter_Detalle_Subasta(idSubasta)
             result = taskSchema.dump(filtro, many=True)
-            return {"producto": result}, 200
+            access_token = create_access_token(identity={"detalleSubasta": result})
+            return {"producto": access_token}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
 class seleccionarGanador(Resource):
@@ -34,7 +39,9 @@ class seleccionarGanador(Resource):
             ganador = Subastas.query.get(idSubastaGet)
             ganador.idUsuarioGanador = idUsuarioGanador
             ganador.save_to_db()
-            return {"respuesta": 'Se guardo el ganador correctamente'}
+            result="Se guardo el ganador correctamente"
+            access_token = create_access_token(identity={"seleccionarGanador": result})
+            return {"respuesta": access_token}
         except Exception as ex:
             raise ObjectNotFound(ex)
 class productosSubastaComprador(Resource):
@@ -43,6 +50,7 @@ class productosSubastaComprador(Resource):
             #idSubastaGet = request.json['idSubasta']
             filtro = Subastas.get_productos_subasta(idSubasta)
             result = taskSchema.dump(filtro, many=True)
-            return {"producto": result}, 200
+            access_token = create_access_token(identity={"productosSubastaComprador": result})
+            return {"producto": access_token}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)

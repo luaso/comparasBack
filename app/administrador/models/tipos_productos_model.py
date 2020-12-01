@@ -42,6 +42,11 @@ class Tipos_Productos(db.Model, BaseModelMixin):
     nombreProducto = db.Column(db.String)
     idSubCategorias = db.Column(db.Integer, db.ForeignKey(Sub_Categorias.idSubCategorias), nullable=False)
 
+    @classmethod
+    def find_by_id(cls, id):
+        print("entro a find_by_id")
+        return cls.query.get(id)
+
     def __init__(self, nombreProducto,idSubCategorias):
 
         self.nombreProducto = nombreProducto
@@ -51,7 +56,7 @@ class Tipos_Productos(db.Model, BaseModelMixin):
         db.session.add(self)
         db.session.commit()
 
-    def delete_sub_cat(self):
+    def delete_type(self):
         db.session.delete(self)
         db.session.commit()
 

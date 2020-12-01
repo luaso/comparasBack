@@ -2,7 +2,7 @@ from app.db import db, BaseModelMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 from sqlalchemy import or_
-
+from geopy.distance import geodesic
 db = SQLAlchemy()
 
 class Estado(db.Model):
@@ -84,6 +84,25 @@ class Subastas(db.Model):
                  outerjoin(Estado, Subastas.idEstado == Estado.idEstado). \
                  filter(Estado.idEstado.in_((1, 2)))
         return filtro
+
+    @classmethod
+    def get_subastas_2km(self):
+        latlongBodeguero = db.session.query(Direcciones).filter(Direcciones.idUsuario == 43)
+
+        for data in latlongBodeguero:
+            usuarioBodegueroCoor = ((data.latitud, data.longitud))
+
+            print(usuarioBodegueroCoor)
+
+        filtro =  db.session.query(Subastas, Usuarios,Direcciones). \
+                  join(Subastas, Usuarios.idUsuario == Subastas.idUsuario). \
+                  join(Direcciones, Usuarios.idUsuario == Direcciones.idUsuario). \
+                  filter((geodesic(usuarioBodegueroCoor, (Direcciones.latitud, Direcciones.longitud)).km)>2)
+        print(filtro)
+        return filtro
+
+
+
 
     def __init__(self, idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, fechaSubasta):
         self.idUsuario = idUsuario

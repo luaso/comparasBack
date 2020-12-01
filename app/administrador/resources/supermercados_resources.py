@@ -9,7 +9,10 @@ import time, os
 from os import remove
 from werkzeug.utils import secure_filename
 supermercado_schema = SupermercadosSchema()
-
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
 
 class SupermercadoList(Resource):
     def get(self):
@@ -31,7 +34,9 @@ class SupermercadoList(Resource):
 
         print(supermercado)
         result = supermercado_schema.dump(supermercado, many=True)
-        return {"supermercados": result, "Parametro": [{ "url": direccion }]}, 200
+        access_token = create_access_token(identity={"supermercados": result})
+        access_direccion = create_access_token(identity={"url": direccion})
+        return {"supermercados": access_token, "Parametro": [{ "url": access_direccion }]}, 200
 
     def post(self):
 
@@ -75,7 +80,9 @@ class SupermercadoList(Resource):
         try:
             superPost = Supermercados(nombreSupermercado, filename, urlSupermercado)
             superPost.save()
-            return "Datos Cargados"
+            result="ok"
+            access_token = create_access_token(identity={"estado": result})
+            return {"Datos Cargados":access_token}
         except Exception as ex:
             raise ObjectNotFound(ex)
 
@@ -91,7 +98,8 @@ class Supermercado(Resource):
         if supermercado is None:
             raise ObjectNotFound('El Supermercado no existe')
         result = supermercado_schema.dump(supermercado)
-        return {"supermercado": result}, 200
+        access_token = create_access_token(identity={"estado": result})
+        return {"supermercado": access_token}, 200
 
     def delete(self, idSupermercado):
         supermercado = Supermercados.find_by_id(idSupermercado)
@@ -102,7 +110,9 @@ class Supermercado(Resource):
             supermercado.delete_from_db()
         except:
             raise ObjectNotFound('error al eliminar de la BD')
-        return {'msg': 'Supermercado eliminado con exito'}, 204
+        result="Supermercado eliminado con exito"
+        access_token = create_access_token(identity={"estado": result})
+        return {'msg': access_token}, 204
 
     def put(self, idSupermercado):
         print("put supermercado")
@@ -144,6 +154,8 @@ class Supermercado(Resource):
                 imagen.save(img_path)
                 imagen = filename
                 supermercado.imagenSupermercado = imagen
+
+
                 print('Se guardo la imagen correctamente')
             except Exception as ex:
                 raise ObjectNotFound(ex)
@@ -156,7 +168,8 @@ class Supermercado(Resource):
 
 
         result = supermercado_schema.dump(supermercado)
-        return {"supermercado": result}, 201
+        access_token = create_access_token(identity={"estado": result})
+        return {"supermercado": access_token}, 201
 
 class SupermercadoBuscar(Resource):
     def get(self, nombreSupermercado):
@@ -164,7 +177,8 @@ class SupermercadoBuscar(Resource):
 
             filtro = Supermercados.get_filter(nombreSupermercado)
             result = supermercado_schema.dump(filtro, many=True)
-            return {"Supermercado": result}, 200
+            access_token = create_access_token(identity={"estado": result})
+            return {"Supermercado": access_token}, 200
 
         except Exception as ex:
             raise ObjectNotFound(ex)

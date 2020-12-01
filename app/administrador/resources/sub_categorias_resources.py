@@ -8,7 +8,10 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 
 db = SQLAlchemy()
-
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
 task_schema = TaskSchema()
 
 class obtenerCategoria(Resource):
@@ -16,17 +19,23 @@ class obtenerCategoria(Resource):
         try:
             filtro = Categorias.get()
             result = task_schema.dump(filtro, many=True)
-            return {"Sub_Categorias": result}, 200
+
+            access_token = create_access_token(identity={"sub_categorias": result})
+
+            return {"Sub_Categorias": access_token}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
 
-class obtenerSubCategoria(Resource):
+class obtenerSubCategoriaTotal(Resource):
     def get(self):
         try:
-            idSubCategorias = request.json['idSubCategorias']
-            filtro =  Sub_Categorias.get(idSubCategorias)
+
+            filtro = Sub_Categorias.get_all()
             result = task_schema.dump(filtro, many=True)
-            return {"Sub_Categorias": result}, 200
+
+            access_token = create_access_token(identity={"sub_categorias": result})
+
+            return {"Sub_Categorias": access_token}, 200
 
         except Exception as ex:
             raise ObjectNotFound(ex)
@@ -43,10 +52,12 @@ class guardarSubCategoria(Resource):
                 try:
                     subCategoria = Sub_Categorias(nombreSubCategorias,idCategoria)
                     subCategoria.save()
+                    result="ok"
 
                 except Exception as ex:
                     raise ObjectNotFound(ex)
-                return 'SubCategoria Guardada', 200
+                access_token = create_access_token(identity={"sub_categorias": result})
+                return {'SubCategoria Guardada': access_token}, 200
             except Exception as ex:
                 raise ObjectNotFound(ex)
 
@@ -67,16 +78,24 @@ class editarSubCategoria(Resource):
 
 
                 try:
-                    subCategoriaEditar.save_to_db()
 
+                    subCategoriaEditar.save_to_db()
+                    result = "ok"
                 except Exception as ex:
                     raise ObjectNotFound(ex)
-                return 'SubCategoria Editada', 200
+                    result ="no"
+                access_token = create_access_token(identity={"sub_categorias": result})
+                return {'SubCategoria Editada': access_token}, 200
             except Exception as ex:
                 raise ObjectNotFound(ex)
 
 class eliminarSubCategorias(Resource):
-    def delete(self):
-        idSubCategorias = request.json['idSubCategorias']
-        sub_categoria = Sub_Categorias.get(idSubCategorias)
-        sub_categoria.delete_pro()
+    def delete(self, idSubCategorias):
+        try:
+            sub_categoria = Sub_Categorias.find_by_id(idSubCategorias)
+            sub_categoria.delete_sub_cat()
+            result="ok"
+            access_token = create_access_token(identity={"sub_categorias": result})
+            return {"Eliminado": access_token}
+        except Exception as ex:
+            raise ObjectNotFound(ex)

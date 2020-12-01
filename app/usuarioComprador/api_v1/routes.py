@@ -5,6 +5,7 @@ from app.usuarioComprador.resources.lista_resources import listas, lista
 from app.usuarioComprador.resources.crear_Subasta_resources import listasUsuario, direccionSubasta, crearSubastaLista, buscarProductosCrearSubasta, crearListaComprador
 from app.usuarioComprador.resources.ver_Subastas_resources import listasSubastasCreadas, detalleSubasta, seleccionarGanador, productosSubastaComprador
 from app.usuarioComprador.resources.mis_Subastas_resources import misSubastasComprador
+from app.usuarioComprador.resources.mis_compras import misComprasTotal, misComprasSeleccionada
 
 
 
@@ -22,3 +23,5 @@ api.add_resource(misSubastasComprador, '/api/misSubastasComprador/<int:idUsuario
 api.add_resource(detalleSubasta, '/api/detalleSubasta/<int:idSubasta>', endpoint='detalleSubasta')
 api.add_resource(seleccionarGanador, '/api/seleccionarGanador/', endpoint='seleccionarGanador')
 api.add_resource(productosSubastaComprador, '/api/productosSubastaComprador/', endpoint='productosSubastaComprador')
+api.add_resource(misComprasTotal, '/api/misComprasTotal/<int:idUsuario>', endpoint='misComprasTotal')
+api.add_resource(misComprasSeleccionada, '/api/misComprasSeleccionada/<int:idSubasta>', endpoint='misComprasSeleccionada')

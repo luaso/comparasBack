@@ -8,7 +8,10 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 db = SQLAlchemy()
-
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
 task_schema = TaskSchema()
 
 class misSubastasBodeguero(Resource):
@@ -18,9 +21,9 @@ class misSubastasBodeguero(Resource):
 
             filtro = Subastas.get_join_filter(idUsuario)
 
-
             result = task_schema.dump(filtro, many=True)
+            access_token = create_access_token(identity={"subastas": result})
 
-            return {"Resultado": result}, 200
+            return {"Resultado": access_token}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
