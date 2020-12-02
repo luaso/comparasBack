@@ -23,7 +23,7 @@ class misSubastasComprador(Resource):
 
 
             result = task_schema.dump(filtro, many=True)
-            access_token = create_access_token(identity={"Subastas": result})
-            return {"Resultado": access_token}, 200
+            #access_token = create_access_token(identity={"Subastas": result})
+            return {"Resultado": result}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)

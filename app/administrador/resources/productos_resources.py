@@ -42,10 +42,10 @@ class obtenerProductosTotal(Resource):
 
 
             result = task_schema.dump(filtro, many=True)
-            access_producto = create_access_token(identity={"productos": result})
-            access_direccion = create_access_token(identity={"direccion": direccion})
+            #access_producto = create_access_token(identity={"productos": result})
+            #access_direccion = create_access_token(identity={"direccion": direccion})
 
-            return {"producto": access_producto, "Parametro": [{ "url": access_direccion }]}, 200
+            return {"producto": result, "Parametro": [{ "url": direccion }]}, 200
 
         except Exception as ex:
             raise ObjectNotFound(ex)
@@ -56,9 +56,9 @@ class obtenerTipoProduto(Resource):
             filtro =  Tipos_Productos.get_joins()
             result = task_schema2.dump(filtro, many=True)
 
-            access_tipos_productos = create_access_token(identity={"tipos_productos": result})
+            #access_tipos_productos = create_access_token(identity={"tipos_productos": result})
 
-            return {"Tipos de pruductos": access_tipos_productos}, 200
+            return {"Tipos de pruductos": result}, 200
 
         except Exception as ex:
             raise ObjectNotFound(ex)
@@ -116,23 +116,23 @@ class guardarproductoNuevo(Resource):
         except Exception as ex:
             raise ObjectNotFound(ex)
             result = "no"
-        access_token = create_access_token(identity={"tipos_productos": result})
-        return {'Imagen cargada': access_token}, 200
+        #access_token = create_access_token(identity={"tipos_productos": result})
+        return {'Imagen cargada': result}, 200
 
 class mostrarProductoSeleccionado(Resource):
     def get(self):
         idProducto = request.json['idProducto']
         filtro = Productos.get(idProducto)
         result = task_schema.dump(filtro, many=True)
-        access_token = create_access_token(identity={"producto": result})
-        return {"Producto": access_token}, 200
+        #access_token = create_access_token(identity={"producto": result})
+        return {"Producto": result}, 200
 
 class mostrarParametros(Resource):
     def get(self):
         filtroParametro = Parametros.get(2)
         result = task_schema.dump(filtroParametro, many=True)
-        access_token = create_access_token(identity={"parametro": result})
-        return {"Direccion": access_token}, 200
+        #access_token = create_access_token(identity={"parametro": result})
+        return {"Direccion": result}, 200
 
 class editarProducto(Resource):
     def put(self):
@@ -213,12 +213,12 @@ class editarProducto(Resource):
 
             productoEditar.save_to_db()
             result = "ok"
-            access_token = create_access_token(identity={"parametro": result})
-            return {"respuesta":access_token}
+            #access_token = create_access_token(identity={"parametro": result})
+            return {"respuesta":result}
         except Exception as ex:
             result = "no"
-            access_token = create_access_token(identity={"parametro": result})
-            return {"respuesta": access_token}
+            #access_token = create_access_token(identity={"parametro": result})
+            return {"respuesta": result}
 
 class eliminarProducto(Resource):
     def delete(self):
@@ -267,5 +267,5 @@ class eliminarProducto(Resource):
                         return 'No se encontró imagen o dirección'
         except Exception as ex:
             result = "no"
-        access_token = create_access_token(identity={"parametro": result})
-        return {"respuesta":access_token}
+        #access_token = create_access_token(identity={"parametro": result})
+        return {"respuesta":result}

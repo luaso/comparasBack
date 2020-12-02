@@ -21,8 +21,8 @@ class obtenerProductosSubasta(Resource):
             idSubasta = request.json['idSubasta']
             filtro =  Subastas.get_joins(idSubasta)
             result = task_schema.dump(filtro, many=True)
-            access_token = create_access_token(identity={"productos": result})
-            return {"producto": access_token}, 200
+            #access_token = create_access_token(identity={"productos": result})
+            return {"producto": result}, 200
 
         except Exception as ex:
             raise ObjectNotFound(ex)
@@ -38,7 +38,7 @@ class guardarPuja(Resource):
             print('Intentado ingresar')
             puja.save()
             result="completado"
-            access_token = create_access_token(identity={"productos": result})
-            return {"Estado de puja": access_token}, 200
+            #access_token = create_access_token(identity={"productos": result})
+            return {"Estado de puja": result}, 200
          except Exception as ex:
             raise ObjectNotFound(ex)

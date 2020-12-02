@@ -16,8 +16,8 @@ class listasSubastasCreadas(Resource):
             idUsuarioGet = request.json['idUsuario']
             filtro = Subastas.get_joins_filter_Subastas_Creadas(idUsuarioGet)
             result = taskSchema.dump(filtro, many=True)
-            access_token = create_access_token(identity={"listasSubastasCreadas": result})
-            return {"producto": access_token}, 200
+            #access_token = create_access_token(identity={"listasSubastasCreadas": result})
+            return {"producto": result}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
 
@@ -27,8 +27,8 @@ class detalleSubasta(Resource):
             #idSubastaGet = request.json['idSubasta']
             filtro = Subastas.get_joins_filter_Detalle_Subasta(idSubasta)
             result = taskSchema.dump(filtro, many=True)
-            access_token = create_access_token(identity={"detalleSubasta": result})
-            return {"producto": access_token}, 200
+            #access_token = create_access_token(identity={"detalleSubasta": result})
+            return {"producto": result}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
 class seleccionarGanador(Resource):
@@ -40,17 +40,18 @@ class seleccionarGanador(Resource):
             ganador.idUsuarioGanador = idUsuarioGanador
             ganador.save_to_db()
             result="Se guardo el ganador correctamente"
-            access_token = create_access_token(identity={"seleccionarGanador": result})
-            return {"respuesta": access_token}
+            #access_token = create_access_token(identity={"seleccionarGanador": result})
+            return {"respuesta": result}
         except Exception as ex:
             raise ObjectNotFound(ex)
+
 class productosSubastaComprador(Resource):
     def get(self, idSubasta):
         try:
             #idSubastaGet = request.json['idSubasta']
             filtro = Subastas.get_productos_subasta(idSubasta)
             result = taskSchema.dump(filtro, many=True)
-            access_token = create_access_token(identity={"productosSubastaComprador": result})
-            return {"producto": access_token}, 200
+            #access_token = create_access_token(identity={"productosSubastaComprador": result})
+            return {"producto": result}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)

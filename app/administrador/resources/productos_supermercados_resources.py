@@ -25,9 +25,9 @@ class obtenerProductosSupermercado(Resource):
             filtro =  Productos_Supermercados.get()
             result = task_schema.dump(filtro, many=True)
 
-            access_token = create_access_token(identity={"productos": result})
+            #access_token = create_access_token(identity={"productos": result})
 
-            return {"Productos_Supermercados": access_token}, 200
+            return {"Productos_Supermercados": result}, 200
 
         except Exception as ex:
             raise ObjectNotFound(ex)
@@ -39,9 +39,9 @@ class productoSupermercado(Resource):
             filtro = Productos_Supermercados.get_query(idProductoSupermercado)
             result = task_schema.dump(filtro, many=True)
 
-            access_token = create_access_token(identity={"productos": result})
+            #access_token = create_access_token(identity={"productos": result})
 
-            return {"Producto": access_token}, 200
+            return {"Producto": result}, 200
 
         except Exception as ex:
             raise ObjectNotFound(ex)
@@ -55,9 +55,9 @@ class buscarSupermercado(Resource):
 
             result = task_schema.dump(filtro, many=True)
 
-            access_token = create_access_token(identity={"productos": result})
+            #access_token = create_access_token(identity={"productos": result})
 
-            return {"Producto": access_token}, 200
+            return {"Producto": result}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
 
@@ -71,9 +71,9 @@ class buscarProducto(Resource):
 
             result = task_schema.dump(filtro, many=True)
 
-            access_token = create_access_token(identity={"productos": result})
+            #access_token = create_access_token(identity={"productos": result})
 
-            return {"Producto": access_token}, 200
+            return {"Producto": result}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
 
@@ -98,8 +98,8 @@ class guardarProductosSupermercados(Resource):
                 except Exception as ex:
                     raise ObjectNotFound(ex)
                     result = "no"
-                access_token = create_access_token(identity={"resultado": result})
-                return {'SubCategoria Guardada':access_token}, 200
+                #access_token = create_access_token(identity={"resultado": result})
+                return {'SubCategoria Guardada':result}, 200
             except Exception as ex:
                 raise ObjectNotFound(ex)
 
@@ -135,8 +135,8 @@ class editarProductosSupermercados(Resource):
                 except Exception as ex:
                     raise ObjectNotFound(ex)
                     result = "no"
-                access_token = create_access_token(identity={"resultado": result})
-                return {'SubCategoria Editada': access_token}, 200
+                #access_token = create_access_token(identity={"resultado": result})
+                return {'SubCategoria Editada': result}, 200
             except Exception as ex:
                 raise ObjectNotFound(ex)
 
@@ -146,7 +146,7 @@ class eliminarProductosSupermercados(Resource):
             productos = Productos_Supermercados.get(idProductoSupermercado)
             productos.delete_pro()
             result="eliminada"
-            access_token = create_access_token(identity={"resultado": result})
-            return {'SubCategoria': access_token}, 200
+            #access_token = create_access_token(identity={"resultado": result})
+            return {'SubCategoria': result}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)

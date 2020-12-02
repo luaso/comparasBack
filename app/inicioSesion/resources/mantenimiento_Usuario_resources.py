@@ -56,7 +56,7 @@ class guardarUsuario(Resource):
             telefono = usuarios['telefono']
             celular = usuarios['celular']
             email = usuarios['email']
-            access_token = create_access_token(identity={"email": email})
+            #access_token = create_access_token(identity={"email": email})
             ###############################
             #Conversión de contraseña
             password = usuarios['password']
@@ -130,8 +130,8 @@ class guardarUsuario(Resource):
             except:
                 print('Error al agregar direccion')
 
-        return {"access_token": access_token}, 200
-        #return ('Usuario registrado correctamente')
+        #return {"access_token": access_token}, 200
+        return ('Usuario registrado correctamente')
 
 class buscarUsuario(Resource):
     def get(seft, idUsuario):
@@ -245,9 +245,9 @@ class editarUsuarioComprador(Resource):
                 print('Error al agregar direccion')
 
 
-        access_token = create_access_token(identity={"request": Respuesta})
-        return {"access_token": access_token}, 200
-        #return ('Usuario editado correctamente')
+        #access_token = create_access_token(identity={"request": Respuesta})
+        #return {"access_token": access_token}, 200
+        return ('Usuario editado correctamente')
 
 class editarUsuarioBodeguero(Resource):
     def put(seft):
@@ -319,7 +319,7 @@ class editarUsuarioBodeguero(Resource):
 
                 print('Error al agregar direccion')
 
-        access_token = create_access_token(identity={"request": Respuesta})
-        return {"access_token": access_token}, 200
-        #return ('Usuario editado correctamente')
+        #access_token = create_access_token(identity={"request": Respuesta})
+        #return {"access_token": Respuesta}, 200
+        return ('Usuario editado correctamente')
 

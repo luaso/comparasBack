@@ -34,9 +34,9 @@ class SupermercadoList(Resource):
 
         print(supermercado)
         result = supermercado_schema.dump(supermercado, many=True)
-        access_token = create_access_token(identity={"supermercados": result})
-        access_direccion = create_access_token(identity={"url": direccion})
-        return {"supermercados": access_token, "Parametro": [{ "url": access_direccion }]}, 200
+        #access_token = create_access_token(identity={"supermercados": result})
+        #access_direccion = create_access_token(identity={"url": direccion})
+        return {"supermercados": result, "Parametro": [{ "url": direccion }]}, 200
 
     def post(self):
 
@@ -81,8 +81,8 @@ class SupermercadoList(Resource):
             superPost = Supermercados(nombreSupermercado, filename, urlSupermercado)
             superPost.save()
             result="ok"
-            access_token = create_access_token(identity={"estado": result})
-            return {"Datos Cargados":access_token}
+            #access_token = create_access_token(identity={"estado": result})
+            return {"Datos Cargados":result}
         except Exception as ex:
             raise ObjectNotFound(ex)
 
@@ -98,8 +98,8 @@ class Supermercado(Resource):
         if supermercado is None:
             raise ObjectNotFound('El Supermercado no existe')
         result = supermercado_schema.dump(supermercado)
-        access_token = create_access_token(identity={"estado": result})
-        return {"supermercado": access_token}, 200
+        #access_token = create_access_token(identity={"estado": result})
+        return {"supermercado": result}, 200
 
     def delete(self, idSupermercado):
         supermercado = Supermercados.find_by_id(idSupermercado)
@@ -111,8 +111,8 @@ class Supermercado(Resource):
         except:
             raise ObjectNotFound('error al eliminar de la BD')
         result="Supermercado eliminado con exito"
-        access_token = create_access_token(identity={"estado": result})
-        return {'msg': access_token}, 204
+        #access_token = create_access_token(identity={"estado": result})
+        return {'msg': result}, 204
 
     def put(self, idSupermercado):
         print("put supermercado")
@@ -168,8 +168,8 @@ class Supermercado(Resource):
 
 
         result = supermercado_schema.dump(supermercado)
-        access_token = create_access_token(identity={"estado": result})
-        return {"supermercado": access_token}, 201
+        #access_token = create_access_token(identity={"estado": result})
+        return {"supermercado": result}, 201
 
 class SupermercadoBuscar(Resource):
     def get(self, nombreSupermercado):
@@ -177,8 +177,8 @@ class SupermercadoBuscar(Resource):
 
             filtro = Supermercados.get_filter(nombreSupermercado)
             result = supermercado_schema.dump(filtro, many=True)
-            access_token = create_access_token(identity={"estado": result})
-            return {"Supermercado": access_token}, 200
+            #access_token = create_access_token(identity={"estado": result})
+            return {"Supermercado": result}, 200
 
         except Exception as ex:
             raise ObjectNotFound(ex)

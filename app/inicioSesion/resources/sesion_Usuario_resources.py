@@ -33,15 +33,17 @@ class loginUsuario(Resource):
             print('Validando pass text y pass cod')
             print(sha256_crypt.verify(password, psw))
             if sha256_crypt.verify(password, psw):
-                access_token = create_access_token(identity={"request": "ok"})
-                access_idUsuario = create_access_token(identity={"idusuario": idUsuario})
-                access_idRol = create_access_token(identity={"idRol": idRol})
-                return {"respuesta": access_token, "idUsuario": access_idUsuario, "idRol": access_idRol}
+                return {"respuesta": "ok", "idUsuario": idUsuario, "idRol": idRol}
+                #access_token = create_access_token(identity={"request": "ok"})
+                #access_idUsuario = create_access_token(identity={"idusuario": idUsuario})
+                #access_idRol = create_access_token(identity={"idRol": idRol})
+                #return {"respuesta": access_token, "idUsuario": access_idUsuario, "idRol": access_idRol}
 
             else:
-                access_token = create_access_token(identity={"request": "no"})
-                access_idUsuario = create_access_token(identity={"idusuario": 0})
-                access_idRol = create_access_token(identity={"idRol": 0})
-                return {"respuesta": access_token, "idUsuario": access_idUsuario, "idRol": access_idRol}
+                return {"respuesta": "no", "idUsuario": 0, "idRol": 0}
+                #access_token = create_access_token(identity={"request": "no"})
+                #access_idUsuario = create_access_token(identity={"idusuario": 0})
+                #access_idRol = create_access_token(identity={"idRol": 0})
+                #return {"respuesta": access_token, "idUsuario": access_idUsuario, "idRol": access_idRol}
         except Exception as ex:
             raise ObjectNotFound(ex)

@@ -57,8 +57,8 @@ class obtenerPosiblesSubastasBodeguero(Resource):
             for dato in filtro:
                 print(dato.idSubasta)
             result = task_schema.dump(filtro, many=True)
-            access_token = create_access_token(identity={"posibles_subastas": result})
-            return {"Resultado": access_token}, 200
+            #access_token = create_access_token(identity={"posibles_subastas": result})
+            return {"Resultado": result}, 200
             #return "dato"
         except Exception as ex:
             raise ObjectNotFound(ex)

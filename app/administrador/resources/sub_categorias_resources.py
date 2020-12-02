@@ -20,9 +20,9 @@ class obtenerCategoria(Resource):
             filtro = Categorias.get()
             result = task_schema.dump(filtro, many=True)
 
-            access_token = create_access_token(identity={"sub_categorias": result})
+            #access_token = create_access_token(identity={"sub_categorias": result})
 
-            return {"Sub_Categorias": access_token}, 200
+            return {"Sub_Categorias": result}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
 
@@ -33,9 +33,9 @@ class obtenerSubCategoriaTotal(Resource):
             filtro = Sub_Categorias.get_all()
             result = task_schema.dump(filtro, many=True)
 
-            access_token = create_access_token(identity={"sub_categorias": result})
+            #access_token = create_access_token(identity={"sub_categorias": result})
 
-            return {"Sub_Categorias": access_token}, 200
+            return {"Sub_Categorias": result}, 200
 
         except Exception as ex:
             raise ObjectNotFound(ex)
@@ -56,8 +56,8 @@ class guardarSubCategoria(Resource):
 
                 except Exception as ex:
                     raise ObjectNotFound(ex)
-                access_token = create_access_token(identity={"sub_categorias": result})
-                return {'SubCategoria Guardada': access_token}, 200
+                #access_token = create_access_token(identity={"sub_categorias": result})
+                return {'SubCategoria Guardada': result}, 200
             except Exception as ex:
                 raise ObjectNotFound(ex)
 
@@ -84,8 +84,8 @@ class editarSubCategoria(Resource):
                 except Exception as ex:
                     raise ObjectNotFound(ex)
                     result ="no"
-                access_token = create_access_token(identity={"sub_categorias": result})
-                return {'SubCategoria Editada': access_token}, 200
+                #access_token = create_access_token(identity={"sub_categorias": result})
+                return {'SubCategoria Editada': result}, 200
             except Exception as ex:
                 raise ObjectNotFound(ex)
 
@@ -95,7 +95,7 @@ class eliminarSubCategorias(Resource):
             sub_categoria = Sub_Categorias.find_by_id(idSubCategorias)
             sub_categoria.delete_sub_cat()
             result="ok"
-            access_token = create_access_token(identity={"sub_categorias": result})
-            return {"Eliminado": access_token}
+            #access_token = create_access_token(identity={"sub_categorias": result})
+            return {"Eliminado": result}
         except Exception as ex:
             raise ObjectNotFound(ex)

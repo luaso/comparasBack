@@ -19,8 +19,8 @@ class obtenerTiposProductos(Resource):
         try:
             filtro = Tipos_Productos.get_all()
             result = task_schema.dump(filtro, many=True)
-            access_token = create_access_token(identity={"productos": result})
-            return {"Tipos_Productos": access_token}, 200
+            #access_token = create_access_token(identity={"productos": result})
+            return {"Tipos_Productos": result}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
 
@@ -29,8 +29,8 @@ class obtenerSubCategorias(Resource):
         try:
             filtro = Sub_Categorias.get_all()
             result = task_schema.dump(filtro, many=True)
-            access_token = create_access_token(identity={"productos": result})
-            return {"Sub_Categorias": access_token}, 200
+            #access_token = create_access_token(identity={"productos": result})
+            return {"Sub_Categorias": result}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
 
@@ -49,8 +49,8 @@ class guardarTiposProductos(Resource):
                     result="ok"
                 except Exception as ex:
                     raise ObjectNotFound(ex)
-                access_token = create_access_token(identity={"productos": result})
-                return {'SubCategoria Guardada':access_token}, 200
+                #access_token = create_access_token(identity={"productos": result})
+                return {'SubCategoria Guardada':result}, 200
             except Exception as ex:
                 raise ObjectNotFound(ex)
 
@@ -76,8 +76,8 @@ class editarTiposProductos(Resource):
                     result="ok"
                 except Exception as ex:
                     raise ObjectNotFound(ex)
-                access_token = create_access_token(identity={"productos": result})
-                return {'SubCategoria Editada':access_token}, 200
+                #access_token = create_access_token(identity={"productos": result})
+                return {'SubCategoria Editada':result}, 200
             except Exception as ex:
                 raise ObjectNotFound(ex)
 
@@ -88,7 +88,7 @@ class eliminarTiposproductos(Resource):
             tipos_Productos = Tipos_Productos.find_by_id(idTipoProducto)
             tipos_Productos.delete_type()
             result="ok"
-            access_token = create_access_token(identity={"productos": result})
-            return access_token
+            #access_token = create_access_token(identity={"productos": result})
+            return result
         except Exception as ex:
             raise ObjectNotFound(ex)

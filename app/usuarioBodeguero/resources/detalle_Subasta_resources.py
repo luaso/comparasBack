@@ -22,9 +22,9 @@ class detallePujasSubasta(Resource):
             filtro = Subastas.get_joins(idSubasta)
 
             result = task_schema.dump(filtro, many=True)
-            access_token = create_access_token(identity={"productos": result})
+            #access_token = create_access_token(identity={"productos": result})
 
-            return {"Resultado": access_token}, 200
+            return {"Resultado": result}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
 
@@ -37,9 +37,9 @@ class obtenerMiOferta(Resource):
             filtro = Pujas.get_filter_or(idSubastaGet,idUsuarioGet)
 
             result = task_schema.dump(filtro, many=True)
-            access_token = create_access_token(identity={"productos": result})
+            #access_token = create_access_token(identity={"productos": result})
 
-            return {"Resultado": access_token}, 200
+            return {"Resultado": result}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
 
@@ -56,7 +56,7 @@ class guardarNuevaPuja(Resource):
             print('Intentado ingresar')
             puja.save()
             result="Completado"
-            access_token = create_access_token(identity={"productos": result})
-            return {"Estado de puja": access_token}, 200
+            #access_token = create_access_token(identity={"productos": result})
+            return {"Estado de puja": result}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)

@@ -17,8 +17,8 @@ class listasUsuario(Resource):
             idEstado = 1
             filtro = Subastas.get_joins_filter_ubastas_usuarios(idUsuario, idEstado)
             result = taskSchema.dump(filtro, many=True)
-            access_token = create_access_token(identity={"listas": result})
-            return {"Subastas": access_token}, 200
+            #access_token = create_access_token(identity={"listas": result})
+            return {"Subastas": result}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
 
@@ -28,8 +28,8 @@ class direccionSubasta(Resource):
             #idUsuarioGet = request.json['idUsuario']
             filtro = Direcciones.get_direcciones(idUsuario)
             result = taskSchema.dump(filtro, many=True)
-            access_token = create_access_token(identity={"direcciones": result})
-            return {"Direcciones": access_token}, 200
+            #access_token = create_access_token(identity={"direcciones": result})
+            return {"Direcciones": result}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
 
@@ -38,7 +38,7 @@ class buscarProductosCrearSubasta(Resource):
         try:
             filtro = Productos.get_filter_buscar_Productos(nombreProducto)
             result = taskSchema.dump(filtro, many=True)
-            access_token = create_access_token(identity={"productos": result})
+            #access_token = create_access_token(identity={"productos": result})
             return {"Direcciones": result}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
@@ -60,8 +60,8 @@ class crearSubastaLista(Resource):
             result="Se creo la subasta correctamente"
         except Exception as ex:
             raise ObjectNotFound(ex)
-        access_token = create_access_token(identity={"crearLista": result})
-        return {"Respuesta": access_token}
+        #access_token = create_access_token(identity={"crearLista": result})
+        return {"Respuesta": result}
 
 class crearListaComprador(Resource):
     def post(self):
@@ -113,5 +113,5 @@ class crearListaComprador(Resource):
                     result = "Subasta creada"
             except Exception as ex:
                 raise ObjectNotFound(ex)
-        access_token = create_access_token(identity={"crearListaComprador": result})
-        return {"Subasta creada":access_token}, 201
+        #access_token = create_access_token(identity={"crearListaComprador": result})
+        return {"Subasta creada":result}, 201
