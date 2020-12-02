@@ -22,6 +22,6 @@ api.add_resource(crearListaComprador, '/api/crearListaComprador/', endpoint='cre
 api.add_resource(misSubastasComprador, '/api/misSubastasComprador/<int:idUsuario>', endpoint='misSubastasComprador')
 api.add_resource(detalleSubasta, '/api/detalleSubasta/<int:idSubasta>', endpoint='detalleSubasta')
 api.add_resource(seleccionarGanador, '/api/seleccionarGanador/', endpoint='seleccionarGanador')
-api.add_resource(productosSubastaComprador, '/api/productosSubastaComprador/', endpoint='productosSubastaComprador')
+api.add_resource(productosSubastaComprador, '/api/productosSubastaComprador/<int:idSubasta>', endpoint='productosSubastaComprador')
 api.add_resource(misComprasTotal, '/api/misComprasTotal/<int:idUsuario>', endpoint='misComprasTotal')
 api.add_resource(misComprasSeleccionada, '/api/misComprasSeleccionada/<int:idSubasta>', endpoint='misComprasSeleccionada')
