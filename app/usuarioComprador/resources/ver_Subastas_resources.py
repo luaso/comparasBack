@@ -31,6 +31,8 @@ class detalleSubasta(Resource):
             return {"producto": result}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
+
+
 class seleccionarGanador(Resource):
     def put(self):
         try:
