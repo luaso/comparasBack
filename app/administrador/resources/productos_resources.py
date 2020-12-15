@@ -15,6 +15,9 @@ from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
     get_jwt_identity
 )
+
+from app.validateToken import check_for_token
+
 db = SQLAlchemy()
 
 #Pruebas
@@ -27,6 +30,10 @@ task_schema = TaskSchema()
 task_schema2= TaskSchema2()
 class obtenerProductosTotal(Resource):
     def get(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
             filtro =  Productos.get_joins()
 
@@ -52,6 +59,10 @@ class obtenerProductosTotal(Resource):
 
 class obtenerTipoProduto(Resource):
     def get(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
             filtro =  Tipos_Productos.get_joins()
             result = task_schema2.dump(filtro, many=True)
@@ -65,6 +76,10 @@ class obtenerTipoProduto(Resource):
 
 class guardarproductoNuevo(Resource):
     def post(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         idProductoMax = 0
         imagen = request.files['pic']
         if not imagen:
@@ -121,6 +136,10 @@ class guardarproductoNuevo(Resource):
 
 class mostrarProductoSeleccionado(Resource):
     def get(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         idProducto = request.json['idProducto']
         filtro = Productos.get(idProducto)
         result = task_schema.dump(filtro, many=True)
@@ -129,6 +148,10 @@ class mostrarProductoSeleccionado(Resource):
 
 class mostrarParametros(Resource):
     def get(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         filtroParametro = Parametros.get(2)
         result = task_schema.dump(filtroParametro, many=True)
         #access_token = create_access_token(identity={"parametro": result})
@@ -136,6 +159,10 @@ class mostrarParametros(Resource):
 
 class editarProducto(Resource):
     def put(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         #data = request.get_json()
         imagen=''
 
@@ -222,6 +249,10 @@ class editarProducto(Resource):
 
 class eliminarProducto(Resource):
     def delete(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         idProducto = request.json['idProducto']
         direccion = ''
         imagen = ''

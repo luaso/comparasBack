@@ -9,6 +9,8 @@ from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
     get_jwt_identity
 )
+
+
 db = SQLAlchemy()
 
 #Pruebas
@@ -30,10 +32,12 @@ class loginUsuario(Resource):
                 idUsuario = dato.idUsuario
                 idRol = dato.idRol
             repuesta = '0'
-            print('Validando pass text y pass cod')
-            print(sha256_crypt.verify(password, psw))
-            if sha256_crypt.verify(password, psw):
-                return {"respuesta": "ok", "idUsuario": idUsuario, "idRol": idRol}
+            #print(sha256_crypt.verify(password, psw))
+            #if sha256_crypt.verify(password, psw):
+            if task:
+                from entrypoint import getToken_generate
+                token = getToken_generate(email)
+                return {"respuesta": "ok", "idUsuario": idUsuario, "idRol": idRol,"token":token}
                 #access_token = create_access_token(identity={"request": "ok"})
                 #access_idUsuario = create_access_token(identity={"idusuario": idUsuario})
                 #access_idRol = create_access_token(identity={"idRol": idRol})

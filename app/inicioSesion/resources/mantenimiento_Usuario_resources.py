@@ -1,10 +1,12 @@
-#pip install passlib
-#pip install flask-jwt-extended
+# pip install passlib
+# pip install flask-jwt-extended
+import json
+
 from passlib.hash import sha256_crypt
 from flask_restful import Api, Resource
-from flask import request, Flask
+from flask import request, Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from app import ObjectNotFound
+from app import ObjectNotFound, validateToken
 from app.inicioSesion.models.mantenimiento_Usuario_model import Rol, Usuarios, Direcciones, Parametros
 from app.inicioSesion.schemas.mantenimiento_Usuario_schema import RolSchema
 import os
@@ -16,27 +18,31 @@ from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
     get_jwt_identity
 )
+
+from app.validateToken import check_for_token
+
 db = SQLAlchemy()
 
-#Pruebas
+# Pruebas
 '''app = Flask(__name__)
 db.init_app(app)
 app.config['JWT_SECRET_KEY'] = 'secret'  # Change this!
 jwt = JWTManager(app)'''
 
-
 rolSchema = RolSchema()
+
 
 class obtenerRol(Resource):
     def get(self):
-        #print('22222')
+        # print('22222')
         filtro = Rol.query.filter(Rol.idRol.in_((3, 4)))
 
-        #print(filtro)
+        # print(filtro)
 
         resultado = rolSchema.dump(filtro, many=True)
-        #print(resultado)
+        # print(resultado)
         return {"rol": resultado}, 200
+
 
 class guardarUsuario(Resource):
     def post(self):
@@ -56,13 +62,13 @@ class guardarUsuario(Resource):
             telefono = usuarios['telefono']
             celular = usuarios['celular']
             email = usuarios['email']
-            #access_token = create_access_token(identity={"email": email})
+            # access_token = create_access_token(identity={"email": email})
             ###############################
-            #Conversión de contraseña
+            # Conversión de contraseña
             password = usuarios['password']
 
-            #password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-            #print('Contraseña creada', password)
+            # password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+            # print('Contraseña creada', password)
 
             password = sha256_crypt.encrypt(password)
             print(password)
@@ -93,11 +99,7 @@ class guardarUsuario(Resource):
             except Exception as ex:
                 raise ObjectNotFound(ex)
 
-
             imagen = filename
-
-
-
 
             CrearUsuario = Usuarios(nombreUsuario, apellidoPatUsuario, apellidoMatUsuario, idRol, Ruc, razonSocial,
                                     nombreComercial, codigoPostalPais, telefono, celular, email, password, imagen)
@@ -130,23 +132,31 @@ class guardarUsuario(Resource):
             except:
                 print('Error al agregar direccion')
 
-        #return {"access_token": access_token}, 200
+        # return {"access_token": access_token}, 200
         return ('Usuario registrado correctamente')
+
+
 
 class buscarUsuario(Resource):
     def get(seft, idUsuario):
-        print('prueba entrada get')
-        #task = Usuarios.query.get(idUsuario)
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+         return chek_token
+        task = Usuarios.query.get(idUsuario)
         filtro = Usuarios.get_buscar_usuario(idUsuario)
-        #print(filtro)
-
+        # print(filtro)
         result = rolSchema.dump(filtro, many=True)
-        print(result)
         print('=================================================')
         return {"producto": result}, 200
 
+
 class editarUsuarioComprador(Resource):
     def put(seft):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         data = request.get_json()
         idUsuarioDireccion = 0
 
@@ -170,7 +180,7 @@ class editarUsuarioComprador(Resource):
             usuarioEditar.celular = celular
             usuarioEditar.email = email
 
-            if cambioImagen == 1 :
+            if cambioImagen == 1:
 
                 filtro = Parametros.get(2)
 
@@ -200,12 +210,7 @@ class editarUsuarioComprador(Resource):
                 except Exception as ex:
                     raise ObjectNotFound(ex)
 
-
                 usuarioEditar.Imagen = imagen
-
-
-
-
 
             print('Ingresando al save to db')
             try:
@@ -214,7 +219,7 @@ class editarUsuarioComprador(Resource):
             except Exception as ex:
                 print('error')
                 raise ObjectNotFound(ex)
-            #db.session.commit()
+            # db.session.commit()
 
             idUsuarioDireccion = idUsuario
 
@@ -238,16 +243,16 @@ class editarUsuarioComprador(Resource):
                 CrearDireccion.save()
 
                 print('Direcciones agregadas correctamente')
-                Respuesta= "ok"
+                Respuesta = "ok"
             except Exception as ex:
                 raise ObjectNotFound(ex)
-                Respuesta ="nok"
+                Respuesta = "nok"
                 print('Error al agregar direccion')
 
-
-        #access_token = create_access_token(identity={"request": Respuesta})
-        #return {"access_token": access_token}, 200
+        # access_token = create_access_token(identity={"request": Respuesta})
+        # return {"access_token": access_token}, 200
         return ('Usuario editado correctamente')
+
 
 class editarUsuarioBodeguero(Resource):
     def put(seft):
@@ -289,7 +294,7 @@ class editarUsuarioBodeguero(Resource):
             except Exception as ex:
                 print('error')
                 raise ObjectNotFound(ex)
-            #db.session.commit()
+            # db.session.commit()
 
             idUsuarioDireccion = idUsuario
 
@@ -319,7 +324,6 @@ class editarUsuarioBodeguero(Resource):
 
                 print('Error al agregar direccion')
 
-        #access_token = create_access_token(identity={"request": Respuesta})
-        #return {"access_token": Respuesta}, 200
+        # access_token = create_access_token(identity={"request": Respuesta})
+        # return {"access_token": Respuesta}, 200
         return ('Usuario editado correctamente')
-

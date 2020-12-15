@@ -7,6 +7,9 @@ from app import ObjectNotFound
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
+
+from app.validateToken import check_for_token
+
 db = SQLAlchemy()
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
@@ -17,6 +20,10 @@ task_schema = TaskSchema()
 class obtenerProductosSubasta(Resource):
     def get(self):
         try:
+            chek_token = check_for_token(request.headers.get('token'))
+            valid_token = chek_token['message']
+            if valid_token != 'ok':
+                return chek_token
             print('Intentado ingreso')
             idSubasta = request.json['idSubasta']
             filtro =  Subastas.get_joins(idSubasta)
@@ -28,7 +35,12 @@ class obtenerProductosSubasta(Resource):
             raise ObjectNotFound(ex)
 class guardarPuja(Resource):
      def post(self):
+         chek_token = check_for_token(request.headers.get('token'))
+         valid_token = chek_token['message']
+         if valid_token != 'ok':
+             return chek_token
          try:
+
             print('Ingresando a la puja')
             idSubasta = request.json['idSubasta']
             idUsuario = request.json['idUsuario']

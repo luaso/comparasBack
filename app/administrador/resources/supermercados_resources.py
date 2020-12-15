@@ -8,6 +8,9 @@ from app import ObjectNotFound
 import time, os
 from os import remove
 from werkzeug.utils import secure_filename
+
+from app.validateToken import check_for_token
+
 supermercado_schema = SupermercadosSchema()
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
@@ -16,6 +19,10 @@ from flask_jwt_extended import (
 
 class SupermercadoList(Resource):
     def get(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
             supermercado = Supermercados.get_all()
 
@@ -39,7 +46,10 @@ class SupermercadoList(Resource):
         return {"supermercados": result, "Parametro": [{ "url": direccion }]}, 200
 
     def post(self):
-
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         imagen = request.files['pic']
         filtro = Parametros.get(9)
 
@@ -92,6 +102,10 @@ class SupermercadoList(Resource):
 
 class Supermercado(Resource):
     def get(self, idSupermercado):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         print("entro a get by id")
         supermercado = Supermercados.find_by_id(idSupermercado)
         print(supermercado)
@@ -102,6 +116,10 @@ class Supermercado(Resource):
         return {"supermercado": result}, 200
 
     def delete(self, idSupermercado):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         supermercado = Supermercados.find_by_id(idSupermercado)
         if supermercado is None:
             print("dentro del if")
@@ -115,6 +133,10 @@ class Supermercado(Resource):
         return {'msg': result}, 204
 
     def put(self, idSupermercado):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         print("put supermercado")
         nombreSupermercado = request.form['nombreSupermercado']
         urlSupermercado = request.form['urlSupermercado']
@@ -173,6 +195,10 @@ class Supermercado(Resource):
 
 class SupermercadoBuscar(Resource):
     def get(self, nombreSupermercado):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
 
             filtro = Supermercados.get_filter(nombreSupermercado)

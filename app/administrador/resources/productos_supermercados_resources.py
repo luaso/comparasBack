@@ -7,6 +7,8 @@ from app import ObjectNotFound
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
+from app.validateToken import check_for_token
+
 db = SQLAlchemy()
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
@@ -21,6 +23,10 @@ jwt = JWTManager(app)'''
 
 class obtenerProductosSupermercado(Resource):
     def get(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
             filtro =  Productos_Supermercados.get()
             result = task_schema.dump(filtro, many=True)
@@ -34,6 +40,10 @@ class obtenerProductosSupermercado(Resource):
 
 class productoSupermercado(Resource):
     def get(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
             idProductoSupermercado = request.json['idProductoSupermercado']
             filtro = Productos_Supermercados.get_query(idProductoSupermercado)
@@ -48,6 +58,10 @@ class productoSupermercado(Resource):
 
 class buscarSupermercado(Resource):
     def get(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
             nombreSupermercado = request.json['nombreSupermercado']
 
@@ -64,6 +78,10 @@ class buscarSupermercado(Resource):
 
 class buscarProducto(Resource):
     def get(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
             nombreProducto = request.json['nombreProducto']
 
@@ -79,6 +97,10 @@ class buscarProducto(Resource):
 
 class guardarProductosSupermercados(Resource):
     def post(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         productos_supermercados = request.get_json()
         for datos in productos_supermercados['productos']:
 
@@ -105,6 +127,10 @@ class guardarProductosSupermercados(Resource):
 
 class editarProductosSupermercados(Resource):
     def put(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         productos_supermercados = request.get_json()
         for datos in productos_supermercados['productos']:
 
@@ -142,6 +168,10 @@ class editarProductosSupermercados(Resource):
 
 class eliminarProductosSupermercados(Resource):
     def delete(self, idProductoSupermercado):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
             productos = Productos_Supermercados.get(idProductoSupermercado)
             productos.delete_pro()

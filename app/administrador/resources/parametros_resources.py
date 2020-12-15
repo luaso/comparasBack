@@ -8,6 +8,8 @@ from flask import Flask, request, jsonify
 from datetime import date
 from flask_sqlalchemy import SQLAlchemy
 
+from app.validateToken import check_for_token
+
 db = SQLAlchemy()
 
 task_schema = TaskSchema()
@@ -15,6 +17,10 @@ task_schema = TaskSchema()
 
 class obtenerParametro(Resource):
     def get(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
             idParametros = request.json['idParametros']
             filtro =  Parametros.get(idParametros)
@@ -26,6 +32,10 @@ class obtenerParametro(Resource):
 
 class guardarParametro(Resource):
     def post(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         parametros = request.get_json()
         for datos in parametros['Parametro']:
 
@@ -48,6 +58,10 @@ class guardarParametro(Resource):
                 raise ObjectNotFound(ex)
 class editarParametro(Resource):
     def put(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         parametros = request.get_json()
         for datos in parametros['Parametro']:
 
@@ -82,6 +96,10 @@ class editarParametro(Resource):
 
 class eliminarParametro(Resource):
     def delete(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
             idParametros = request.json['idParametros']
             parametro = Parametros.get_query(idParametros)
@@ -93,6 +111,10 @@ class eliminarParametro(Resource):
 
 class mostrarParametrosTotal(Resource):
     def get(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
 
             filtro =  Parametros.get_all()

@@ -9,9 +9,16 @@ from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
     get_jwt_identity
 )
+
+from app.validateToken import check_for_token
+
 taskSchema = TaskSchema()
 class listasSubastasCreadas(Resource):
     def get(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
             idUsuarioGet = request.json['idUsuario']
             filtro = Subastas.get_joins_filter_Subastas_Creadas(idUsuarioGet)
@@ -23,6 +30,10 @@ class listasSubastasCreadas(Resource):
 
 class detalleSubasta(Resource):
     def get(self, idSubasta):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
             #idSubastaGet = request.json['idSubasta']
             filtro = Subastas.get_joins_filter_Detalle_Subasta(idSubasta)
@@ -35,6 +46,10 @@ class detalleSubasta(Resource):
 
 class seleccionarGanador(Resource):
     def put(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
             idSubastaGet = request.json['idSubasta']
             idUsuarioGanador = request.json['idUsuarioGanador']
@@ -49,6 +64,10 @@ class seleccionarGanador(Resource):
 
 class productosSubastaComprador(Resource):
     def get(self, idSubasta):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
             #idSubastaGet = request.json['idSubasta']
             filtro = Subastas.get_productos_subasta(idSubasta)

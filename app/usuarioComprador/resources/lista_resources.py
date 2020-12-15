@@ -9,6 +9,7 @@ from app.usuarioComprador.models.subastas_model import Subastas, Estado, Product
 
 
 from app import ObjectNotFound
+from app.validateToken import check_for_token
 
 taskSchema = TaskSchema()
 productoSchema = ProductoSchema()
@@ -16,6 +17,10 @@ subastasSchema = SubastasSchema()
 
 class listas(Resource):
     def get(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
             idUsuario = 43
             lista = "Lista"
@@ -31,6 +36,10 @@ class listas(Resource):
             raise ObjectNotFound(ex)
 
     def post(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
             idSubastaCreada = 0
             # ESTE DATO (DEFAULT) PUEDE VARIAR SEGUN EL REGISTRO DE LA TABLA DIRECCIONES
@@ -83,6 +92,10 @@ class listas(Resource):
 
 class lista(Resource):
     def get(self, idLista):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
             idUsuario = 1
             lista = idLista
@@ -100,6 +113,10 @@ class lista(Resource):
 
 
     def put(self, idLista):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         data = request.get_json()
         subasta = Subastas.find_by_id(idLista)
         print(subasta)
@@ -125,6 +142,10 @@ class lista(Resource):
         return {"Subasta actualizada": idLista}, 201
 
     def delete(self, idLista):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         subastas = Subastas.find_by_idd(idLista)
         print(subastas)
         if subastas is None:

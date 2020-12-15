@@ -5,12 +5,18 @@ from datetime import datetime
 from app.administrador.schemas.categoria_schema import CategoriasSchema
 from app.administrador.models.categoria_model import Categorias
 from app import ObjectNotFound
+from app.validateToken import check_for_token
 
 categoria_schema = CategoriasSchema()
 
 
 class CategoriaList(Resource):
     def get(self):
+        chek_token = check_for_token(request.headers.get('token'))
+
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
             categoria = Categorias.get_all()
         except:
@@ -21,6 +27,10 @@ class CategoriaList(Resource):
         return {"categorias": result}, 200
 
     def post(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         data = request.get_json()
         try:
             categoria_dict = categoria_schema.load(data)
@@ -38,6 +48,10 @@ class CategoriaList(Resource):
 
 class Categoria(Resource):
     def get(self, idCategoria):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         print("entro a get by id")
         categoria = Categorias.find_by_id(idCategoria)
         print(categoria)
@@ -47,6 +61,10 @@ class Categoria(Resource):
         return {"categoria": result}, 200
 
     def delete(self, idCategoria):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         categoria = Categorias.find_by_id(idCategoria)
         if categoria is None:
             print("dentro del if")
@@ -59,6 +77,10 @@ class Categoria(Resource):
 
 
     def put(self, idCategoria):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         data = request.get_json()
         print(data)
         try:

@@ -9,6 +9,7 @@ from flask import request
 from geopy.geocoders import ArcGIS
 from geopy.distance import geodesic
 #=======================================================================
+from app.validateToken import check_for_token
 
 db = SQLAlchemy()
 
@@ -19,6 +20,10 @@ from flask_jwt_extended import (
 )
 class obtenerPosiblesSubastasBodeguero(Resource):
     def get(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
             '''#idUsuario = request.json['idUsuario']
             try:

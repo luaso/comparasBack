@@ -7,6 +7,8 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 
+from app.validateToken import check_for_token
+
 db = SQLAlchemy()
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
@@ -16,6 +18,12 @@ task_schema = TaskSchema()
 
 class obtenerCategoria(Resource):
     def get(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        print(chek_token)
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
+
         try:
             filtro = Categorias.get()
             result = task_schema.dump(filtro, many=True)
@@ -28,6 +36,10 @@ class obtenerCategoria(Resource):
 
 class obtenerSubCategoriaTotal(Resource):
     def get(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
 
             filtro = Sub_Categorias.get_all()
@@ -42,6 +54,10 @@ class obtenerSubCategoriaTotal(Resource):
 
 class guardarSubCategoria(Resource):
     def post(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         sub_categorias = request.get_json()
         for datos in sub_categorias['Sub_Categorias']:
 
@@ -63,6 +79,10 @@ class guardarSubCategoria(Resource):
 
 class editarSubCategoria(Resource):
     def put(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         sub_categorias = request.get_json()
         for datos in sub_categorias['Sub_Categorias']:
 
@@ -91,6 +111,10 @@ class editarSubCategoria(Resource):
 
 class eliminarSubCategorias(Resource):
     def delete(self, idSubCategorias):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
             sub_categoria = Sub_Categorias.find_by_id(idSubCategorias)
             sub_categoria.delete_sub_cat()

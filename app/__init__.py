@@ -1,6 +1,8 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify,request
 from flask_restful import Api
 from config.configuration import DevelopmentConfig
+from functools import wraps
+import jwt
 
 from app.common.error_handling import ObjectNotFound, AppErrorBaseClass, PruebaExeption
 from app.db import db
@@ -68,6 +70,7 @@ def create_app(config):
     return app
 
 
+
 def register_error_handlers(app):
     @app.errorhandler(Exception)
     def handle_exception_error(e):
@@ -96,3 +99,4 @@ def register_error_handlers(app):
     @app.errorhandler(PruebaExeption)
     def handle_object_not_found_error(e):
         return jsonify({'prsn msg': str(e)}), 404
+

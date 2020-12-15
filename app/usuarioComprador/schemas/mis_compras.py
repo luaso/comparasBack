@@ -23,4 +23,6 @@ class TaskSchema3(ma.Schema):
         fields = ('Usuarios.idUsuario',
                   'Usuarios.nombreUsuario',
                   'Usuarios.apellidoPatUsuario',
+                  'Usuarios.celular',
+                  'Usuarios.email',
                   'Pujas.precioPuja')

@@ -47,7 +47,6 @@ class Subastas(db.Model, BaseModelMixin):
 
 
         return filtro
-
     def get_compraSeleccionada(idSubasta):
         filtro = db.session.query(Pujas, Usuarios). \
                 join(Usuarios, Pujas.idUsuario == Usuarios.idUsuario). \

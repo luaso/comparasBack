@@ -5,6 +5,9 @@ from app.usuarioComprador.schemas.crear_Subasta_schema import TaskSchema
 from app.usuarioComprador.models.crear_Subasta_model import Subastas, Usuarios,  Productos, Direcciones, Subastas_Productos
 from app import ObjectNotFound
 import datetime
+
+from app.validateToken import check_for_token
+
 taskSchema = TaskSchema()
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
@@ -12,6 +15,10 @@ from flask_jwt_extended import (
 )
 class listasUsuario(Resource):
     def get(self, idUsuario):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
             #idUsuario = request.json['idUsuario']
             idEstado = 1
@@ -24,6 +31,10 @@ class listasUsuario(Resource):
 
 class direccionSubasta(Resource):
     def get(self, idUsuario):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
             #idUsuarioGet = request.json['idUsuario']
             filtro = Direcciones.get_direcciones(idUsuario)
@@ -35,6 +46,10 @@ class direccionSubasta(Resource):
 
 class buscarProductosCrearSubasta(Resource):
     def get(self, nombreProducto):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
             filtro = Productos.get_filter_buscar_Productos(nombreProducto)
             result = taskSchema.dump(filtro, many=True)
@@ -45,6 +60,10 @@ class buscarProductosCrearSubasta(Resource):
 
 class crearSubastaLista(Resource):
     def put(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
             idSubasta = request.json['idSubasta']
             CrearSubasta = Subastas.query.get(idSubasta)
@@ -65,6 +84,10 @@ class crearSubastaLista(Resource):
 
 class crearListaComprador(Resource):
     def post(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         try:
 
             # ESTE DATO (DEFAULT) PUEDE VARIAR SEGUN EL REGISTRO DE LA TABLA DIRECCIONES
