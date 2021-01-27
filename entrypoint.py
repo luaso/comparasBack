@@ -75,6 +75,4 @@ def login_prueba():
         return make_response('incapaz de verificar', 403, {'WWW-Autenticate': 'Basic login'})
 
 
-if __name__ == '__app__':
-    app.run(debug=True)
 
