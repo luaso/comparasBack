@@ -32,22 +32,24 @@ class loginUsuario(Resource):
                 idUsuario = dato.idUsuario
                 idRol = dato.idRol
             repuesta = '0'
-            #print(sha256_crypt.verify(password, psw))
-            #if sha256_crypt.verify(password, psw):
-            if task:
-                from entrypoint import getToken_generate
-                token = getToken_generate(email)
-                return {"respuesta": "ok", "idUsuario": idUsuario, "idRol": idRol,"token":token}
-                #access_token = create_access_token(identity={"request": "ok"})
-                #access_idUsuario = create_access_token(identity={"idusuario": idUsuario})
-                #access_idRol = create_access_token(identity={"idRol": idRol})
-                #return {"respuesta": access_token, "idUsuario": access_idUsuario, "idRol": access_idRol}
+            print(sha256_crypt.verify(password, psw))
+            if sha256_crypt.verify(password, psw):
+                if task:
+                    from entrypoint import getToken_generate
+                    token = getToken_generate(email)
+                    return {"respuesta": "ok", "idUsuario": idUsuario, "idRol": idRol,"token":token}
+                    #access_token = create_access_token(identity={"request": "ok"})
+                    #access_idUsuario = create_access_token(identity={"idusuario": idUsuario})
+                    #access_idRol = create_access_token(identity={"idRol": idRol})
+                    #return {"respuesta": access_token, "idUsuario": access_idUsuario, "idRol": access_idRol}
 
+                else:
+                    return {"respuesta": "no", "idUsuario": 0, "idRol": 0}
+                    #access_token = create_access_token(identity={"request": "no"})
+                    #access_idUsuario = create_access_token(identity={"idusuario": 0})
+                    #access_idRol = create_access_token(identity={"idRol": 0})
+                    #return {"respuesta": access_token, "idUsuario": access_idUsuario, "idRol": access_idRol}
             else:
-                return {"respuesta": "no", "idUsuario": 0, "idRol": 0}
-                #access_token = create_access_token(identity={"request": "no"})
-                #access_idUsuario = create_access_token(identity={"idusuario": 0})
-                #access_idRol = create_access_token(identity={"idRol": 0})
-                #return {"respuesta": access_token, "idUsuario": access_idUsuario, "idRol": access_idRol}
+                return {"respuesta": "Usuario o contraseña incorrecta"}
         except Exception as ex:
             raise ObjectNotFound(ex)

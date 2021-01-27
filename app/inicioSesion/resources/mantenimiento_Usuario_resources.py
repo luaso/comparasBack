@@ -62,6 +62,7 @@ class guardarUsuario(Resource):
             telefono = usuarios['telefono']
             celular = usuarios['celular']
             email = usuarios['email']
+            print('ingresando a seccion usuarios 2')
             # access_token = create_access_token(identity={"email": email})
             ###############################
             # Conversión de contraseña
