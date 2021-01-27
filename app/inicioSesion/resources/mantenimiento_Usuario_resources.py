@@ -63,6 +63,13 @@ class guardarUsuario(Resource):
             celular = usuarios['celular']
             email = usuarios['email']
             print('ingresando a seccion usuarios 2')
+            #Verificar si el email existe
+
+            usuarioExist = Usuarios.get_email(email)
+            print(usuarioExist)
+            if usuarioExist is not None:
+                return {"respuesta": "Ya existe el correo electronico"}, 200
+
             # access_token = create_access_token(identity={"email": email})
             ###############################
             # Conversión de contraseña
@@ -76,34 +83,10 @@ class guardarUsuario(Resource):
             print(sha256_crypt.verify("password", password))
             ###############################
 
-            imagen = request.files['pic']
-
-            if not imagen:
-                return 'Imagen no seleccionada!', 400
-            parametro_img = Parametros.get_query(10)
-            for datos in parametro_img:
-                print('impirmir valor')
-                print(datos.Valor)
-                direccion = datos.Valor
-                print('aquí termina')
-
-            try:
-                filename = time.strftime("%H%M%S") + (time.strftime("%d%m%y")) + secure_filename(imagen.filename)
-                mimetype = imagen.mimetype
-                print(filename)
-                print(mimetype)
-                save_father_path = direccion
-                os.chdir(save_father_path)
-                img_path = os.path.join(save_father_path + filename)
-                imagen.save(img_path)
-                print('cogimos datos de la imagen')
-            except Exception as ex:
-                raise ObjectNotFound(ex)
-
-            imagen = filename
+            #imagen = request.files['pic']
 
             CrearUsuario = Usuarios(nombreUsuario, apellidoPatUsuario, apellidoMatUsuario, idRol, Ruc, razonSocial,
-                                    nombreComercial, codigoPostalPais, telefono, celular, email, password, imagen)
+                                    nombreComercial, codigoPostalPais, telefono, celular, email, password)
             print(CrearUsuario)
             try:
 

@@ -87,7 +87,7 @@ class Usuarios(db.Model, BaseModelMixin):
     imagen = db.Column(db.String)
     direcciones = db.relationship('Direcciones', backref='Usuarios', lazy=True)
 
-    def __init__(self, nombreUsuario,apellidoPatUsuario,apellidoMatUsuario,idRol,Ruc,razonSocial,nombreComercial,codigoPostalPais,telefono,celular,email,password,imagen):
+    def __init__(self, nombreUsuario,apellidoPatUsuario,apellidoMatUsuario,idRol,Ruc,razonSocial,nombreComercial,codigoPostalPais,telefono,celular,email,password):
         self.nombreUsuario = nombreUsuario
         self.apellidoPatUsuario = apellidoPatUsuario
         self.apellidoMatUsuario = apellidoMatUsuario
@@ -100,7 +100,6 @@ class Usuarios(db.Model, BaseModelMixin):
         self.celular = celular
         self.email = email
         self.password = password
-        self.imagen = imagen
 
     def save_to_db(self):
         db.session.add(self)
@@ -110,6 +109,10 @@ class Usuarios(db.Model, BaseModelMixin):
     def get_query(self, idUsuario):
         filtro = Usuarios.query.get(idUsuario)
         return filtro
+
+    @classmethod
+    def get_email(cls, email):
+        return cls.query.filter_by(email=email).first()
 
     @classmethod
     def get_buscar_usuario(self, idUsuario):
