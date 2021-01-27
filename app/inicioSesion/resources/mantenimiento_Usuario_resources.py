@@ -68,7 +68,7 @@ class guardarUsuario(Resource):
             usuarioExist = Usuarios.get_email(email)
             print(usuarioExist)
             if usuarioExist is not None:
-                return {"respuesta": "Ya existe el correo electronico"}, 200
+                return {"respuesta": "Existe"}, 200
 
             # access_token = create_access_token(identity={"email": email})
             ###############################
