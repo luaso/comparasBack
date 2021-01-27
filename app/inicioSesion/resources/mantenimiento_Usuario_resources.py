@@ -117,7 +117,7 @@ class guardarUsuario(Resource):
                 print('Error al agregar direccion')
 
         # return {"access_token": access_token}, 200
-        return ('Usuario registrado correctamente')
+        return {"respuesta": "Usuario registrado correctamente"}
 
 
 
