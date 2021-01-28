@@ -1,7 +1,7 @@
 # pip install passlib
 # pip install flask-jwt-extended
 import json
-
+from config.configuration import BaseConfig
 from passlib.hash import sha256_crypt
 from flask_restful import Api, Resource
 from flask import request, Flask, jsonify
@@ -11,6 +11,7 @@ from app.inicioSesion.models.mantenimiento_Usuario_model import Rol, Usuarios, D
 from app.inicioSesion.schemas.mantenimiento_Usuario_schema import RolSchema
 import os
 import time
+import base64
 from werkzeug.utils import secure_filename
 from os import remove
 import bcrypt
@@ -19,7 +20,7 @@ from flask_jwt_extended import (
     get_jwt_identity
 )
 
-from app.validateToken import check_for_token
+from app.validateToken import check_for_token, check_for_token_id
 
 db = SQLAlchemy()
 
@@ -126,11 +127,13 @@ class buscarUsuario(Resource):
         chek_token = check_for_token(request.headers.get('token'))
         valid_token = chek_token['message']
         if valid_token != 'ok':
-         return chek_token
+            return chek_token
         task = Usuarios.query.get(idUsuario)
         filtro = Usuarios.get_buscar_usuario(idUsuario)
         # print(filtro)
         result = rolSchema.dump(filtro, many=True)
+        #resultadop = check_for_token_id(request.headers.get('token'), 54)
+        #print(resultadop)
         print('=================================================')
         return {"producto": result}, 200
 
@@ -149,52 +152,31 @@ class editarUsuarioComprador(Resource):
             nombreUsuario = usuario['nombreUsuario']
             apellidoPatUsuario = usuario['apellidoPatUsuario']
             apellidoMatUsuario = usuario['apellidoMatUsuario']
-            idRol = usuario['idRol']
             telefono = usuario['telefono']
             celular = usuario['celular']
-            email = usuario['email']
+            #email = usuario['email']
             cambioImagen = usuario['cambioImagen']
+            imgstring = usuario['imagen']
 
             usuarioEditar = Usuarios.get_query(idUsuario)
             usuarioEditar.nombreUsuario = nombreUsuario
             usuarioEditar.apellidoPatUsuario = apellidoPatUsuario
             usuarioEditar.apellidoMatUsuario = apellidoMatUsuario
-            usuarioEditar.idRol = idRol
+            #usuarioEditar.idRol = idRol
             usuarioEditar.telefono = telefono
             usuarioEditar.celular = celular
-            usuarioEditar.email = email
+            #usuarioEditar.email = email
 
-            if cambioImagen == 1:
-
-                filtro = Parametros.get(2)
-
-                for datos in filtro:
-                    print('impirmir valor')
-                    print(datos.Valor)
-                    direccion = datos.Valor
-                    print('aquí termina')
-
-                print(direccion + imagen)
-                try:
-                    remove(direccion + imagen)
-                except Exception as ex:
-                    print('No se encontró la imagen que desea editar.')
-                try:
-                    imagen = request.files['pic']
-                    filename = time.strftime("%H%M%S") + (time.strftime("%d%m%y")) + secure_filename(imagen.filename)
-                    mimetype = imagen.mimetype
-                    print(filename)
-                    print(mimetype)
-                    save_father_path = direccion
-                    os.chdir(save_father_path)
-                    img_path = os.path.join(save_father_path + filename)
-                    imagen.save(img_path)
-                    imagen = filename
-                    print('Se guardo la imagen correctamente')
-                except Exception as ex:
-                    raise ObjectNotFound(ex)
-
-                usuarioEditar.Imagen = imagen
+            try:
+                if cambioImagen == 1:
+                    rutaimg = BaseConfig.RUTAIMAGENESUSUARIOS
+                    imgdata = base64.b64decode(imgstring)
+                    filename = 'app/imagenes/usuarios/' + str(usuario['idUsuario']) + '.jpg'
+                    with open(filename, 'wb') as f:
+                        f.write(imgdata)
+                    usuarioEditar.imagen = rutaimg + str(usuario['idUsuario']) + '.jpg'
+            except Exception as ex:
+                raise ObjectNotFound(ex)
 
             print('Ingresando al save to db')
             try:
@@ -248,29 +230,42 @@ class editarUsuarioBodeguero(Resource):
             nombreUsuario = usuario['nombreUsuario']
             apellidoPatUsuario = usuario['apellidoPatUsuario']
             apellidoMatUsuario = usuario['apellidoMatUsuario']
-            idRol = usuario['idRol']
+            #idRol = usuario['idRol']
             Ruc = usuario['Ruc']
             razonSocial = usuario['razonSocial']
             nombreComercial = usuario['nombreComercial']
             codigoPostalPais = usuario['codigoPostalPais']
             telefono = usuario['telefono']
             celular = usuario['celular']
-            email = usuario['email']
-            imagen = usuario['imagen']
+            #email = usuario['email']
+            cambioImagen = usuario['cambioImagen']
+
+            imgstring = usuario['imagen']
 
             usuarioEditar = Usuarios.get_query(idUsuario)
             usuarioEditar.nombreUsuario = nombreUsuario
             usuarioEditar.apellidoPatUsuario = apellidoPatUsuario
             usuarioEditar.apellidoMatUsuario = apellidoMatUsuario
-            usuarioEditar.idRol = idRol
+            #usuarioEditar.idRol = idRol
             usuarioEditar.Ruc = Ruc
             usuarioEditar.razonSocial = razonSocial
             usuarioEditar.nombreComercial = nombreComercial
             usuarioEditar.codigoPostalPais = codigoPostalPais
             usuarioEditar.telefono = telefono
             usuarioEditar.celular = celular
-            usuarioEditar.email = email
-            usuarioEditar.imagen = imagen
+
+            try:
+                if cambioImagen == 1:
+                    rutaimg = BaseConfig.RUTAIMAGENESUSUARIOS
+                    imgdata = base64.b64decode(imgstring)
+                    filename = 'app/imagenes/usuarios/' + str(usuario['idUsuario']) + '.jpg'
+                    with open(filename, 'wb') as f:
+                        f.write(imgdata)
+                    usuarioEditar.imagen = rutaimg + str(usuario['idUsuario']) + '.jpg'
+            except Exception as ex:
+                raise ObjectNotFound(ex)
+
+
             print('Ingresando al save to db')
             try:
                 usuarioEditar.save_to_db()
@@ -302,12 +297,12 @@ class editarUsuarioBodeguero(Resource):
                 CrearDireccion.save()
 
                 print('Direcciones agregadas correctamente')
-
+                Respuesta = "ok"
             except Exception as ex:
                 raise ObjectNotFound(ex)
-
+                Respuesta = "nok"
                 print('Error al agregar direccion')
 
         # access_token = create_access_token(identity={"request": Respuesta})
-        # return {"access_token": Respuesta}, 200
+        # return {"access_token": access_token}, 200
         return ('Usuario editado correctamente')

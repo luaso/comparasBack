@@ -115,6 +115,13 @@ class Usuarios(db.Model, BaseModelMixin):
         return cls.query.filter_by(email=email).first()
 
     @classmethod
+    def get_rol(cls, idUsuario):
+        filtro = db.session.query(Usuarios, Rol). \
+           join(Rol, Usuarios.idRol == Rol.idRol). \
+           filter(Usuarios.idUsuario == idUsuario).all()
+        return filtro
+
+    @classmethod
     def get_buscar_usuario(self, idUsuario):
         filtro = db.session.query(Usuarios, Direcciones, Rol).\
                  outerjoin(Direcciones, Usuarios.idUsuario == Direcciones.idUsuario). \

@@ -1,6 +1,14 @@
 from marshmallow import fields
 from app.ext import ma
 
+class RolSchemaToken(ma.Schema):
+    class Meta:
+        fields = ('Rol.idRol',
+                  'Rol.nombreRol',
+                  'Usuarios.email',
+                  'Usuarios.idUsuario')
+
+
 class RolSchema(ma.Schema):
     class Meta:
         fields = ('Rol.idRol',
