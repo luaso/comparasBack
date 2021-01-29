@@ -11,8 +11,6 @@ config = DevelopmentConfig
 
 app = create_app(config)
 
-app.config['SECRET_KEY'] = 'DeveloperComparajrl'
-
 
 #def check_for_token(func):
     #@wraps(func)

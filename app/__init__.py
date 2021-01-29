@@ -22,8 +22,6 @@ from flask_jwt_extended import (
 def create_app(config):
     app = Flask(__name__)
 
-    db.init_app(app)
-    app.config['JWT_SECRET_KEY'] = 'secret'
     jwt = JWTManager(app)
 
     CORS(app)
@@ -43,7 +41,7 @@ def create_app(config):
     app.config.from_object(config)
 
     print(app.config['SQLALCHEMY_DATABASE_URI'])
-
+    print(app.config['SECRET_KEY'])
     # Inicializa las extensiones
     db.init_app(app)
 

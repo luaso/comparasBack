@@ -1,7 +1,5 @@
-# pip install passlib
-# pip install flask-jwt-extended
-import json
-from config.configuration import BaseConfig
+
+from config.configuration import AdditionalConfig
 from passlib.hash import sha256_crypt
 from flask_restful import Api, Resource
 from flask import request, Flask, jsonify
@@ -9,18 +7,11 @@ from flask_sqlalchemy import SQLAlchemy
 from app import ObjectNotFound, validateToken
 from app.inicioSesion.models.mantenimiento_Usuario_model import Rol, Usuarios, Direcciones, Parametros
 from app.inicioSesion.schemas.mantenimiento_Usuario_schema import RolSchema
-import os
-import time
-import base64
-from werkzeug.utils import secure_filename
-from os import remove
-import bcrypt
-from flask_jwt_extended import (
-    JWTManager, jwt_required, create_access_token,
-    get_jwt_identity
-)
 
-from app.validateToken import check_for_token, check_for_token_id
+import base64
+
+
+from app.validateToken import check_for_token, check_for_token_id_rol, check_for_token_rol, check_for_token_id
 
 db = SQLAlchemy()
 
@@ -35,7 +26,7 @@ rolSchema = RolSchema()
 
 class obtenerRol(Resource):
     def get(self):
-        # print('22222')
+
         filtro = Rol.query.filter(Rol.idRol.in_((3, 4)))
 
         # print(filtro)
@@ -124,7 +115,7 @@ class guardarUsuario(Resource):
 
 class buscarUsuario(Resource):
     def get(seft, idUsuario):
-        chek_token = check_for_token(request.headers.get('token'))
+        chek_token = check_for_token_id(request.headers.get('token'),idUsuario)
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
@@ -132,19 +123,21 @@ class buscarUsuario(Resource):
         filtro = Usuarios.get_buscar_usuario(idUsuario)
         # print(filtro)
         result = rolSchema.dump(filtro, many=True)
-        #resultadop = check_for_token_id(request.headers.get('token'), 54)
-        #print(resultadop)
-        print('=================================================')
+        print('================================================')
         return {"producto": result}, 200
 
 
 class editarUsuarioComprador(Resource):
     def put(seft):
-        chek_token = check_for_token(request.headers.get('token'))
+        '''Metodo para editar un usuario con el Rol1'''
+        data = request.get_json()
+        rolUser = AdditionalConfig.ROL1
+        chek_token = check_for_token_id_rol(request.headers.get('token'), data["Datos"][0]["idUsuario"], rolUser)
+        #chek_token = check_for_token(request.headers.get('token'))
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
-        data = request.get_json()
+        print(data["Datos"][0]["idUsuario"])
         idUsuarioDireccion = 0
 
         for usuario in data['Datos']:
@@ -169,7 +162,7 @@ class editarUsuarioComprador(Resource):
 
             try:
                 if cambioImagen == 1:
-                    rutaimg = BaseConfig.RUTAIMAGENESUSUARIOS
+                    rutaimg = AdditionalConfig.RUTAIMAGENESUSUARIOS
                     imgdata = base64.b64decode(imgstring)
                     filename = 'app/imagenes/usuarios/' + str(usuario['idUsuario']) + '.jpg'
                     with open(filename, 'wb') as f:
@@ -222,7 +215,13 @@ class editarUsuarioComprador(Resource):
 
 class editarUsuarioBodeguero(Resource):
     def put(seft):
+        '''Metodo para editar un usuario con el Rol2'''
         data = request.get_json()
+        rolUser = AdditionalConfig.ROL2
+        chek_token = check_for_token_id_rol(request.headers.get('token'), data["Datos"][0]["idUsuario"], rolUser)
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
         idUsuarioDireccion = 0
 
         for usuario in data['Datos']:
@@ -256,7 +255,7 @@ class editarUsuarioBodeguero(Resource):
 
             try:
                 if cambioImagen == 1:
-                    rutaimg = BaseConfig.RUTAIMAGENESUSUARIOS
+                    rutaimg = AdditionalConfig.RUTAIMAGENESUSUARIOS
                     imgdata = base64.b64decode(imgstring)
                     filename = 'app/imagenes/usuarios/' + str(usuario['idUsuario']) + '.jpg'
                     with open(filename, 'wb') as f:
@@ -303,6 +302,4 @@ class editarUsuarioBodeguero(Resource):
                 Respuesta = "nok"
                 print('Error al agregar direccion')
 
-        # access_token = create_access_token(identity={"request": Respuesta})
-        # return {"access_token": access_token}, 200
         return ('Usuario editado correctamente')

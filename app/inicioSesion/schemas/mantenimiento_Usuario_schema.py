@@ -8,6 +8,20 @@ class RolSchemaToken(ma.Schema):
                   'Usuarios.email',
                   'Usuarios.idUsuario')
 
+class UserSchemaToken(ma.Schema):
+    class Meta:
+        fields = ('Usuarios.nombreUsuario',
+                  'Usuarios.apellidoPatUsuario',
+                  'Usuarios.apellidoMatUsuario',
+                  'Usuarios.Ruc',
+                  'Usuarios.razonSocial',
+                  'Usuarios.nombreComercial',
+                  'Usuarios.codigoPostalPais',
+                  'Usuarios.telefono',
+                  'Usuarios.celular',
+                  'Usuarios.email',
+                  'Usuarios.imagen',
+                  'Usuarios.idUsuario',)
 
 class RolSchema(ma.Schema):
     class Meta:
