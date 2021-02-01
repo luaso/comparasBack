@@ -123,6 +123,8 @@ class buscarUsuario(Resource):
         filtro = Usuarios.get_buscar_usuario(idUsuario)
         # print(filtro)
         result = rolSchema.dump(filtro, many=True)
+        resultd = check_for_token_rol(request.headers.get('token'))
+        print(resultd)
         print('================================================')
         return {"producto": result}, 200
 

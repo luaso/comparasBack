@@ -25,6 +25,7 @@ class subastasEjecucion(Resource):
             nombreSubasta = 'Creación de lista'
             precioIdeal = 0.0
             fechaSubasta = datetime.now()
+            print(fechaSubasta)
             # ESTE DATO (DEFAULT) PUEDE VARIAR SEGUN EL REGISTRO DE LA TABLA DIRECCIONES
             # =================================================================
             idDireccion = 24

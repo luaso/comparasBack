@@ -23,7 +23,7 @@ def check_for_token(token_ur):
     except:
         rept = {'user': 'invalid', 'exp': '0', 'message': 'Token Caducado ó invalido', 'status': '403'}
 
-    return   rept
+    return rept
 
 
 def check_for_token_id_rol(token_ur,id,rolUser):
@@ -43,23 +43,24 @@ def check_for_token_id_rol(token_ur,id,rolUser):
         elif (data.get("user") != resultado[0]["Usuarios.email"]):
             rept = {'user': 'invalid', 'exp': '0', 'message': 'no concuerda el id con el usuario del token', 'status': '403'}
         else:
-            rept = {'user': data.get("user"), 'exp': data.get("exp"), 'message': data.get("message"), 'status': data.get("status"), 'rol': resultado[0]["Rol.idRol"]}
+            rept = {'user': data.get("user"), 'exp': data.get("exp"), 'message': data.get("message"), 'status': data.get("status"), 'rol': resultado[0]["Rol.idRol"], 'idUser':1}
 
     except:
         rept = {'user': 'invalid', 'exp': '0', 'message': 'Token Caducado ó invalido', 'status': '403'}
     return   rept
 
-def check_for_token_rol(token_ur, rolUser):
-    '''Funcion que valida si el token es correcto y si el rol concuerda con el rol del usuario del token '''
+def check_for_token_rol(token_ur):
+    '''Funcion que valida si el token es correcto y devuelve el di y rol del usuario del token '''
     if not token_ur:
         rept = rept = {'user': 'invalid', 'exp': '0', 'message': 'Token Caducado ó invalido', 'status': '403'}
 
     try:
         data = jwt.decode(token_ur, secret_Key)
+
         userRol = Usuarios.get_email_token(data.get("user"))
         resultado = rolSchemaToken.dump(userRol)
-
-        if (resultado["Rol.idRol"] != rolUser):
+        print(resultado)
+        if (resultado["Rol.idRol"] != 3):
             rept = {'user': 'invalid', 'exp': '0', 'message': 'El usuario no puede realizar esta accion', 'status': '403'}
         else:
             rept = {'user': data.get("user"), 'exp': data.get("exp"), 'message': data.get("message"), 'status': data.get("status"), 'rol': resultado["Rol.idRol"]}

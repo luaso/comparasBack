@@ -94,8 +94,9 @@ class Direcciones(db.Model, BaseModelMixin):
 
     @classmethod
     def get_direcciones(self, idUsuario):
-        filtro = Direcciones.query.filter(Direcciones.idUsuario.in_((idUsuario)))
+        filtro = Direcciones.query.filter(Direcciones.idUsuario == idUsuario).all()
         return filtro
+
 
 class Subastas(db.Model, BaseModelMixin):
     __tablename__= "SUBASTAS"
