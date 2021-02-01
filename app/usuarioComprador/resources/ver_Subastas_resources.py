@@ -4,6 +4,7 @@ from sqlalchemy import or_
 from app.usuarioComprador.schemas.ver_Subastas_schema import TaskSchema
 from app.usuarioComprador.models.ver_Subastas_model import Subastas, Usuarios, Estado
 from app import ObjectNotFound
+from config.configuration import AdditionalConfig
 
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
@@ -57,7 +58,9 @@ class seleccionarGanador(Resource):
 
             print("ganador")
             print(type(idUsuarioGanador))
-
+            estado = Estado.find_by_cod(AdditionalConfig.ESTADO4)
+            print(estado)
+            ganador.idEstado = estado.idEstado
             ganador.idUsuarioGanador = idUsuarioGanador
             print("usuarioganadro")
             print(type(ganador.idUsuarioGanador))

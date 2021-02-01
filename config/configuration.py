@@ -17,6 +17,11 @@ class AdditionalConfig(object):
     ROL2 = 3    #Bodeguero
     ROL3 = 2    #Adminstrador
 
+    ESTADO1 = 'Cod1'      #Lista
+    ESTADO2 = 'Cod2'      #Disponible
+    ESTADO3 = 'Cod3'      #Curso
+    ESTADO4 = 'Cod4'      #Finalizado
+
 class ProductionConfig(BaseConfig):
     'Configuracion para produccion'
     DEBUG = False

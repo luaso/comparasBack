@@ -47,8 +47,12 @@ class Estado(db.Model, BaseModelMixin):
     __tablename__ = "ESTADO"
     idEstado = db.Column(db.Integer, primary_key=True)
     nombreEstado = db.Column(db.String)
+    codEstado = db.Column(db.String)
     subastas = db.relationship('Subastas', backref='Estado', lazy=True)
 
+    @classmethod
+    def find_by_cod(cls, cod):
+        return cls.query.filter_by(codEstado=cod).first()
 
 class Rol(db.Model, BaseModelMixin):
     __tablename__ = "ROL"
