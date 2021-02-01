@@ -20,6 +20,7 @@ class TaskSchema(ma.Schema):
                   'Productos.cantidadPaquete',
                   'Productos.unidadMedida',
                   'Productos.presentacion',
+                  'Productos.Imagen',
                   'marca',
                   'cantidadPaquete',
                   'unidadMedida',
@@ -27,4 +28,5 @@ class TaskSchema(ma.Schema):
                   'idProducto',
                   'idCategoria',
                   'nombreProducto',
+                  'Imagen',
                   'contenidoProducto')
