@@ -70,18 +70,22 @@ class Usuarios(db.Model, BaseModelMixin):
     direccion = db.Column(db.String)
     email = db.Column(db.String)
     password = db.Column(db.String)
-    subastas = db.relationship('Subastas', backref='Usuarios', lazy=True)
+    #subastas = db.relationship('Subastas', backref='Usuarios', lazy=True)
+
 
 class Subastas(db.Model, BaseModelMixin):
     __tablename__= "SUBASTAS"
     idSubasta = db.Column(db.Integer, primary_key=True)
     idUsuario = db.Column(db.Integer,db.ForeignKey(Usuarios.idUsuario), nullable=False)
     idEstado = db.Column(db.Integer, db.ForeignKey(Estado.idEstado), nullable=False)
+    idUsuarioGanador = db.Column(db.Integer, db.ForeignKey(Usuarios.idUsuario), nullable=False)
     tiempoInicial = db.Column(db.Date)
     nombreSubasta = db.Column(db.String)
     precioIdeal = db.Column(db.Float)
     idDireccion = db.Column(db.Integer)
     fechaSubasta = db.Column(db.Date)
+    usuario = db.relationship("Usuarios", foreign_keys=[idUsuario])
+    usuarioGanador = db.relationship("Usuarios", foreign_keys=[idUsuarioGanador])
     subastas_productos = db.relationship('Subastas_Productos', backref='Subastas', lazy=True)
 
     @classmethod
@@ -91,6 +95,11 @@ class Subastas(db.Model, BaseModelMixin):
             outerjoin(Estado, Subastas.idEstado == Estado.idEstado). \
             filter(Subastas.idUsuario == idUsuarioGet).all()
         return filtro
+
+    @classmethod
+    def find_by_id(cls, id):
+        print("entro a find_by_id")
+        return cls.query.get(id)
 
     @classmethod
     def get_joins_filter_Detalle_Subasta(self, idSubasta):
@@ -111,7 +120,6 @@ class Subastas(db.Model, BaseModelMixin):
                  join(Productos, Subastas_Productos.idProducto == Productos.idProducto). \
                  filter(Subastas_Productos.idSubasta == idSubasta)
         return filtro
-
 
     def save_to_db(self):
         db.session.add(self)

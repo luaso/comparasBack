@@ -24,6 +24,7 @@ class TaskSchema(ma.Schema):
                   'Pujas.idPuja',
                   'Pujas.precioPuja',
                   'Pujas.fechaPuja',
+                  'Pujas.idUsuario',
                   'Subastas_Productos.cantidad',
                   'Productos.nombreProducto',
                   'Productos.marca',

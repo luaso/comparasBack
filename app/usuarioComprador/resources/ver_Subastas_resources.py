@@ -54,7 +54,14 @@ class seleccionarGanador(Resource):
             idSubastaGet = request.json['idSubasta']
             idUsuarioGanador = request.json['idUsuarioGanador']
             ganador = Subastas.query.get(idSubastaGet)
+
+            print("ganador")
+            print(type(idUsuarioGanador))
+
             ganador.idUsuarioGanador = idUsuarioGanador
+            print("usuarioganadro")
+            print(type(ganador.idUsuarioGanador))
+
             ganador.save_to_db()
             result="Se guardo el ganador correctamente"
             #access_token = create_access_token(identity={"seleccionarGanador": result})
