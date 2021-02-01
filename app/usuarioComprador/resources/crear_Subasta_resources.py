@@ -75,6 +75,7 @@ class crearSubastaLista(Resource):
 
             CrearSubasta.fechaSubasta = fechaSubasta
             CrearSubasta.idDireccion = idDireccion
+            CrearSubasta.idEstado = 2
             CrearSubasta.save_to_db()
             result="Se creo la subasta correctamente"
         except Exception as ex:
