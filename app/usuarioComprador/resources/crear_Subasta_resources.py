@@ -72,7 +72,9 @@ class crearSubastaLista(Resource):
             #fechaSubasta = datetime.datetime.now()
             print(fechaSubasta)
             idDireccion = request.json['idDireccion']
+            nombreSubasta = request.json['nombreSubasta']
 
+            CrearSubasta.nombreSubasta = nombreSubasta
             CrearSubasta.fechaSubasta = fechaSubasta
             CrearSubasta.idDireccion = idDireccion
             CrearSubasta.idEstado = 2
