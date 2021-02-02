@@ -20,13 +20,13 @@ from flask_jwt_extended import (
     get_jwt_identity
 )
 class obtenerPosiblesSubastasBodeguero(Resource):
-    def get(self):
+    def get(self, idUsuario):
         chek_token = check_for_token(request.headers.get('token'))
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
         try:
-            idUsuario = request.json['idUsuario']
+            idUsuario = idUsuario
             filtro = Subastas.get_subastas()
             #print(filtro)
             result = task_schema.dump(filtro, many=True)
