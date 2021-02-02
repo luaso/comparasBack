@@ -93,9 +93,10 @@ class Subastas(db.Model):
     @classmethod
     def get_subastas(self):
 
-        filtro =  db.session.query(Subastas, Direcciones, Estado). \
+        filtro =  db.session.query(Subastas, Direcciones, Estado, Usuarios). \
                   join(Direcciones, Subastas.idDireccion == Direcciones.idDireccion). \
                   join(Estado, Estado.idEstado == Subastas.idEstado). \
+                  join(Usuarios,Subastas.idUsuario == Usuarios.idUsuario). \
                   filter(Estado.codEstado == "Cod2").all()
         return filtro
 
