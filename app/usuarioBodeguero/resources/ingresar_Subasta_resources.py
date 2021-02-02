@@ -4,6 +4,7 @@ from app.usuarioBodeguero.schemas.ingresar_Subasta_schema import TaskSchema
 from app import ObjectNotFound
 from flask_sqlalchemy import SQLAlchemy
 from flask import request
+
 #Librerias de calculo de distancias entre dos puntos mediante lat y long
 #pip install geopy
 from geopy.geocoders import ArcGIS
@@ -25,45 +26,17 @@ class obtenerPosiblesSubastasBodeguero(Resource):
         if valid_token != 'ok':
             return chek_token
         try:
-            '''#idUsuario = request.json['idUsuario']
-            try:
-                filtro = Direcciones.get(43)
-
-                for data in filtro:
-
-                    usuarioBodegueroCoor = ((data.latitud, data.longitud))
-                    print(usuarioBodegueroCoor)
-
-            except Exception as ex:
-                raise ObjectNotFound(ex)
-
-            try:
-
-                for data in filtro:
-
-                    usuarioCompradorCoor = ((data.latitud, data.longitud))
-                    print(usuarioCompradorCoor)
-
-
-            except Exception as ex:
-                raise ObjectNotFound(ex)
-
-            distancia = str(geodesic(usuarioBodegueroCoor, usuarioCompradorCoor).km)
-            print(float(distancia))
-            #filtro = Direcciones.get()
-
-            print("Distancia entre ny y tokyo:" + distancia + " km")'''
-
-
-
-            filtro = Subastas.get_subastas_2km()
-
+            idUsuario = request.json['idUsuario']
+            filtro = Subastas.get_subastas()
             #print(filtro)
-            for dato in filtro:
-                print(dato.idSubasta)
             result = task_schema.dump(filtro, many=True)
+
+            coordenadas = Subastas.get_direccion_usuario_2km(idUsuario,result)
+            print("antes del for")
+            print(coordenadas)
+
             #access_token = create_access_token(identity={"posibles_subastas": result})
-            return {"Resultado": result}, 200
+            return {"Resultado": coordenadas}, 200
             #return "dato"
         except Exception as ex:
             raise ObjectNotFound(ex)

@@ -11,4 +11,7 @@ class TaskSchema(ma.Schema):
                   'Usuarios.apellidoMatUsuario',
                   'Subastas.fechaSubasta',
                   'Estado.nombreEstado',
-                  'Estado.idEstado')
+                  'Estado.idEstado',
+                  'Direcciones.idDireccion',
+                  'Direcciones.latitud',
+                  'Direcciones.longitud',)

@@ -2,6 +2,7 @@ from app.db import db, BaseModelMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 from sqlalchemy import or_
+from config.configuration import AdditionalConfig
 
 db = SQLAlchemy()
 
@@ -106,9 +107,8 @@ class Subastas(db.Model):
                      join(Usuarios, Subastas.idUsuario == Usuarios.idUsuario). \
                      join(Estado, Subastas.idEstado == Estado.idEstado). \
                      filter(Subastas.idUsuario == idUsuario). \
-                     filter(or_(Estado.codEstado == "Cod2",
-                                Estado.codEstado == "Cod3",
-                                Estado.codEstado == "Cod4"))
+                     filter(or_(Estado.codEstado == AdditionalConfig.ESTADO2,
+                                Estado.codEstado == AdditionalConfig.ESTADO3))
             return filtro
 
 

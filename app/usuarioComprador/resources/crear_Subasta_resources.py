@@ -3,9 +3,10 @@ from flask_restful import Resource
 from sqlalchemy import or_
 from app.usuarioComprador.schemas.crear_Subasta_schema import TaskSchema
 from app.usuarioComprador.models.crear_Subasta_model import Subastas, Usuarios,  Productos, Direcciones, Subastas_Productos
+from app.usuarioComprador.models.ver_Subastas_model import Estado
 from app import ObjectNotFound
 import datetime
-
+from config.configuration import AdditionalConfig
 from app.validateToken import check_for_token
 
 taskSchema = TaskSchema()
@@ -96,7 +97,10 @@ class crearListaComprador(Resource):
             idUsuario = request.json['idUsuario']
             nombreLista = request.json['nombreLista']
             # =================================================================
-            idEstado = 1
+
+            estado = Estado.find_by_cod(AdditionalConfig.ESTADO1)
+
+            idEstado = estado.idEstado
 
             tiempoInicial = datetime.datetime.now()
             nombreSubasta = nombreLista
@@ -104,7 +108,7 @@ class crearListaComprador(Resource):
             fechaSubasta = datetime.datetime.now()
             # ESTE DATO (DEFAULT) PUEDE VARIAR SEGUN EL REGISTRO DE LA TABLA DIRECCIONES
             # =================================================================
-            idDireccion = 24
+            idDireccion = AdditionalConfig.DIRECCIONNODEFINIDA
             # =================================================================
             print('Selección de datos completado')
             crearSubasta = Subastas(idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, idDireccion, fechaSubasta)

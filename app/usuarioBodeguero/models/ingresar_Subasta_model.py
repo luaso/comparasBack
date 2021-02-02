@@ -1,5 +1,7 @@
 from app.db import db, BaseModelMixin
 from flask_sqlalchemy import SQLAlchemy
+from config.configuration import AdditionalConfig
+import math
 from sqlalchemy import Column, Integer, String
 from sqlalchemy import or_
 from geopy.distance import geodesic
@@ -9,6 +11,7 @@ class Estado(db.Model):
     __tablename__ = "ESTADO"
     idEstado = db.Column(db.Integer, primary_key=True)
     nombreEstado = db.Column(db.String)
+    codEstado = db.Column(db.String)
     subastas = db.relationship('Subastas', backref='Estado', lazy=True)
 
 
@@ -45,6 +48,7 @@ class Direcciones(db.Model):
     direccion = db.Column(db.String)
     latitud = db.Column(db.String)
     longitud = db.Column(db.String)
+    subastas = db.relationship('Subastas', backref='Direcciones', lazy=True)
 
     @classmethod
     def get(self, idUsuario):
@@ -72,6 +76,7 @@ class Subastas(db.Model):
     idSubasta = db.Column(db.Integer, primary_key=True)
     idUsuario = db.Column(db.Integer,db.ForeignKey(Usuarios.idUsuario), nullable=False)
     idEstado = db.Column(db.Integer, db.ForeignKey(Estado.idEstado), nullable=False)
+    idDireccion = db.Column(db.Integer, db.ForeignKey(Direcciones.idDireccion), nullable=False)
     tiempoInicial = db.Column(db.Date)
     nombreSubasta = db.Column(db.String)
     precioIdeal = db.Column(db.Float)
@@ -86,23 +91,42 @@ class Subastas(db.Model):
         return filtro
 
     @classmethod
-    def get_subastas_2km(self):
-        latlongBodeguero = db.session.query(Direcciones).filter(Direcciones.idUsuario == 43)
+    def get_subastas(self):
 
-        for data in latlongBodeguero:
-            usuarioBodegueroCoor = ((data.latitud, data.longitud))
-
-            print(usuarioBodegueroCoor)
-
-        filtro =  db.session.query(Subastas, Usuarios,Direcciones). \
-                  join(Subastas, Usuarios.idUsuario == Subastas.idUsuario). \
-                  join(Direcciones, Usuarios.idUsuario == Direcciones.idUsuario). \
-                  filter((geodesic(usuarioBodegueroCoor, (Direcciones.latitud, Direcciones.longitud)).km)>2)
-        print(filtro)
+        filtro =  db.session.query(Subastas, Direcciones, Estado). \
+                  join(Direcciones, Subastas.idDireccion == Direcciones.idDireccion). \
+                  join(Estado, Estado.idEstado == Subastas.idEstado). \
+                  filter(Estado.codEstado == "Cod2").all()
         return filtro
 
+    @classmethod
+    def get_direccion_usuario_2km(self, idUsuario, direcciones):
+        i = 0
+        direccionesMenores = []
+        latlongBodeguero = db.session.query(Direcciones).filter(Direcciones.idUsuario == idUsuario)
+        for data in latlongBodeguero:
+            coordenada = ((data.latitud, data.longitud))
+            #usuarioBodegueroCoor = ((data.latitud, data.longitud))
 
+        for direccion in direcciones:
 
+            coordenadadaBus = ((direccion["Direcciones.latitud"],direccion["Direcciones.longitud"]))
+            dist = geodesic(coordenada,coordenadadaBus).km
+            print("distancia")
+            print(dist)
+            if dist <= AdditionalConfig.RADIOBUSQUEDASUBASTA:
+
+                print("entro al  if")
+                direccionesMenores.append(direccion)
+                ''' = {"Subastas.idSubasta":direccion["Subastas.idSubasta"],
+                                           "Subastas.nombreSubasta":direccion["Subastas.nombreSubasta"],
+                                           "Subastas.fechaSubasta":direccion["Subastas.fechaSubasta"],
+                                           "Direcciones.longitud":direccion["Direcciones.longitud"],
+                                           "Estado.nombreEstado":direccion["Estado.nombreEstado"],
+                                           "Direcciones.latitud":direccion["Direcciones.latitud"],
+                                           "Estado.idEstado":direccion["Estado.idEstado"],
+                                           "Direcciones.idDireccion":direccion["Direcciones.idDireccion"]}'''
+        return direccionesMenores
 
     def __init__(self, idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, fechaSubasta):
         self.idUsuario = idUsuario

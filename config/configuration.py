@@ -22,6 +22,10 @@ class AdditionalConfig(object):
     ESTADO3 = 'Cod3'      #Curso
     ESTADO4 = 'Cod4'      #Finalizado
 
+    DIRECCIONNODEFINIDA = 24        #Direccion por default
+
+    RADIOBUSQUEDASUBASTA = 7        #Este radio se utiliza para la busqueda de subastas cercanas para el usaurio bodeguero
+
 class ProductionConfig(BaseConfig):
     'Configuracion para produccion'
     DEBUG = False
