@@ -102,6 +102,11 @@ class Subastas(db.Model):
     @classmethod
     def get_direccion_usuario_2km(self, idUsuario, direcciones):
         i = 0
+        codRadio = AdditionalConfig.RADIOBUSQUEDASUBASTA
+        parametroRadio = db.session.query(Parametros).filter(Parametros.idParametros == codRadio).first()
+        radioInt = int(parametroRadio.Valor)
+        print(type(radioInt))
+
         direccionesMenores = []
         latlongBodeguero = db.session.query(Direcciones).filter(Direcciones.idUsuario == idUsuario)
         for data in latlongBodeguero:
@@ -114,18 +119,11 @@ class Subastas(db.Model):
             dist = geodesic(coordenada,coordenadadaBus).km
             print("distancia")
             print(dist)
-            if dist <= AdditionalConfig.RADIOBUSQUEDASUBASTA:
+            if dist <= radioInt:
 
                 print("entro al  if")
                 direccionesMenores.append(direccion)
-                ''' = {"Subastas.idSubasta":direccion["Subastas.idSubasta"],
-                                           "Subastas.nombreSubasta":direccion["Subastas.nombreSubasta"],
-                                           "Subastas.fechaSubasta":direccion["Subastas.fechaSubasta"],
-                                           "Direcciones.longitud":direccion["Direcciones.longitud"],
-                                           "Estado.nombreEstado":direccion["Estado.nombreEstado"],
-                                           "Direcciones.latitud":direccion["Direcciones.latitud"],
-                                           "Estado.idEstado":direccion["Estado.idEstado"],
-                                           "Direcciones.idDireccion":direccion["Direcciones.idDireccion"]}'''
+                
         return direccionesMenores
 
     def __init__(self, idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, fechaSubasta):
@@ -151,8 +149,27 @@ class Subastas_Productos(db.Model):
         self.Cantidad = Cantidad
 
 
+class Parametros(db.Model):
+    __tablename__= "PARAMETROS"
+    idParametros = db.Column(db.Integer, primary_key=True)
+    Descripcion = db.Column(db.Text)
+    Estado = db.Column(db.Integer)
+    FecCrea = db.Column(db.Date)
+    FecModifica = db.Column(db.Date)
+    UsuCrea = db.Column(db.Integer)
+    UsuModifica = db.Column(db.Integer)
+    Valor = db.Column(db.String)
 
+    def __init__(self,idParametros, Descripcion, Estado, FecCrea, FecModifica, UsuCrea, UsuModifica, Valor):
 
+        self.idParametros = idParametros
+        self.Descripcion = Descripcion
+        self.Estado = Estado
+        self.FecCrea = FecCrea
+        self.FecModifica = FecModifica
+        self.UsuCrea = UsuCrea
+        self.UsuModifica = UsuModifica
+        self.Valor = Valor
 
 
 #Listar subastas de Usuario que podria escoger el bodeguero

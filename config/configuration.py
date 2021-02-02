@@ -24,7 +24,7 @@ class AdditionalConfig(object):
 
     DIRECCIONNODEFINIDA = 24        #Direccion por default
 
-    RADIOBUSQUEDASUBASTA = 7        #Este radio se utiliza para la busqueda de subastas cercanas para el usaurio bodeguero
+    RADIOBUSQUEDASUBASTA = 13        #Este radio se utiliza para la busqueda de subastas cercanas para el usaurio bodeguero en km
 
 class ProductionConfig(BaseConfig):
     'Configuracion para produccion'
