@@ -72,9 +72,7 @@ class crearSubastaLista(Resource):
             #fechaSubasta = datetime.datetime.now()
             print(fechaSubasta)
             idDireccion = request.json['idDireccion']
-            nombreSubasta = request.json['nombreSubasta']
 
-            CrearSubasta.nombreSubasta = nombreSubasta
             CrearSubasta.fechaSubasta = fechaSubasta
             CrearSubasta.idDireccion = idDireccion
             CrearSubasta.idEstado = 2
@@ -96,10 +94,12 @@ class crearListaComprador(Resource):
             # ESTE DATO (DEFAULT) PUEDE VARIAR SEGUN EL REGISTRO DE LA TABLA DIRECCIONES
             # =================================================================
             idUsuario = request.json['idUsuario']
+            nombreLista = request.json['nombreLista']
             # =================================================================
             idEstado = 1
+
             tiempoInicial = datetime.datetime.now()
-            nombreSubasta = 'Creación de lista'
+            nombreSubasta = nombreLista
             precioIdeal = 0.0
             fechaSubasta = datetime.datetime.now()
             # ESTE DATO (DEFAULT) PUEDE VARIAR SEGUN EL REGISTRO DE LA TABLA DIRECCIONES
