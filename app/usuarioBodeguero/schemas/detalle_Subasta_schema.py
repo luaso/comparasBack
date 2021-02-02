@@ -9,3 +9,12 @@ class TaskSchema(ma.Schema):
                   'Pujas.idSubasta',
                   'idPuja',
                   'precioPuja')
+
+class TaskSchema2(ma.Schema):
+    class Meta:
+        fields = ('Productos.idProducto',
+                  'Productos.nombreProducto',
+                  'Productos.idProducto',
+                  'Pujas.idSubasta',
+                  'idPuja',
+                  'precioPuja')

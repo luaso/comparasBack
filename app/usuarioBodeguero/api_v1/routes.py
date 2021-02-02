@@ -17,3 +17,4 @@ api.add_resource(obtenerMiOferta, '/api/obtenerMiOferta/', endpoint='obtenerMiOf
 api.add_resource(obtenerPosiblesSubastasBodeguero, '/api/obtenerPosiblesSubastasBodeguero/<int:idUsuario>', endpoint='obtenerPosiblesSubastasBodeguero')
 api.add_resource(misSubastasBodeguero, '/api/misSubastasBodeguero/<int:idUsuario>', endpoint='misSubastasBodeguero')
 api.add_resource(guardarNuevaPuja, '/api/guardarNuevaPuja/', endpoint='guardarNuevaPuja')
+api.add_resource(guardarNuevaPuja, '/api/SubastaProductos1/<idSubasta>', endpoint='SubastasProductos1')

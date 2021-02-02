@@ -17,6 +17,21 @@ from flask_jwt_extended import (
 )
 task_schema = TaskSchema()
 
+
+class detalleSubasta(Resource):
+    def get(self, idSubasta):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
+        try:
+            filtro = Subastas.get_detalle_subasta(idSubasta)
+
+            print("")
+        except Exception as ex:
+            raise ObjectNotFound(ex)
+
+
 class detallePujasSubasta(Resource):
     def get(self):
         chek_token = check_for_token(request.headers.get('token'))

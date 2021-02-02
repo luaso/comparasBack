@@ -32,8 +32,6 @@ class obtenerPosiblesSubastasBodeguero(Resource):
             result = task_schema.dump(filtro, many=True)
 
             coordenadas = Subastas.get_direccion_usuario_2km(idUsuario,result)
-            print("antes del for")
-            print(coordenadas)
 
             #access_token = create_access_token(identity={"posibles_subastas": result})
             return {"Resultado": coordenadas}, 200

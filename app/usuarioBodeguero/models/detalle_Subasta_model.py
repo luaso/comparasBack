@@ -72,6 +72,14 @@ class Subastas(db.Model, BaseModelMixin):
         #print(filtro)
         return filtro
 
+    def get_detalle_subasta(self,idSubasta):
+        filtro = db.session.query(Subastas, Subastas_Productos, Productos, P). \
+            join(Subastas_Productos, Subastas.idSubasta == Subastas_Productos.idSubasta). \
+            join(Productos, Productos.idProducto == Subastas_Productos.idProducto). \
+            filter(Subastas.idSubasta == idSubasta)
+        # print(filtro)
+        return filtro
+
     def __init__(self, idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, fechaSubasta):
         self.idUsuario = idUsuario
         self.idEstado = idEstado
