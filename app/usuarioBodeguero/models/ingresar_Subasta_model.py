@@ -123,7 +123,7 @@ class Subastas(db.Model):
 
                 print("entro al  if")
                 direccionesMenores.append(direccion)
-                
+
         return direccionesMenores
 
     def __init__(self, idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, fechaSubasta):
