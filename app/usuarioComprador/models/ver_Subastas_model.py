@@ -109,7 +109,7 @@ class Subastas(db.Model, BaseModelMixin):
     def get_joins_filter_Detalle_Subasta(self, idSubasta):
         filtro = db.session.query(Pujas, Subastas). \
             join(Subastas, Subastas.idSubasta == Pujas.idSubasta). \
-            filter(Subastas.idSubasta == idSubasta).all()
+            filter(Subastas.idSubasta == idSubasta).order_by(Pujas.precioPuja).all()
         #subq = db.session.query(Pujas.idSubasta,func.max(Pujas.precioPuja).label('maxprecio')).group_by(Pujas.idSubasta).subquery('t2')
 
         #query = db.session.query(Pujas).join(subq, and_(Pujas.idSubasta == subq.c.idSubasta,Pujas.precioPuja == subq.c.maxprecio))

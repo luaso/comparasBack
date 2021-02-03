@@ -164,6 +164,8 @@ class Pujas(db.Model, BaseModelMixin):
     def get_filter_or(self, idSubastaGet, idUsuarioGet):
         filtro = Pujas.query.filter(or_(Pujas.idSubasta == idSubastaGet, Pujas.idUsuario == idUsuarioGet)).\
                              filter(Pujas.idPuja == db.session.query(func.max(Pujas.idPuja)))
+        #filtro = db.session.query(Pujas,Subastas_Productos, Productos, Productos_Supermercados).\
+         #   filter(Subastas.idSubasta == idSubasta).all()
         return filtro
     def __init__(self,idSubasta, idUsuario, precioPuja, fechaPuja):
 

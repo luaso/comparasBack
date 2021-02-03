@@ -9,5 +9,4 @@ class TaskSchema(ma.Schema):
                   'Usuarios.apellidoMatUsuario',
                   'Subastas.fechaSubasta',
                   'Pujas.precioPuja',
-                  'Pujas.precioPuja',
                   'Estado.nombreEstado')

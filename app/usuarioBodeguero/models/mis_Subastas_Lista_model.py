@@ -88,12 +88,11 @@ class Subastas(db.Model):
     @classmethod
     def get_join_filter(self, idUsuario):
         filtro = db.session.query(Subastas, Subastas_Productos, Productos, Pujas, Estado, Usuarios). \
-            outerjoin(Subastas_Productos, Subastas.idSubasta == Subastas_Productos.idSubasta). \
-            outerjoin(Productos, Subastas_Productos.idProducto == Productos.idProducto). \
-            outerjoin(Pujas, Subastas.idSubasta == Pujas.idSubasta). \
-            outerjoin(Estado, Subastas.idEstado == Estado.idEstado). \
-            outerjoin(Usuarios, Subastas.idUsuario == Usuarios.idUsuario). \
-            filter(Subastas.idUsuario == idUsuario). \
+            join(Subastas_Productos, Subastas.idSubasta == Subastas_Productos.idSubasta). \
+            join(Productos, Subastas_Productos.idProducto == Productos.idProducto). \
+            join(Pujas, Subastas.idSubasta == Pujas.idSubasta). \
+            join(Estado, Subastas.idEstado == Estado.idEstado). \
+            join(Usuarios, Subastas.idUsuario == Usuarios.idUsuario). \
             filter(Pujas.idUsuario == idUsuario).all()
             #filter(Pujas.idSubasta== Subastas.idSubasta).all()
         print(filtro)
@@ -101,6 +100,12 @@ class Subastas(db.Model):
 
     @classmethod
     def get_mis_subastas(self, idUsuario):
+            filtro = db.session.query(Subastas, Usuarios, Estado). \
+                     join(Usuarios, Subastas.idUsuario == Usuarios.idUsuario). \
+                     join(Estado, Subastas.idEstado == Estado.idEstado). \
+                     filter(Subastas.idUsuario == idUsuario).all()
+    @classmethod
+    def get_subastas(self, idUsuario):
             filtro = db.session.query(Subastas, Usuarios, Estado). \
                      join(Usuarios, Subastas.idUsuario == Usuarios.idUsuario). \
                      join(Estado, Subastas.idEstado == Estado.idEstado). \

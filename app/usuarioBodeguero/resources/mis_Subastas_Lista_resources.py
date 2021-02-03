@@ -29,6 +29,10 @@ class misSubastasBodeguero(Resource):
             filtro = Subastas.get_join_filter(idUsuario)
 
             result = task_schema.dump(filtro, many=True)
+            print(filtro)
+            for filtro in result:
+                print()
+
             #access_token = create_access_token(identity={"subastas": result})
 
             return {"Resultado": result}, 200
