@@ -142,6 +142,7 @@ class Direcciones(db.Model, BaseModelMixin):
     direccion = db.Column(db.String)
     latitud = db.Column(db.String)
     longitud = db.Column(db.String)
+    subastas = db.relationship('Subastas', backref='Direcciones', lazy=True)
 
     def __init__(self, idUsuario,direccion,latitud,longitud):
         #self.idDireccion=idDireccion
@@ -160,13 +161,25 @@ class Direcciones(db.Model, BaseModelMixin):
         db.session.commit()
 
     @classmethod
-    def get_query(self, idUsuarioDireccion):
+    def get_query(cls, idUsuarioDireccion):
         filtro = Direcciones.query.filter(Direcciones.idUsuario == idUsuarioDireccion)
         return filtro
 
     @classmethod
     def find_by_id(cls, id):
         return cls.query.get(id)
+
+
+class Subastas(db.Model, BaseModelMixin):
+    __tablename__ = "SUBASTAS"
+    idSubasta = db.Column(db.Integer, primary_key=True)
+    idUsuario = db.Column(db.Integer)
+    idEstado = db.Column(db.Integer)
+    tiempoInicial = db.Column(db.Date)
+    nombreSubasta = db.Column(db.String)
+    precioIdeal = db.Column(db.Float)
+    idDireccion = db.Column(db.Integer, db.ForeignKey(Direcciones.idDireccion), nullable=False)
+    fechaSubasta = db.Column(db.Date)
 
 #db.create_all()
 #rolsSchema = rolSchema(many=True)

@@ -190,7 +190,7 @@ class editarUsuarioComprador(Resource):
             print(direcciones.idDireccion)
             direccion = Direcciones.find_by_id(direcciones.idDireccion)
             print("Direccion")
-            print(direccion)
+            print(direccion.idUsuario)
             direccion.delete_from_db()
 
         for direcciones in data['direcciones']:
