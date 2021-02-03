@@ -186,9 +186,12 @@ class editarUsuarioComprador(Resource):
 
         filtro = Direcciones.get_query(idUsuarioDireccion)
         for direcciones in filtro:
+            print("idDireccion")
             print(direcciones.idDireccion)
-            direcciones = Direcciones.find_by_id(direcciones.idDireccion)
-            direcciones.delete_from_db()
+            direccion = Direcciones.find_by_id(direcciones.idDireccion)
+            print("Direccion")
+            print(direccion)
+            direccion.delete_from_db()
 
         for direcciones in data['direcciones']:
 
@@ -282,8 +285,9 @@ class editarUsuarioBodeguero(Resource):
         for direcciones in filtro:
             print(direcciones.idDireccion)
             direcciones = Direcciones.find_by_id(direcciones.idDireccion)
+            print(direcciones)
             direcciones.delete_from_db()
-
+            print('salio del primer for')
         for direcciones in data['direcciones']:
 
             idUsuario = idUsuarioDireccion

@@ -142,6 +142,7 @@ class Direcciones(db.Model, BaseModelMixin):
     direccion = db.Column(db.String)
     latitud = db.Column(db.String)
     longitud = db.Column(db.String)
+
     def __init__(self, idUsuario,direccion,latitud,longitud):
         #self.idDireccion=idDireccion
         self.idUsuario =idUsuario
@@ -151,6 +152,11 @@ class Direcciones(db.Model, BaseModelMixin):
 
     def delete_from_db(self):
         db.session.delete(self)
+        db.session.commit()
+
+    @classmethod
+    def delete_from_db2(cls, id):
+        Direcciones.query.filter(Direcciones.id == id).delete()
         db.session.commit()
 
     @classmethod
