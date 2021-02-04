@@ -113,8 +113,8 @@ class Subastas(db.Model, BaseModelMixin):
     @classmethod
     def get_joins(self, idSubasta):
         filtro = db.session.query(Subastas, Pujas). \
-            outerjoin(Pujas, Subastas.idSubasta == Pujas.idSubasta). \
-            filter(Subastas.idSubasta == idSubasta)
+            join(Pujas, Subastas.idSubasta == Pujas.idSubasta). \
+            filter(Subastas.idSubasta == idSubasta).order_by(Pujas.precioPuja).all()
         #print(filtro)
         return filtro
 
