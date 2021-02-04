@@ -36,13 +36,13 @@ class buscarProductosSubastaresource(Resource):
 
 
 class detallePujasSubasta(Resource):
-    def get(self):
+    def get(self, idSubastaR):
         chek_token = check_for_token(request.headers.get('token'))
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
         try:
-            idSubasta = request.json['idSubasta']
+            idSubasta = idSubastaR
 
             filtro = Subastas.get_joins(idSubasta)
 
@@ -54,7 +54,7 @@ class detallePujasSubasta(Resource):
             raise ObjectNotFound(ex)
 
 class obtenerMiOferta(Resource):
-    def get(self):
+    def post(self):
         chek_token = check_for_token(request.headers.get('token'))
         valid_token = chek_token['message']
         if valid_token != 'ok':

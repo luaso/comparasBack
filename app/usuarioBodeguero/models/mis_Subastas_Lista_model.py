@@ -95,7 +95,6 @@ class Subastas(db.Model):
             join(Usuarios, Subastas.idUsuario == Usuarios.idUsuario). \
             filter(Pujas.idUsuario == idUsuario).all()
             #filter(Pujas.idSubasta== Subastas.idSubasta).all()
-        print(filtro)
         return filtro
 
     @classmethod
@@ -104,13 +103,15 @@ class Subastas(db.Model):
                      join(Usuarios, Subastas.idUsuario == Usuarios.idUsuario). \
                      join(Estado, Subastas.idEstado == Estado.idEstado). \
                      filter(Subastas.idUsuario == idUsuario).all()
+            return filtro
+
     @classmethod
     def get_subastas(self, idUsuario):
             filtro = db.session.query(Subastas, Usuarios, Estado). \
                      join(Usuarios, Subastas.idUsuario == Usuarios.idUsuario). \
                      join(Estado, Subastas.idEstado == Estado.idEstado). \
                      filter(Subastas.idUsuario == idUsuario).all()
-
+            return filtro
 
     def __init__(self, idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, fechaSubasta):
         self.idUsuario = idUsuario

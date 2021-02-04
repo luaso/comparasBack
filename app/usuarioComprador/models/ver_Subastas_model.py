@@ -1,6 +1,7 @@
 from app.db import db, BaseModelMixin
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from sqlalchemy import distinct
 from sqlalchemy import Column, Integer, String, Date
 from sqlalchemy import func, and_
 
@@ -71,7 +72,6 @@ class Usuarios(db.Model, BaseModelMixin):
     codigoPostalPais = db.Column(db.String)
     telefono = db.Column(db.String)
     celular = db.Column(db.String)
-    direccion = db.Column(db.String)
     email = db.Column(db.String)
     password = db.Column(db.String)
     #subastas = db.relationship('Subastas', backref='Usuarios', lazy=True)
@@ -107,9 +107,13 @@ class Subastas(db.Model, BaseModelMixin):
 
     @classmethod
     def get_joins_filter_Detalle_Subasta(self, idSubasta):
-        filtro = db.session.query(Pujas, Subastas). \
-            join(Subastas, Subastas.idSubasta == Pujas.idSubasta). \
-            filter(Subastas.idSubasta == idSubasta).order_by(Pujas.precioPuja).all()
+        subqueryP = db.session.query(Pujas.idPuja, Pujas.idSubasta, Pujas.idUsuario, func.min(Pujas.precioPuja).label('pujaMinima')).\
+            group_by(Pujas.idPuja).subquery()
+
+        filtro = db.session.query(subqueryP, Subastas, Usuarios). \
+            join(subqueryP, subqueryP.c.idSubasta == Subastas.idSubasta). \
+            join(Usuarios, Usuarios.idUsuario == subqueryP.c.idUsuario). \
+            filter(Subastas.idSubasta == idSubasta).all()
         #subq = db.session.query(Pujas.idSubasta,func.max(Pujas.precioPuja).label('maxprecio')).group_by(Pujas.idSubasta).subquery('t2')
 
         #query = db.session.query(Pujas).join(subq, and_(Pujas.idSubasta == subq.c.idSubasta,Pujas.precioPuja == subq.c.maxprecio))

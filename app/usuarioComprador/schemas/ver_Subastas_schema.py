@@ -29,4 +29,7 @@ class TaskSchema(ma.Schema):
                   'Productos.nombreProducto',
                   'Productos.marca',
                   'Productos.unidadMedida',
-                  'Productos.cantidadPaquete')
+                  'Productos.cantidadPaquete',
+                  'Usuarios.idUsuario',
+                  'Usuarios.nombreUsuario',
+                  'Usuarios.nombreComercial')

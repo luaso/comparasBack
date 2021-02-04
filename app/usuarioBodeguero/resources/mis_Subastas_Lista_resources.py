@@ -24,17 +24,19 @@ class misSubastasBodeguero(Resource):
         if valid_token != 'ok':
             return chek_token
         try:
+            res = []
             #idUsuario = request.json['idUsuario']
 
             filtro = Subastas.get_join_filter(idUsuario)
-
-            result = task_schema.dump(filtro, many=True)
             print(filtro)
-            for filtro in result:
-                print()
+            result = task_schema.dump(filtro, many=True)
+            '''print("antes del for")
+            for filtros in result:
+                print(filtros.Subasta["idSubasta"])
+                print("fin del for")
 
             #access_token = create_access_token(identity={"subastas": result})
-
+            print(res)'''
             return {"Resultado": result}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
