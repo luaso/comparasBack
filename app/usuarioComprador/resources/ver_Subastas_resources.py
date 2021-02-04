@@ -1,9 +1,10 @@
 from flask import request
 from flask_restful import Resource
 from sqlalchemy import or_
-from app.usuarioComprador.schemas.ver_Subastas_schema import TaskSchema
+from app.usuarioComprador.schemas.ver_Subastas_schema import TaskSchema,Serializar
 from app.usuarioComprador.models.ver_Subastas_model import Subastas, Usuarios, Estado
 from app import ObjectNotFound
+
 from config.configuration import AdditionalConfig
 
 from flask_jwt_extended import (
@@ -37,10 +38,17 @@ class detalleSubasta(Resource):
             return chek_token
         try:
             #idSubastaGet = request.json['idSubasta']
+            #print(Subastas.find_by_id2())
+            print("**********************************************************************")
             filtro = Subastas.get_joins_filter_Detalle_Subasta(idSubasta)
+            prueba = Serializar.serializarDetalleSubasta(filtro)
+            print("prueba")
+            print(type(prueba))
+            #print(jsonify(prueba))
+
             result = taskSchema.dump(filtro, many=True)
-            #access_token = create_access_token(identity={"detalleSubasta": result})
-            return {"producto": result}, 200
+
+            return prueba
         except Exception as ex:
             raise ObjectNotFound(ex)
 

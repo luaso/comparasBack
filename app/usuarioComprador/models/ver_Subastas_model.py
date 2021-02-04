@@ -77,7 +77,7 @@ class Usuarios(db.Model, BaseModelMixin):
     #subastas = db.relationship('Subastas', backref='Usuarios', lazy=True)
 
 
-class Subastas(db.Model, BaseModelMixin):
+class Subastas(db.Model):
     __tablename__= "SUBASTAS"
     idSubasta = db.Column(db.Integer, primary_key=True)
     idUsuario = db.Column(db.Integer,db.ForeignKey(Usuarios.idUsuario), nullable=False)
@@ -106,14 +106,20 @@ class Subastas(db.Model, BaseModelMixin):
         return cls.query.get(id)
 
     @classmethod
-    def get_joins_filter_Detalle_Subasta(self, idSubasta):
-        subqueryP = db.session.query(Pujas.idPuja, Pujas.idSubasta, Pujas.idUsuario, func.min(Pujas.precioPuja).label('pujaMinima')).\
-            group_by(Pujas.idPuja).subquery()
+    def find_by_id2(cls):
+        subqueryP = db.session.query(Pujas). \
+            group_by(Pujas.idPuja).order_by(func.min(Pujas.precioPuja)).all()
+        return subqueryP
+
+    @classmethod
+    def get_joins_filter_Detalle_Subasta(cls, idSubasta):
+        subqueryP = db.session.query(Pujas). \
+            group_by(Pujas.idPuja).order_by(func.min(Pujas.precioPuja)).subquery()
 
         filtro = db.session.query(subqueryP, Subastas, Usuarios). \
             join(subqueryP, subqueryP.c.idSubasta == Subastas.idSubasta). \
             join(Usuarios, Usuarios.idUsuario == subqueryP.c.idUsuario). \
-            filter(Subastas.idSubasta == idSubasta).all()
+            filter(Subastas.idSubasta == idSubasta).distinct(subqueryP.c.idUsuario).all()
         #subq = db.session.query(Pujas.idSubasta,func.max(Pujas.precioPuja).label('maxprecio')).group_by(Pujas.idSubasta).subquery('t2')
 
         #query = db.session.query(Pujas).join(subq, and_(Pujas.idSubasta == subq.c.idSubasta,Pujas.precioPuja == subq.c.maxprecio))
