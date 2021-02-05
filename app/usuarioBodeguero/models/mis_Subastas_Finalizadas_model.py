@@ -110,20 +110,20 @@ class Subastas(db.Model):
             join(Estado, Estado.idEstado == Subastas.idEstado).\
             join(Usuarios, Usuarios.idUsuario == Pujas.idUsuario).\
             filter(Pujas.idUsuario == idUsuario).\
-            filter(Estado.codEstado == AdditionalConfig.ESTADO2).\
+            filter(Estado.codEstado == AdditionalConfig.ESTADO4).\
             group_by(Pujas.idSubasta, Subastas.idSubasta).all()
 
         ofertaMin = db.session.query(func.min(Pujas.precioPuja).label("ofertaMin"), Subastas.idSubasta ). \
             join(Subastas, Subastas.idSubasta == Pujas.idSubasta). \
             join(Estado, Estado.idEstado == Subastas.idEstado).\
-            filter(Estado.codEstado == AdditionalConfig.ESTADO2).\
+            filter(Estado.codEstado == AdditionalConfig.ESTADO4).\
             group_by(Pujas.idSubasta, Subastas.idSubasta).all()
 
         misSubastasP = db.session.query(Subastas.idSubasta, Usuarios.nombreUsuario, Usuarios.apellidoPatUsuario,
                                         Subastas.fechaSubasta, Estado.nombreEstado). \
             join(Usuarios, Usuarios.idUsuario == Subastas.idUsuario). \
             join(Estado, Estado.idEstado == Subastas.idEstado).\
-            filter(Estado.codEstado == AdditionalConfig.ESTADO2).all()
+            filter(Estado.codEstado == AdditionalConfig.ESTADO4).all()
 
         arr = []
 
@@ -154,21 +154,7 @@ class Subastas(db.Model):
             arr.append(dicc)
         return arr
 
-    @classmethod
-    def get_mis_subastas(self, idUsuario):
-            filtro = db.session.query(Subastas, Usuarios, Estado). \
-                     join(Usuarios, Subastas.idUsuario == Usuarios.idUsuario). \
-                     join(Estado, Subastas.idEstado == Estado.idEstado). \
-                     filter(Subastas.idUsuario == idUsuario).all()
-            return filtro
 
-    @classmethod
-    def get_subastas(self, idUsuario):
-            filtro = db.session.query(Subastas, Usuarios, Estado). \
-                     join(Usuarios, Subastas.idUsuario == Usuarios.idUsuario). \
-                     join(Estado, Subastas.idEstado == Estado.idEstado). \
-                     filter(Subastas.idUsuario == idUsuario).all()
-            return filtro
 
     def __init__(self, idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, fechaSubasta):
         self.idUsuario = idUsuario
