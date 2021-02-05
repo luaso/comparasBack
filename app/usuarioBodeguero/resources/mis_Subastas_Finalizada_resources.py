@@ -28,7 +28,7 @@ class misSubastasFinalizadasBodeguero(Resource):
 
 
             #filtro = Subastas.get_join_filter(idUsuario)
-            filtro1 = Subastas.get_mis_subastas_disponibles(idUsuario)
+            filtro1 = Subastas.get_mis_subastas_finalizadas(idUsuario)
 
             result = jsonify({"Resultado": filtro1})
 

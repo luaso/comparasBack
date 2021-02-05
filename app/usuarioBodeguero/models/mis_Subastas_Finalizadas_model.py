@@ -37,7 +37,6 @@ class Usuarios(db.Model, BaseModelMixin):
     email = db.Column(db.String)
     password = db.Column(db.String)
     imagen = db.Column(db.String)
-    subastas = db.relationship('Subastas', backref='Usuarios', lazy=True)
     pujas = db.relationship('Pujas', backref='Usuarios', lazy=True)
 
 class Categorias(db.Model, BaseModelMixin):
@@ -77,15 +76,19 @@ class Productos(db.Model, BaseModelMixin):
     subastas_productos = db.relationship('Subastas_Productos', backref='Productos', lazy=True)
 
 class Subastas(db.Model):
-    __tablename__= "SUBASTAS"
+    __tablename__ = "SUBASTAS"
     idSubasta = db.Column(db.Integer, primary_key=True)
-    idUsuario = db.Column(db.Integer,db.ForeignKey(Usuarios.idUsuario), nullable=False)
+    idUsuario = db.Column(db.Integer, db.ForeignKey(Usuarios.idUsuario), nullable=False)
     idEstado = db.Column(db.Integer, db.ForeignKey(Estado.idEstado), nullable=False)
+    idUsuarioGanador = db.Column(db.Integer, db.ForeignKey(Usuarios.idUsuario), nullable=False)
     tiempoInicial = db.Column(db.Date)
     nombreSubasta = db.Column(db.String)
     precioIdeal = db.Column(db.Float)
-    fechaSubasta = db.Column(db.String)
-    pujas = db.relationship('Pujas', backref='Subastas', lazy=True)
+    idDireccion = db.Column(db.Integer)
+    fechaSubasta = db.Column(db.Date)
+    usuario = db.relationship("Usuarios", foreign_keys=[idUsuario])
+    usuarioGanador = db.relationship("Usuarios", foreign_keys=[idUsuarioGanador])
+    subastas_productos = db.relationship('Subastas_Productos', backref='Subastas', lazy=True)
 
 
     @classmethod
@@ -103,27 +106,29 @@ class Subastas(db.Model):
         return filtro
 
     @classmethod
-    def get_mis_subastas_disponibles(self, idUsuario):
+    def get_mis_subastas_finalizadas(self, idUsuario):
 
         misOfertasMin = db.session.query(func.min(Pujas.precioPuja).label("miMinOferta"), Subastas.idSubasta).\
             join(Subastas, Subastas.idSubasta == Pujas.idSubasta).\
             join(Estado, Estado.idEstado == Subastas.idEstado).\
             join(Usuarios, Usuarios.idUsuario == Pujas.idUsuario).\
             filter(Pujas.idUsuario == idUsuario).\
-            filter(Estado.codEstado == AdditionalConfig.ESTADO4).\
+            filter(Estado.codEstado == AdditionalConfig.ESTADO4). \
+            filter(Subastas.idUsuarioGanador == idUsuario). \
             group_by(Pujas.idSubasta, Subastas.idSubasta).all()
 
-        ofertaMin = db.session.query(func.min(Pujas.precioPuja).label("ofertaMin"), Subastas.idSubasta ). \
-            join(Subastas, Subastas.idSubasta == Pujas.idSubasta). \
-            join(Estado, Estado.idEstado == Subastas.idEstado).\
-            filter(Estado.codEstado == AdditionalConfig.ESTADO4).\
-            group_by(Pujas.idSubasta, Subastas.idSubasta).all()
+        print("misOfertasMin")
+        print(misOfertasMin)
 
         misSubastasP = db.session.query(Subastas.idSubasta, Usuarios.nombreUsuario, Usuarios.apellidoPatUsuario,
                                         Subastas.fechaSubasta, Estado.nombreEstado). \
             join(Usuarios, Usuarios.idUsuario == Subastas.idUsuario). \
             join(Estado, Estado.idEstado == Subastas.idEstado).\
-            filter(Estado.codEstado == AdditionalConfig.ESTADO4).all()
+            filter(Estado.codEstado == AdditionalConfig.ESTADO4). \
+            filter(Subastas.idUsuarioGanador == idUsuario).all()
+
+        print("misSubastasP")
+        print(misSubastasP)
 
         arr = []
 
@@ -131,10 +136,8 @@ class Subastas(db.Model):
             dicc = {}
             miOfertaMinima = data[0]
             idSubasta = data[1]
+            ofertaMinimaSubasta = data[0]
 
-            for ofertaMinima in ofertaMin:
-                if ofertaMinima[1] == idSubasta:
-                    ofertaMinimaSubasta = ofertaMinima[0]
 
             for subasta in misSubastasP:
                 if subasta[0] == idSubasta:
