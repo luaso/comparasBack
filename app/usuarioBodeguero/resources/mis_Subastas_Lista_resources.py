@@ -30,7 +30,7 @@ class misSubastasBodeguero(Resource):
             #filtro = Subastas.get_join_filter(idUsuario)
             filtro1 = Subastas.get_mis_subastas_disponibles(idUsuario)
 
-            result = jsonify({"Resultado": filtro1})
+            result = jsonify({"resultado": filtro1})
             #result = task_schema.dump(filtro, many=True)
 
             return result
