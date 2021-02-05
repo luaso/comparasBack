@@ -106,28 +106,20 @@ class Subastas(db.Model):
         codRadio = AdditionalConfig.RADIOBUSQUEDASUBASTA
         parametroRadio = db.session.query(Parametros).filter(Parametros.idParametros == codRadio).first()
         radioInt = int(parametroRadio.Valor)
-        print(type(radioInt))
 
         direccionesMenores = []
         latlongBodeguero = db.session.query(Direcciones).filter(Direcciones.idUsuario == idUsuario)
         for data in latlongBodeguero:
             coordenada = ((data.latitud, data.longitud))
-            print("coordenada")
-            print(coordenada)
 
         for direccion in direcciones:
 
             coordenadadaBus = ((direccion["Direcciones.latitud"],direccion["Direcciones.longitud"]))
-            print("coordenada")
-            print(coordenada)
-            print("coordenada busqueda")
-            print(coordenadadaBus)
+
             dist = geodesic(coordenada,coordenadadaBus).km
-            print("distancia")
-            print(dist)
+
             if dist <= radioInt:
 
-                print("entro al  if")
                 direccionesMenores.append(direccion)
 
         return direccionesMenores

@@ -5,6 +5,7 @@ from app.usuarioBodeguero.schemas.mis_Subastas_Lista_schema import TaskSchema
 from datetime import datetime
 from app import ObjectNotFound
 from flask import Flask, request, jsonify
+
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 
@@ -27,16 +28,13 @@ class misSubastasBodeguero(Resource):
             res = []
             #idUsuario = request.json['idUsuario']
 
-            filtro = Subastas.get_join_filter(idUsuario)
-            print(filtro)
-            result = task_schema.dump(filtro, many=True)
-            '''print("antes del for")
-            for filtros in result:
-                print(filtros.Subasta["idSubasta"])
-                print("fin del for")
+            #filtro = Subastas.get_join_filter(idUsuario)
+            filtro1 = Subastas.prueba(idUsuario)
+            #print("filtro")
+            #print(filtro)
+            result = jsonify({"resultado": filtro1})
+            #result = task_schema.dump(filtro, many=True)
 
-            #access_token = create_access_token(identity={"subastas": result})
-            print(res)'''
-            return {"Resultado": result}, 200
+            return result
         except Exception as ex:
             raise ObjectNotFound(ex)

@@ -106,15 +106,16 @@ class Subastas(db.Model):
         return cls.query.get(id)
 
     @classmethod
-    def find_by_id2(cls):
-        subqueryP = db.session.query(Pujas). \
-            group_by(Pujas.idPuja).order_by(func.min(Pujas.precioPuja)).all()
+    def find_by_id2(cls, idSubasta):
+        subqueryP = db.session.query(func.min(Pujas.precioPuja)). \
+            filter(Pujas.idSubasta == idSubasta).group_by(Pujas.idUsuario).all()
         return subqueryP
 
     @classmethod
     def get_joins_filter_Detalle_Subasta(cls, idSubasta):
         subqueryP = db.session.query(Pujas). \
-            group_by(Pujas.idPuja).order_by(func.min(Pujas.precioPuja)).subquery()
+            join(Subastas, Subastas.idSubasta == Pujas.idSubasta). \
+            filter(Subastas.idSubasta == idSubasta).order_by(Pujas.precioPuja).subquery()
 
         filtro = db.session.query(subqueryP, Subastas, Usuarios). \
             join(subqueryP, subqueryP.c.idSubasta == Subastas.idSubasta). \
@@ -123,8 +124,6 @@ class Subastas(db.Model):
         #subq = db.session.query(Pujas.idSubasta,func.max(Pujas.precioPuja).label('maxprecio')).group_by(Pujas.idSubasta).subquery('t2')
 
         #query = db.session.query(Pujas).join(subq, and_(Pujas.idSubasta == subq.c.idSubasta,Pujas.precioPuja == subq.c.maxprecio))
-
-
 
         return filtro
 

@@ -2,6 +2,8 @@ from app.db import db, BaseModelMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 from sqlalchemy import or_
+from config.configuration import AdditionalConfig
+from sqlalchemy.sql.expression import func
 
 db = SQLAlchemy()
 
@@ -9,6 +11,7 @@ class Estado(db.Model):
     __tablename__ = "ESTADO"
     idEstado = db.Column(db.Integer, primary_key=True)
     nombreEstado = db.Column(db.String)
+    codEstado = db.Column(db.String)
     subastas = db.relationship('Subastas', backref='Estado', lazy=True)
 
 
@@ -95,7 +98,70 @@ class Subastas(db.Model):
             join(Usuarios, Subastas.idUsuario == Usuarios.idUsuario). \
             filter(Pujas.idUsuario == idUsuario).all()
             #filter(Pujas.idSubasta== Subastas.idSubasta).all()
+        # filtro = Pujas.query.filter(or_(Pujas.idSubasta == idSubastaGet, Pujas.idUsuario == idUsuarioGet)).\
+        # filter(Pujas.idPuja == db.session.query(func.max(Pujas.idPuja)))
         return filtro
+
+    @classmethod
+    def prueba(self, idUsuario):
+
+        misOfertasMin = db.session.query(func.min(Pujas.precioPuja).label("miMinOferta"), Subastas.idSubasta).\
+            join(Subastas, Subastas.idSubasta == Pujas.idSubasta).\
+            join(Estado, Estado.idEstado == Subastas.idEstado).\
+            join(Usuarios, Usuarios.idUsuario == Pujas.idUsuario).\
+            filter(Pujas.idUsuario == idUsuario).\
+            filter(Estado.codEstado == AdditionalConfig.ESTADO2).\
+            group_by(Pujas.idSubasta, Subastas.idSubasta).all()
+
+        print("misOfertas")
+        print(misOfertasMin)
+
+        ofertaMin = db.session.query(func.min(Pujas.precioPuja).label("ofertaMin"), Subastas.idSubasta ). \
+            join(Subastas, Subastas.idSubasta == Pujas.idSubasta). \
+            join(Estado, Estado.idEstado == Subastas.idEstado).\
+            filter(Estado.codEstado == AdditionalConfig.ESTADO2).\
+            group_by(Pujas.idSubasta, Subastas.idSubasta).all()
+
+        print("ofertaMin")
+        print(ofertaMin)
+
+        misSubastasP = db.session.query(Subastas.idSubasta, Usuarios.nombreUsuario, Usuarios.apellidoPatUsuario,
+                                        Subastas.fechaSubasta, Estado.nombreEstado). \
+            join(Usuarios, Usuarios.idUsuario == Subastas.idUsuario). \
+            join(Estado, Estado.idEstado == Subastas.idEstado).\
+            filter(Estado.codEstado == AdditionalConfig.ESTADO2).all()
+
+        print("final")
+        print(misSubastasP)
+        arr = []
+
+        for data in misOfertasMin:
+            dicc = {}
+            miOfertaMinima = data[0]
+            idSubasta = data[1]
+
+            for ofertaMinima in ofertaMin:
+                if ofertaMinima[1] == idSubasta:
+                    ofertaMinimaSubasta = ofertaMinima[0]
+
+            for subasta in misSubastasP:
+                if subasta[0] == idSubasta:
+                    nombreUsuario = subasta[1]
+                    apellidoPatUsuario = subasta[2]
+                    fechaSubasta = subasta[3].strftime("%Y-%m-%d %H:%M:%S")
+                    estadoSubasta = subasta[4]
+
+            dicc = {"Subastas.idSubasta":idSubasta,
+                    "Usuarios.nombreUsuario":nombreUsuario,
+                    "Usuarios.apellidoPatUsuario":apellidoPatUsuario,
+                    "Subastas.fechaSubasta":fechaSubasta,
+                    "Pujas.miOferta":miOfertaMinima,
+                    "Pujas.ofertaMinimaSubasta":ofertaMinimaSubasta,
+                    "Estado.nombreEstado":estadoSubasta}
+
+            arr.append(dicc)
+        print(arr)
+        return arr
 
     @classmethod
     def get_mis_subastas(self, idUsuario):
