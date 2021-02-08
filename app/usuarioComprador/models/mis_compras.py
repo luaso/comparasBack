@@ -23,13 +23,18 @@ class Usuarios(db.Model, BaseModelMixin):
     password = db.Column(db.String)
     subastas = db.relationship('Subastas', backref='Usuarios', lazy=True)
 
-
+class Estado(db.Model):
+    __tablename__ = "ESTADO"
+    idEstado = db.Column(db.Integer, primary_key=True)
+    nombreEstado = db.Column(db.String)
+    codEstado = db.Column(db.String)
+    subastas = db.relationship('Subastas', backref='Estado', lazy=True)
 
 class Subastas(db.Model, BaseModelMixin):
     __tablename__= "SUBASTAS"
     idSubasta = db.Column(db.Integer, primary_key=True)
     idUsuario = db.Column(db.Integer,db.ForeignKey(Usuarios.idUsuario), nullable=False)
-    idEstado = db.Column(db.Integer)
+    idEstado = db.Column(db.Integer, db.ForeignKey(Estado.idEstado), nullable=False)
     tiempoInicial = db.Column(db.Date)
     nombreSubasta = db.Column(db.String)
     precioIdeal = db.Column(db.Float)
@@ -38,15 +43,27 @@ class Subastas(db.Model, BaseModelMixin):
     idUsuarioGanador = db.Column(db.Integer)
     subastas_productos = db.relationship('Subastas_Productos', backref='Subastas', lazy=True)
 
-    def get_compras(idUsuario):
-        filtro = db.session.query(Subastas, Usuarios, Pujas). \
-                    join(Usuarios, Subastas.idUsuario == Usuarios.idUsuario). \
-                    join(Pujas, Subastas.idSubasta == Pujas.idSubasta). \
-                    filter(Subastas.idUsuario == idUsuario). \
-                    filter(and_(Subastas.idUsuarioGanador == Pujas.idUsuario, Subastas.idSubasta == Pujas.idSubasta))
+    @classmethod
+    def get_compras(cls, idUsuario):
+        filtro = db.session.query(Subastas, Pujas). \
+            join(Estado, Estado.idEstado == Subastas.idEstado). \
+            join(Usuarios, Subastas.idUsuario == Usuarios.idUsuario). \
+            filter(Subastas.idUsuario == idUsuario). \
+            filter(Estado.codEstado == "Cod4"). \
+            filter(Subastas.idUsuarioGanador.isnot(None)).all()
+
+
+        filtro = db.session.query(Subastas, Usuarios). \
+            join(Estado, Estado.idEstado == Subastas.idEstado). \
+            join(Usuarios, Subastas.idUsuario == Usuarios.idUsuario). \
+            filter(Subastas.idUsuario == idUsuario). \
+            filter(Estado.codEstado == "Cod4").\
+            filter(Subastas.idUsuarioGanador.isnot(None)).all()
+            #filter(and_(Subastas.idUsuarioGanador == Pujas.idUsuario, Subastas.idSubasta == Pujas.idSubasta)).all()
 
 
         return filtro
+
     def get_compraSeleccionada(idSubasta):
         filtro = db.session.query(Pujas, Usuarios). \
                 join(Usuarios, Pujas.idUsuario == Usuarios.idUsuario). \
