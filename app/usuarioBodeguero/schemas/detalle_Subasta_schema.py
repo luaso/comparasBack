@@ -8,7 +8,8 @@ class TaskSchema(ma.Schema):
                   'Pujas.precioPuja',
                   'Pujas.idSubasta',
                   'idPuja',
-                  'precioPuja')
+                  'precioPuja',
+                  'fechaPuja')
 
 class TaskSchema2(ma.Schema):
     class Meta:

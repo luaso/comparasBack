@@ -21,8 +21,7 @@ def check_for_token(token_ur):
         data = jwt.decode(token_ur, secret_Key)
         userRol = Usuarios.get_email_token(data.get("user"))
         resultado = rolSchemaToken.dump(userRol)
-        print(userRol.idUsuario)
-        print(resultado["Rol.idRol"])
+
         rept = {'user': data.get("user"), 'exp': data.get("exp"), 'message': data.get("message"), 'status': data.get("status"), 'idUsuario':userRol.idUsuario, 'rol': resultado["Rol.idRol"]}
     except:
         rept = {'user': 'invalid', 'exp': '0', 'message': 'Token Caducado ó invalido', 'status': '403'}

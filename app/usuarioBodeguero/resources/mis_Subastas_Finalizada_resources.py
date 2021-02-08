@@ -45,7 +45,8 @@ class datosUsuarioCGanador(Resource):
         if valid_token != 'ok':
             return chek_token
         try:
-            idUsuario = 54
+
+            idUsuario = chek_token['idUsuario']
             usuarioGanador = Subastas.get_usuario_ganador(idSubasta, idUsuario)
             result = task_schema.dump(usuarioGanador, many=True)
 
