@@ -75,6 +75,15 @@ class Productos(db.Model, BaseModelMixin):
     cantidadPaquete = db.Column(db.Integer)
     subastas_productos = db.relationship('Subastas_Productos', backref='Productos', lazy=True)
 
+class Direcciones(db.Model, BaseModelMixin):
+    __tablename__="DIRECCIONES"
+    idDireccion = db.Column(db.Integer, primary_key=True)
+    idUsuario = db.Column(db.Integer,db.ForeignKey(Usuarios.idUsuario), nullable=False)
+    direccion = db.Column(db.String)
+    latitud = db.Column(db.String)
+    longitud = db.Column(db.String)
+    subastas = db.relationship('Subastas', backref='Direcciones', lazy=True)
+
 class Subastas(db.Model):
     __tablename__ = "SUBASTAS"
     idSubasta = db.Column(db.Integer, primary_key=True)
@@ -84,7 +93,7 @@ class Subastas(db.Model):
     tiempoInicial = db.Column(db.Date)
     nombreSubasta = db.Column(db.String)
     precioIdeal = db.Column(db.Float)
-    idDireccion = db.Column(db.Integer)
+    idDireccion = db.Column(db.Integer,db.ForeignKey(Direcciones.idDireccion), nullable=False)
     fechaSubasta = db.Column(db.Date)
     usuario = db.relationship("Usuarios", foreign_keys=[idUsuario])
     usuarioGanador = db.relationship("Usuarios", foreign_keys=[idUsuarioGanador])
@@ -157,6 +166,14 @@ class Subastas(db.Model):
             arr.append(dicc)
         return arr
 
+    @classmethod
+    def get_usuario_ganador(self, idSubasta, idUsuario):
+        filtro = db.session.query(Usuarios, Direcciones). \
+            join(Subastas, Subastas.idUsuario == Usuarios.idUsuario). \
+            join(Direcciones, Direcciones.idDireccion == Subastas.idDireccion).\
+            filter(Subastas.idSubasta == idSubasta).\
+            filter(Subastas.idUsuarioGanador == idUsuario).all()
+        return filtro
 
 
     def __init__(self, idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, fechaSubasta):

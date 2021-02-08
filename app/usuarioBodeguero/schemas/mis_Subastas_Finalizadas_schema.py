@@ -7,6 +7,7 @@ class TaskSchema(ma.Schema):
                   'Usuarios.nombreUsuario',
                   'Usuarios.apellidoPatUsuario',
                   'Usuarios.apellidoMatUsuario',
-                  'Subastas.fechaSubasta',
-                  'Pujas.precioPuja',
-                  'Estado.nombreEstado')
+                  'Usuarios.telefono',
+                  'Usuarios.celular',
+                  'Usuarios.email',
+                  'Direcciones.direccion')

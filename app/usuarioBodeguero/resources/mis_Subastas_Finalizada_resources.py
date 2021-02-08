@@ -38,16 +38,17 @@ class misSubastasFinalizadasBodeguero(Resource):
 
 
 
-class datosUsuarioGanador(Resource):
+class datosUsuarioCGanador(Resource):
     def get(seft, idSubasta):
         chek_token = check_for_token(request.headers.get('token'))
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
         try:
+            idUsuario = 54
+            usuarioGanador = Subastas.get_usuario_ganador(idSubasta, idUsuario)
+            result = task_schema.dump(usuarioGanador, many=True)
 
-
-            result = ""
-            return result
+            return {"resultado": result}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
