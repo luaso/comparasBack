@@ -119,25 +119,31 @@ class lista(Resource):
             return chek_token
         data = request.get_json()
         subasta = Subastas.find_by_id(idLista)
-        print(subasta)
+
         if subasta is None:
             raise ObjectNotFound('No existe lista con ese id')
         else:
+            try:
+                nombreLista = data["nombreLista"]
 
-            Subastas_Productos.delete_rows_for_id(idLista)
+                if subasta.nombreSubasta != nombreLista:
+                    subasta.nombreSubasta = nombreLista
+                    subasta.save_to_db()
 
-            for productos in data['productos']:
-                print('idProducto:', productos['idProducto'])
-                print('Cantidad:', productos['Cantidad'])
-                try:
-                   idSubasta = idLista
-                   idProducto = productos['idProducto']
-                   Cantidad = productos['Cantidad']
-                   subasta_productos = Subastas_Productos(idSubasta, idProducto, Cantidad)
-                   subasta_productos.save()
-                   print('Productos Agregados a la subasta con exito')
-                except Exception as ex:
-                    raise ObjectNotFound(ex)
+                Subastas_Productos.delete_rows_for_id(idLista)
+                for productos in data['productos']:
+                    print('idProducto:', productos['idProducto'])
+                    print('Cantidad:', productos['Cantidad'])
+
+                    idSubasta = idLista
+                    idProducto = productos['idProducto']
+                    Cantidad = productos['Cantidad']
+                    subasta_productos = Subastas_Productos(idSubasta, idProducto, Cantidad)
+                    subasta_productos.save()
+                    print('Productos Agregados a la subasta con exito')
+
+            except Exception as ex:
+                raise ObjectNotFound(ex)
 
         return {"Subasta actualizada": idLista}, 201
 
@@ -152,16 +158,11 @@ class lista(Resource):
             raise ObjectNotFound('No existe lista con ese id')
         else:
             print("1")
-            elimiSubastas = Subastas(subastas.idSubasta,
-                                     subastas.idUsuario,
-                                     subastas.idEstado,
-                                     subastas.tiempoInicial,
-                                     subastas.nombreSubasta,
-                                     subastas.precioIdeal,
-                                     subastas.idDireccion,
-                                     subastas.fechaSubasta)
             print("2")
-            Subastas_Productos.delete_rows_for_id(idLista)
+            try:
+                Subastas_Productos.delete_Subastas(idLista)
+            except Exception as ex:
+                raise ObjectNotFound(ex)
             print("3")
         return {"Lista eliminada": idLista}, 201
 

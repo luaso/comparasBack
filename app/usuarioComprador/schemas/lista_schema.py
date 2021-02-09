@@ -30,7 +30,7 @@ class ProductoSchema(ma.Schema):
     nombreProducto = fields.String(dump_only=True, required=True, error_messages={"required": "idCategoria es obligatorio", "code": 400})
     contenidoProducto = fields.String()
     Imagen = fields.String()
-    codProducto = fields.Integer()
+    codProducto = fields.String()
     marca = fields.String()
     presentacion = fields.String()
     unidadMedida = fields.String()

@@ -177,9 +177,17 @@ class Subastas_Productos(db.Model, BaseModelMixin):
         return cls.query.get(id)
 
     @classmethod
-    def delete_rows_for_id(cls, id):
+    def delete_Subastas(cls, id):
         delete_q = Subastas_Productos.__table__.delete().where(Subastas_Productos.idSubasta == id)
         db.session.execute(delete_q)
         delete_s = Subastas.__table__.delete().where(Subastas.idSubasta == id)
         db.session.execute(delete_s)
+        db.session.commit()
+
+    @classmethod
+    def delete_rows_for_id(cls, id):
+        delete_q = Subastas_Productos.__table__.delete().where(Subastas_Productos.idSubasta == id)
+        db.session.execute(delete_q)
+        #delete_s = Subastas.__table__.delete().where(Subastas.idSubasta == id)
+        #db.session.execute(delete_s)
         db.session.commit()
