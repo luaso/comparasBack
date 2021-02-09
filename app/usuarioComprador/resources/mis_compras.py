@@ -1,9 +1,10 @@
-from flask import request
+from flask import request, jsonify
 from flask_restful import Api, Resource
 from app import ObjectNotFound
 from app.usuarioComprador.models.mis_compras import Subastas, Usuarios, Pujas
 from app.usuarioComprador.schemas.mis_compras import TaskSchema, TaskSchema2, TaskSchema3
 from flask_sqlalchemy import SQLAlchemy
+
 
 from app.validateToken import check_for_token
 
@@ -21,8 +22,9 @@ class misComprasTotal(Resource):
         try:
             print('entrando')
             filtro = Subastas.get_compras(idUsuario)
-            result = task_schema.dump(filtro, many=True)
-            return {"Resultado": result}, 200
+            #result = task_schema.dump(filtro, many=True)
+            result = jsonify({"Resultado": filtro})
+            return result
 
         except Exception as ex:
             raise ObjectNotFound(ex)

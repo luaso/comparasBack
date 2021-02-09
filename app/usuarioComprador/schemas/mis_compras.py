@@ -24,5 +24,6 @@ class TaskSchema3(ma.Schema):
                   'Usuarios.nombreUsuario',
                   'Usuarios.apellidoPatUsuario',
                   'Usuarios.celular',
+                  'Usuarios.nombreComercial',
                   'Usuarios.email',
                   'Pujas.precioPuja')

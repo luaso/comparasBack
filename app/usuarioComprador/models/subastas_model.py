@@ -1,6 +1,8 @@
 from app.db import db, BaseModelMixin
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from sqlalchemy import or_
+
 from sqlalchemy import Column, Integer, String, Date
 
 db = SQLAlchemy()
@@ -54,6 +56,7 @@ class Estado(db.Model, BaseModelMixin):
     __tablename__ = "ESTADO"
     idEstado = db.Column(db.Integer, primary_key=True)
     nombreEstado = db.Column(db.String)
+    codEstado = db.Column(db.String)
     subastas = db.relationship('Subastas', backref='Estado', lazy=True)
 
 
@@ -97,11 +100,11 @@ class Subastas(db.Model, BaseModelMixin):
     subastas_productos = db.relationship('Subastas_Productos', backref='Subastas', lazy=True)
 
     @classmethod
-    def get_list_user(self, idUsuario, nombreEstado):
+    def get_list_user(self, idUsuario, codEstado):
         filtro = db.session.query(Subastas, Estado). \
                  join(Estado, Subastas.idEstado == Estado.idEstado). \
-                 filter(Subastas.idUsuario == idUsuario). \
-                 filter(Estado.nombreEstado == nombreEstado).all()
+                 filter(Estado.codEstado == codEstado). \
+                 filter(Subastas.idUsuario == idUsuario).all()
 
         return filtro
 
@@ -134,8 +137,7 @@ class Subastas(db.Model, BaseModelMixin):
         print("entro a find_by_id")
         return cls.query.get(id)
 
-    def __init__(self, idSubasta, idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, idDireccion, fechaSubasta):
-        self.idSubasta = idSubasta
+    def __init__(self, idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, idDireccion, fechaSubasta):
         self.idUsuario = idUsuario
         self.idEstado = idEstado
         self.tiempoInicial = tiempoInicial

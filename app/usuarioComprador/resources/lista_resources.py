@@ -5,7 +5,8 @@ from flask_restful import Resource
 from sqlalchemy import or_
 from app.usuarioComprador.schemas.crear_Subasta_schema import TaskSchema
 from app.usuarioComprador.schemas.lista_schema import ProductoSchema, SubastasSchema
-from app.usuarioComprador.models.subastas_model import Subastas, Estado, Productos, Categorias, Sub_Categorias, Tipos_Productos, Rol, Usuarios, Subastas_Productos
+from app.usuarioComprador.models.subastas_model import Subastas, Subastas_Productos
+from config.configuration import AdditionalConfig
 
 
 from app import ObjectNotFound
@@ -22,14 +23,13 @@ class listas(Resource):
         if valid_token != 'ok':
             return chek_token
         try:
-            idUsuario = 43
-            lista = "Lista"
+            idUsuario = chek_token["idUsuario"]
+            codEstado = AdditionalConfig.ESTADO1
             print("test")
-            filtro = Subastas.get_list_user(idUsuario, lista)
+            filtro = Subastas.get_list_user(idUsuario, codEstado)
             print("test parte final")
             print(filtro)
             result = taskSchema.dump(filtro, many=True)
-            print(result)
 
             return {"lista": result}, 201
         except Exception as ex:
@@ -97,7 +97,7 @@ class lista(Resource):
         if valid_token != 'ok':
             return chek_token
         try:
-            idUsuario = 1
+            idUsuario = chek_token["idUsuario"]
             lista = idLista
             print("test unico")
             filtro = Subastas.get_list_for_id(idUsuario, lista)

@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from sqlalchemy import Column, Integer, String, Date
 from sqlalchemy import func, and_
+from config.configuration import AdditionalConfig
 
 db = SQLAlchemy()
 ma = Marshmallow()
@@ -45,24 +46,48 @@ class Subastas(db.Model, BaseModelMixin):
 
     @classmethod
     def get_compras(cls, idUsuario):
-        filtro = db.session.query(Subastas, Pujas). \
-            join(Estado, Estado.idEstado == Subastas.idEstado). \
-            join(Usuarios, Subastas.idUsuario == Usuarios.idUsuario). \
-            filter(Subastas.idUsuario == idUsuario). \
-            filter(Estado.codEstado == "Cod4"). \
-            filter(Subastas.idUsuarioGanador.isnot(None)).all()
-
 
         filtro = db.session.query(Subastas, Usuarios). \
             join(Estado, Estado.idEstado == Subastas.idEstado). \
             join(Usuarios, Subastas.idUsuario == Usuarios.idUsuario). \
             filter(Subastas.idUsuario == idUsuario). \
-            filter(Estado.codEstado == "Cod4").\
+            filter(Estado.codEstado == AdditionalConfig.ESTADO4).\
             filter(Subastas.idUsuarioGanador.isnot(None)).all()
-            #filter(and_(Subastas.idUsuarioGanador == Pujas.idUsuario, Subastas.idSubasta == Pujas.idSubasta)).all()
+
+        print(filtro)
 
 
-        return filtro
+        arr = []
+        for data in filtro:
+            dicc = {}
+            idSubasta = data[0].idSubasta
+            idUsuarioGanador = data[0].idUsuarioGanador
+            fechaSubasta = data[0].fechaSubasta
+            print(idSubasta)
+            print(data[0].idUsuarioGanador)
+            filtro2 = db.session.query(func.min(Pujas.precioPuja).label("miMinOferta"), Usuarios.nombreUsuario, Usuarios.apellidoPatUsuario). \
+                join(Subastas, Subastas.idUsuarioGanador == Pujas.idUsuario). \
+                join(Usuarios, Usuarios.idUsuario == Subastas.idUsuarioGanador). \
+                filter(Pujas.idSubasta == idSubasta).\
+                filter(Pujas.idUsuario == idUsuarioGanador).group_by(Pujas.idUsuario, Usuarios.idUsuario).all()
+
+            precioGanador = filtro2[0][0]
+            nombreGanador = filtro2[0][1]
+            apellidoPatGanador = filtro2[0][2]
+            dicc = {
+                "Usuarios.nombreUsuario": nombreGanador,
+                "Usuarios.apellidoPatUsuario": apellidoPatGanador,
+                "Pujas.precioPuja": precioGanador,
+                "Pujas.idSubasta": idSubasta,
+                "Subastas.idSubasta": idSubasta,
+                "Pujas.fechaPuja": fechaSubasta,
+                "Subastas.fechaSubasta": fechaSubasta
+            }
+
+            arr.append(dicc)
+            print(arr)
+        print("fin")
+        return arr
 
     def get_compraSeleccionada(idSubasta):
         filtro = db.session.query(Pujas, Usuarios). \
