@@ -26,4 +26,5 @@ class TaskSchema3(ma.Schema):
                   'Usuarios.celular',
                   'Usuarios.nombreComercial',
                   'Usuarios.email',
-                  'Pujas.precioPuja')
+                  'Pujas.precioPuja',
+                  'Pujas.fechaPuja')
