@@ -157,13 +157,11 @@ class lista(Resource):
         if subastas is None:
             raise ObjectNotFound('No existe lista con ese id')
         else:
-            print("1")
-            print("2")
+
             try:
                 Subastas_Productos.delete_Subastas(idLista)
             except Exception as ex:
                 raise ObjectNotFound(ex)
-            print("3")
         return {"Lista eliminada": idLista}, 201
 
 
