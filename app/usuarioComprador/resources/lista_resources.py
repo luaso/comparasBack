@@ -4,7 +4,7 @@ from flask import request
 from flask_restful import Resource
 from sqlalchemy import or_
 from app.usuarioComprador.schemas.crear_Subasta_schema import TaskSchema
-from app.usuarioComprador.schemas.lista_schema import ProductoSchema, SubastasSchema
+from app.usuarioComprador.schemas.lista_schema import ProductoSchema, SubastasSchema, Subasta_ProductosTaskSchema
 from app.usuarioComprador.models.subastas_model import Subastas, Subastas_Productos
 from config.configuration import AdditionalConfig
 
@@ -12,6 +12,7 @@ from config.configuration import AdditionalConfig
 from app import ObjectNotFound
 from app.validateToken import check_for_token
 
+subasta_ProductosSchema = Subasta_ProductosTaskSchema()
 taskSchema = TaskSchema()
 productoSchema = ProductoSchema()
 subastasSchema = SubastasSchema()
@@ -25,7 +26,8 @@ class listas(Resource):
         try:
             idUsuario = chek_token["idUsuario"]
             codEstado = AdditionalConfig.ESTADO1
-            print("test")
+            print(idUsuario)
+            print(codEstado)
             filtro = Subastas.get_list_user(idUsuario, codEstado)
             print("test parte final")
             print(filtro)
@@ -104,9 +106,11 @@ class lista(Resource):
             print("test parte final unico")
             print(filtro)
             result = productoSchema.dump(filtro, many=True)
-            print(result)
+            result1 = subasta_ProductosSchema.dump(filtro, many=True)
 
-            return {"lista": result}, 201
+            print(result1)
+
+            return {"lista": result1}, 201
         except Exception as ex:
             raise ObjectNotFound(ex)
 

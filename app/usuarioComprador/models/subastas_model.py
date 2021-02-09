@@ -110,7 +110,7 @@ class Subastas(db.Model, BaseModelMixin):
 
     @classmethod
     def get_list_for_id(self, idUsuario, idList):
-        filtro = db.session.query(Productos). \
+        filtro = db.session.query(Productos, Subastas_Productos). \
             join(Subastas_Productos, Subastas_Productos.idProducto == Productos.idProducto). \
             join(Subastas, Subastas.idSubasta == Subastas_Productos.idSubasta). \
             join(Estado, Estado.idEstado == Subastas.idEstado). \

@@ -44,3 +44,18 @@ class SubastasSchema(ma.Schema):
     precioIdeal = fields.Float()
     idDireccion = fields.Integer()
     fechaSubasta = fields.Date()
+
+
+class Subasta_ProductosTaskSchema(ma.Schema):
+    class Meta:
+        fields = ('Productos.unidadMedida',
+                  'Productos.marca',
+                  'Productos.presentacion',
+                  'Productos.contenidoProducto',
+                  'Productos.codProducto',
+                  'Productos.idProducto',
+                  'Productos.idTipoProducto',
+                  'Productos.nombreProducto',
+                  'Productos.cantidadPaquete',
+                  'Productos.Imagen',
+                  'Subastas_Productos.Cantidad')
