@@ -98,7 +98,7 @@ class Subastas(db.Model):
             filter(Subastas.idUsuario == idUsuario). \
             filter(Pujas.idUsuario == idUsuario).all()
             #filter(Pujas.idSubasta== Subastas.idSubasta).all()
-        print(filtro)
+
         return filtro
 
     @classmethod
@@ -108,7 +108,11 @@ class Subastas(db.Model):
                      join(Estado, Subastas.idEstado == Estado.idEstado). \
                      filter(Subastas.idUsuario == idUsuario). \
                      filter(or_(Estado.codEstado == AdditionalConfig.ESTADO2,
-                                Estado.codEstado == AdditionalConfig.ESTADO3))
+                                Estado.codEstado == AdditionalConfig.ESTADO3)).all()
+            for row in filtro:
+
+                print(row[0])
+            print("asd")
             return filtro
 
 

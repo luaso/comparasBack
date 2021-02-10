@@ -120,6 +120,11 @@ class Subastas(db.Model, BaseModelMixin):
 
         return filtro
 
+    @classmethod
+    def find_by_id(cls, id):
+        print("entro a find_by_id")
+        return cls.query.get(id)
+
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()

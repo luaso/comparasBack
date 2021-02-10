@@ -30,6 +30,35 @@ class listasUsuario(Resource):
         except Exception as ex:
             raise ObjectNotFound(ex)
 
+class cammbiarListaUsuario(Resource):
+    def put(self):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
+        try:
+            data = request.get_json()
+            idSubasta = data["idSubasta"]
+            idUsuario = data["idUsuario"]
+            subasta = Subastas.find_by_id(idSubasta)
+            print(subasta.idUsuario)
+            if subasta is None:
+                raise ObjectNotFound('No existe lista con ese id')
+            else:
+                if subasta.idUsuario == 1:
+                    if subasta.idEstado == 1:
+                        print("el usaurio es 1")
+                        subasta.idUsuario = idUsuario
+                        subasta.save_to_db()
+                    else:
+                        raise ObjectNotFound('La accion no es correcta')
+                else:
+                    raise ObjectNotFound('La lista ya tiene dueño')
+            result = "Lista editada"
+            return {"Lista": result}, 200
+        except Exception as ex:
+            raise ObjectNotFound(ex)
+
 class direccionSubasta(Resource):
     def get(self, idUsuario):
         chek_token = check_for_token(request.headers.get('token'))
