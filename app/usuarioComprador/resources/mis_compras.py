@@ -37,8 +37,10 @@ class misComprasSeleccionada(Resource):
             return chek_token
         try:
             print('entrando')
-            filtro = Subastas.get_compraSeleccionada(idSubasta)
+            filtro = Subastas.get_direccion(idSubasta)
+            print(filtro)
             result = task_schema.dump(filtro, many=True)
+            print(result)
 
             filtroPro = Subastas.get_productosSubasta(idSubasta)
             result2 = task_schema2.dump(filtroPro, many=True)
@@ -48,7 +50,7 @@ class misComprasSeleccionada(Resource):
             result3 = task_schema3.dump(filtroganador, many=True)
 
 
-            return {"Pujas": result, "Productos": result2, "Ganador": result3}, 200
+            return {"Direccion": result, "Productos": result2, "Ganador": result3}, 200
 
         except Exception as ex:
             raise ObjectNotFound(ex)

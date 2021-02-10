@@ -31,6 +31,15 @@ class Estado(db.Model):
     codEstado = db.Column(db.String)
     subastas = db.relationship('Subastas', backref='Estado', lazy=True)
 
+class Direcciones(db.Model, BaseModelMixin):
+    __tablename__="DIRECCIONES"
+    idDireccion = db.Column(db.Integer, primary_key=True)
+    idUsuario = db.Column(db.Integer)
+    direccion = db.Column(db.String)
+    latitud = db.Column(db.String)
+    longitud = db.Column(db.String)
+    subastas = db.relationship('Subastas', backref='Direcciones', lazy=True)
+
 class Subastas(db.Model, BaseModelMixin):
     __tablename__= "SUBASTAS"
     idSubasta = db.Column(db.Integer, primary_key=True)
@@ -39,7 +48,7 @@ class Subastas(db.Model, BaseModelMixin):
     tiempoInicial = db.Column(db.Date)
     nombreSubasta = db.Column(db.String)
     precioIdeal = db.Column(db.Float)
-    idDireccion = db.Column(db.Integer)
+    idDireccion = db.Column(db.Integer, db.ForeignKey(Direcciones.idDireccion), nullable=False)
     fechaSubasta = db.Column(db.Date)
     idUsuarioGanador = db.Column(db.Integer)
     subastas_productos = db.relationship('Subastas_Productos', backref='Subastas', lazy=True)
@@ -88,6 +97,13 @@ class Subastas(db.Model, BaseModelMixin):
             print(arr)
         print("fin")
         return arr
+
+    @classmethod
+    def get_direccion(cls, idSubasta):
+        filtro = db.session.query(Direcciones). \
+                join(Subastas, Subastas.idDireccion == Direcciones.idDireccion). \
+                filter(Subastas.idSubasta == idSubasta).all()
+        return filtro
 
     def get_compraSeleccionada(idSubasta):
         filtro = db.session.query(Pujas, Usuarios). \
