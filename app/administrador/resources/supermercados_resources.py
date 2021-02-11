@@ -3,13 +3,14 @@ from flask_restful import Resource
 
 from app.administrador.schemas.supermercado_schema import SupermercadosSchema
 from app.administrador.models.supermercados_model import Supermercados, Parametros
-
 from app import ObjectNotFound
+from config.configuration import AdditionalConfig
 import time, os
 from os import remove
 from werkzeug.utils import secure_filename
-
 from app.validateToken import check_for_token
+
+import base64
 
 supermercado_schema = SupermercadosSchema()
 from flask_jwt_extended import (
@@ -50,41 +51,25 @@ class SupermercadoList(Resource):
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
-        imagen = request.files['pic']
-        filtro = Parametros.get(9)
+        res = request.get_json()
 
-        for datos in filtro:
-           direccion = datos.Valor
-        '''
-        try:
-            if cambioImagen == 1:
-                rutaimg = AdditionalConfig.RUTAIMAGENESUSUARIOS
-                imgdata = base64.b64decode(imgstring)
-                filename = 'app/imagenes/usuarios/' + str(usuario['idUsuario']) + '.jpg'
-                with open(filename, 'wb') as f:
-                    f.write(imgdata)
-                usuarioEditar.imagen = rutaimg + str(usuario['idUsuario']) + '.jpg'
-        except Exception as ex:
-            raise ObjectNotFound(ex)
-'''
+        supermercado = res["supermercado"]
+        nombreSupermercado = supermercado["nombreSupermercado"]
+        urlSupermercado = supermercado["urlSupermercado"]
+        imagenSupermercadoR = supermercado["imagenSupermercado"]
+
+        rutaimg = AdditionalConfig.RUTAIMAGENESSUPERMERCADOS
 
         try:
-            #data = request.json['prueba']
-            #print(data)
-            nombreSupermercado=request.form['nombreSupermercado']
-            urlSupermercado=request.form['urlSupermercado']
-            print('carga de datos de insomnia')
-            print(nombreSupermercado)
-            print(urlSupermercado)
-            #nombreSupermercado=request.form["nombreSupermercado"]
-            #urlSupermercado=request.form["urlSupermercado"]
-        except Exception as ex:
-            raise ObjectNotFound(ex)
+            imgdata = base64.b64decode(imagenSupermercadoR)
+            filename = 'app/imagenes/supermercados/' + nombreSupermercado + '.jpg'
+            with open(filename, 'wb') as f:
+                f.write(imgdata)
+            imagenSupermercado = rutaimg + nombreSupermercado + '.jpg'
 
-        try:
-            superPost = Supermercados(nombreSupermercado, filename, urlSupermercado)
+            superPost = Supermercados(nombreSupermercado, imagenSupermercado, urlSupermercado)
             superPost.save()
-            result="ok"
+            result = "ok"
             #access_token = create_access_token(identity={"estado": result})
             return {"Datos Cargados":result}
         except Exception as ex:
@@ -131,61 +116,43 @@ class Supermercado(Resource):
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
-        print("put supermercado")
-        nombreSupermercado = request.form['nombreSupermercado']
-        urlSupermercado = request.form['urlSupermercado']
 
+        res = request.get_json()
+        supermercadoRes = res["supermercado"]
+        nombreSupermercado = supermercadoRes["nombreSupermercado"]
+        urlSupermercado = supermercadoRes["urlSupermercado"]
+        cambioImagen = supermercadoRes["cambioImagen"]
+        imagenSupermercadoR = supermercadoRes["imagenSupermercado"]
 
+        rutaimg = AdditionalConfig.RUTAIMAGENESSUPERMERCADOS
 
         supermercado = Supermercados.find_by_id(idSupermercado)
-        supermercado.nombreSupermercado = nombreSupermercado
-        supermercado.urlSupermercado = urlSupermercado
 
-        cambioImagen = request.form['cambioImagen']
-        imagen = ''
+        if supermercado is None:
+            raise ObjectNotFound('El id del supermercado no existe')
+        else:
 
-        if cambioImagen == 0 :
-            filtro = Parametros.get(9)
+            supermercado.nombreSupermercado = nombreSupermercado
+            supermercado.urlSupermercado = urlSupermercado
 
-            for datos in filtro:
-                print('impirmir valor')
-                print(datos.Valor)
-                direccion = datos.Valor
-                print('aquí termina')
-
-            print(direccion + imagen)
             try:
-                remove(direccion + imagen)
-            except Exception as ex:
-                print('No se encontró la imagen que desea editar.')
-            try:
-                imagen = request.files['pic']
-                filename = time.strftime("%H%M%S") + (time.strftime("%d%m%y")) + secure_filename(imagen.filename)
-                mimetype = imagen.mimetype
-                print(filename)
-                print(mimetype)
-                save_father_path = direccion
-                os.chdir(save_father_path)
-                img_path = os.path.join(save_father_path + filename)
-                imagen.save(img_path)
-                imagen = filename
-                supermercado.imagenSupermercado = imagen
+                if cambioImagen == 1:
+                    imgdata = base64.b64decode(imagenSupermercadoR)
+                    filename = 'app/imagenes/supermercados/' + nombreSupermercado + '.jpg'
 
+                    with open(filename, 'wb') as f:
+                        f.write(imgdata)
 
-                print('Se guardo la imagen correctamente')
+                    imagenSupermercado = rutaimg + nombreSupermercado + '.jpg'
+                    supermercado.imagenSupermercado = imagenSupermercado
+
+                supermercado.save_to_db()
+
+                result = "ok"
+                return {"Datos Cargados": result}
             except Exception as ex:
                 raise ObjectNotFound(ex)
 
-        try:
-            supermercado.save_to_db()
-        except:
-            raise ObjectNotFound('error al agregar a la BD')
-
-
-
-        result = supermercado_schema.dump(supermercado)
-        #access_token = create_access_token(identity={"estado": result})
-        return {"supermercado": result}, 201
 
 class SupermercadoBuscar(Resource):
     def get(self, nombreSupermercado):

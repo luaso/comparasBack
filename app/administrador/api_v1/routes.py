@@ -29,7 +29,8 @@ api.add_resource(guardarSubCategoria, '/api/guardarSubCategoria/', endpoint='gua
 #Mantenimiento Supermercados
 api.add_resource(SupermercadoList, '/api/supermercado/', endpoint='supermercado_list_resource')
 api.add_resource(Supermercado, '/api/supermercado/<int:idSupermercado>', endpoint='supermercado_resource')
-api.add_resource(mostrarParametrosTotal, '/api/mostrarParametrosTotal/', endpoint='mostrarParametrosTotal')
+api.add_resource(SupermercadoBuscar, '/api/SupermercadoBuscar/<string:nombreSupermercado>', endpoint='SupermercadoBuscar')
+
 
 #Mantenimiento
 #Mantenimiento
@@ -45,7 +46,7 @@ api.add_resource(obtenerParametro, '/api/obtenerParametro/', endpoint='obtenerPa
 api.add_resource(guardarParametro, '/api/guardarParametro/', endpoint='guardarParametro')
 api.add_resource(obtenerProductosSupermercado, '/api/obtenerProductosSupermercado/', endpoint='obtenerProductosSupermercado')
 
-api.add_resource(SupermercadoBuscar, '/api/SupermercadoBuscar/<string:nombreSupermercado>', endpoint='SupermercadoBuscar')
+api.add_resource(mostrarParametrosTotal, '/api/mostrarParametrosTotal/', endpoint='mostrarParametrosTotal')
 api.add_resource(obtenerTiposProductos, '/api/obtenerTiposProductos/', endpoint='obtenerTiposProductos')
 api.add_resource(guardarTiposProductos, '/api/guardarTiposProductos/', endpoint='guardarTiposProductos')
 api.add_resource(obtenerSubCategorias, '/api/obtenerSubCategorias/', endpoint='obtenerSubCategorias')
