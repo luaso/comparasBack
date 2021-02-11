@@ -1,6 +1,6 @@
 from flask_restful import Api, Resource
 from sqlalchemy import or_
-from app.administrador.models.sub_categorias_model import  Sub_Categorias, Categorias
+from app.administrador.models.sub_categorias_model import Sub_Categorias, Categorias
 from app.administrador.schemas.sub_categorias_schema import TaskSchema
 from app import ObjectNotFound
 from flask import Flask, request, jsonify
@@ -65,9 +65,10 @@ class guardarSubCategoria(Resource):
         try:
             nombreSubCategorias = datos['nombreSubCategorias']
             idCategoria = datos['idCategoria']
+            print(idCategoria)
             subCategoria = Sub_Categorias(nombreSubCategorias, idCategoria)
-            print(subCategoria)
-            subCategoria.save()
+            print(type(subCategoria))
+            subCategoria.save_to_db()
             result="ok"
             print("3")
 
