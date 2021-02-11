@@ -55,21 +55,18 @@ class SupermercadoList(Resource):
 
         for datos in filtro:
            direccion = datos.Valor
-
+        '''
         try:
-            filename = time.strftime("%H%M%S") + (time.strftime("%d%m%y")) + secure_filename(imagen.filename)
-            mimetype = imagen.mimetype
-            print(filename)
-            print(mimetype)
-            save_father_path = direccion
-            os.chdir(save_father_path)
-            img_path = os.path.join(save_father_path + filename)
-            imagen.save(img_path)
-            print('cogimos datos de la imagen')
-            #return 'Carga de imagen dada'
+            if cambioImagen == 1:
+                rutaimg = AdditionalConfig.RUTAIMAGENESUSUARIOS
+                imgdata = base64.b64decode(imgstring)
+                filename = 'app/imagenes/usuarios/' + str(usuario['idUsuario']) + '.jpg'
+                with open(filename, 'wb') as f:
+                    f.write(imgdata)
+                usuarioEditar.imagen = rutaimg + str(usuario['idUsuario']) + '.jpg'
         except Exception as ex:
             raise ObjectNotFound(ex)
-
+'''
 
         try:
             #data = request.json['prueba']
@@ -83,9 +80,6 @@ class SupermercadoList(Resource):
             #urlSupermercado=request.form["urlSupermercado"]
         except Exception as ex:
             raise ObjectNotFound(ex)
-
-
-
 
         try:
             superPost = Supermercados(nombreSupermercado, filename, urlSupermercado)

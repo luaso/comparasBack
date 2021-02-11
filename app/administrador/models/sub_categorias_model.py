@@ -47,7 +47,8 @@ class Sub_Categorias(db.Model, BaseModelMixin):
 
     @classmethod
     def get_all(self):
-        filtro = db.session.query(Sub_Categorias)
+        filtro = db.session.query(Sub_Categorias, Categorias).\
+            join(Categorias, Categorias.idCategoria == Sub_Categorias.idCategoria).all()
         return filtro
 
     def save_to_db(self):

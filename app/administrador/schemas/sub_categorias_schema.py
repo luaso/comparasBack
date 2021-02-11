@@ -8,3 +8,11 @@ class TaskSchema(ma.Schema):
                   'idCategoria',
                   'nombreCategoria',
                   'fechaCreacion')
+
+class TaskSchema2(ma.Schema):
+    class Meta:
+        fields = ('Sub_Categorias.idSubCategorias',
+                  'Sub_Categorias.nombreSubCategorias',
+                  'Sub_Categorias.idCategoria',
+                  'Categorias.nombreCategoria',
+                  'Categorias.fechaCreacion')

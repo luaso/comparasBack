@@ -1,7 +1,7 @@
 from flask_restful import Api, Resource
 from sqlalchemy import or_
 from app.administrador.models.sub_categorias_model import Sub_Categorias, Categorias
-from app.administrador.schemas.sub_categorias_schema import TaskSchema
+from app.administrador.schemas.sub_categorias_schema import TaskSchema, TaskSchema2
 from app import ObjectNotFound
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
@@ -15,6 +15,7 @@ from flask_jwt_extended import (
     get_jwt_identity
 )
 task_schema = TaskSchema()
+task_schema2 = TaskSchema2()
 
 class obtenerCategoria(Resource):
     def get(self):
@@ -44,7 +45,8 @@ class obtenerSubCategoriaTotal(Resource):
         try:
 
             filtro = Sub_Categorias.get_all()
-            result = task_schema.dump(filtro, many=True)
+            print(filtro)
+            result = task_schema2.dump(filtro, many=True)
 
             #access_token = create_access_token(identity={"sub_categorias": result})
 
