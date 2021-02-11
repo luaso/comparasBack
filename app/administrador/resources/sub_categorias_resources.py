@@ -66,8 +66,8 @@ class guardarSubCategoria(Resource):
             nombreSubCategorias = datos['nombreSubCategorias']
             idCategoria = datos['idCategoria']
             print(idCategoria)
-            subCategoria = Sub_Categorias(nombreSubCategorias, idCategoria)
-            print(type(subCategoria))
+            subCategoria = Sub_Categorias(nombreSubCategorias=nombreSubCategorias, idCategoria=idCategoria)
+            print(subCategoria)
             subCategoria.save_to_db()
             result="ok"
             print("3")
@@ -84,30 +84,24 @@ class editarSubCategoria(Resource):
         if valid_token != 'ok':
             return chek_token
         sub_categorias = request.get_json()
-        for datos in sub_categorias['Sub_Categorias']:
+        datos = sub_categorias['subCategorias']
 
-            try:
-                idSubCategorias = datos['idSubCategorias']
-                nombreSubCategorias = datos['nombreSubCategorias']
-                idCategoria = datos['idCategoria']
+        try:
+            idSubCategorias = datos['idSubCategorias']
+            nombreSubCategorias = datos['nombreSubCategorias']
+            idCategoria = datos['idCategoria']
 
+            subCategoriaEditar = Sub_Categorias.get_query(idSubCategorias)
+            subCategoriaEditar.nombreSubCategorias = nombreSubCategorias
+            subCategoriaEditar.idCategoria = idCategoria
 
-                subCategoriaEditar = Sub_Categorias.get_query(idSubCategorias)
-                subCategoriaEditar.nombreSubCategorias = nombreSubCategorias
-                subCategoriaEditar.idCategoria = idCategoria
+            subCategoriaEditar.save_to_db()
+            result = "ok"
 
-
-                try:
-
-                    subCategoriaEditar.save_to_db()
-                    result = "ok"
-                except Exception as ex:
-                    raise ObjectNotFound(ex)
-                    result ="no"
                 #access_token = create_access_token(identity={"sub_categorias": result})
-                return {'SubCategoria Editada': result}, 200
-            except Exception as ex:
-                raise ObjectNotFound(ex)
+            return {'SubCategoria Editada': result}, 200
+        except Exception as ex:
+            raise ObjectNotFound(ex)
 
 class eliminarSubCategorias(Resource):
     def delete(self, idSubCategorias):
