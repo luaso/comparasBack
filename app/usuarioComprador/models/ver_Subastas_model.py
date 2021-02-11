@@ -107,23 +107,33 @@ class Subastas(db.Model):
 
     @classmethod
     def find_by_id2(cls, idSubasta):
-        subqueryP = db.session.query(func.min(Pujas.precioPuja)). \
-            filter(Pujas.idSubasta == idSubasta).group_by(Pujas.idUsuario).all()
+        subqueryP = db.session.query(func.min(Pujas.precioPuja), Usuarios.idUsuario). \
+            join(Usuarios, Usuarios.idUsuario == Pujas.idUsuario). \
+            filter(Pujas.idSubasta == idSubasta).group_by(Pujas.idUsuario, Usuarios.idUsuario).order_by(func.min(Pujas.precioPuja)).all()
         return subqueryP
 
     @classmethod
+    def find_by_id3(cls, idSubasta):
+        filtro = db.session.query(Pujas, Subastas, Usuarios). \
+            join(Pujas, Pujas.idSubasta == Subastas.idSubasta). \
+            join(Usuarios, Usuarios.idUsuario == Pujas.idUsuario). \
+            filter(Subastas.idSubasta == idSubasta).all()
+        return filtro
+
+    @classmethod
     def get_joins_filter_Detalle_Subasta(cls, idSubasta):
+
         subqueryP = db.session.query(Pujas). \
             join(Subastas, Subastas.idSubasta == Pujas.idSubasta). \
             filter(Subastas.idSubasta == idSubasta).order_by(Pujas.precioPuja).subquery()
+        #print("subquery")
+        #print(subqueryP)
+        #return
 
         filtro = db.session.query(subqueryP, Subastas, Usuarios). \
             join(subqueryP, subqueryP.c.idSubasta == Subastas.idSubasta). \
             join(Usuarios, Usuarios.idUsuario == subqueryP.c.idUsuario). \
             filter(Subastas.idSubasta == idSubasta).distinct(subqueryP.c.idUsuario).all()
-        #subq = db.session.query(Pujas.idSubasta,func.max(Pujas.precioPuja).label('maxprecio')).group_by(Pujas.idSubasta).subquery('t2')
-
-        #query = db.session.query(Pujas).join(subq, and_(Pujas.idSubasta == subq.c.idSubasta,Pujas.precioPuja == subq.c.maxprecio))
 
         return filtro
 

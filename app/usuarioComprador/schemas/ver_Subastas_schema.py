@@ -39,8 +39,7 @@ class TaskSchema(ma.Schema):
 class Serializar:
 
     @classmethod
-    def serializarDetalleSubasta(cls,datos):
-        print(datos)
+    def serializarDetalleSubasta(cls, datos):
         arr = []
         for dato in datos:
 
@@ -84,5 +83,56 @@ class Serializar:
             arr.append(result)
         prueba = jsonify({"resultado":arr})
         print(prueba)
+
+        return prueba
+
+    @classmethod
+    def serializarDetalleSubasta2(cls, pujas, subastas):
+        arr = []
+        for puja in pujas:
+            print("-----------------------------------------------")
+
+            precioPuja = puja[0]
+            idUsuario = puja[1]
+
+            for subasta in subastas:
+
+                if (precioPuja == subasta[0].precioPuja and idUsuario == subasta[0].idUsuario):
+                    idPuja = subasta[0].idPuja
+                    idSubasta = subasta[0].idSubasta
+                    fechaPuja = subasta[0].fechaPuja.strftime("%Y-%m-%d %H:%M:%S")
+
+                    SubastaIdSubasta = subasta[1].idSubasta
+                    SubastaIdUsuario = subasta[1].idUsuario
+                    SubastaIdEstado = subasta[1].idEstado
+                    SubastaTiempoInicial = subasta[1].tiempoInicial.strftime("%Y-%m-%d %H:%M:%S")
+                    SubastaNombreSubasta = subasta[1].nombreSubasta
+                    SubastaPrecioIdeal = subasta[1].precioIdeal
+                    SubastaFechaSubasta = subasta[1].fechaSubasta.strftime("%Y-%m-%d %H:%M:%S")
+
+                    UsuarioIdUsuario = subasta[2].idUsuario
+                    UsuarioNombreUsuario = subasta[2].nombreUsuario
+                    UsuarioNombreComercial = subasta[2].nombreComercial
+
+            result = {
+                "Pujas.idPuja": idPuja,
+                "Pujas.idSubasta": idSubasta,
+                "Pujas.idUsuario": idUsuario,
+                "Pujas.precioPuja": precioPuja,
+                "Pujas.fechaPuja": fechaPuja,
+                "Subastas.idSubasta": SubastaIdSubasta,
+                "Subastas.idUsuario": SubastaIdUsuario,
+                "Subastas.idEstado": SubastaIdEstado,
+                "Subastas.tiempoInicial": SubastaTiempoInicial,
+                "Subastas.nombreSubasta": SubastaNombreSubasta,
+                "Subastas.precioIdeal": SubastaPrecioIdeal,
+                "Subastas.fechaSubasta": SubastaFechaSubasta,
+                "Usuarios.idUsuario": UsuarioIdUsuario,
+                "Usuarios.nombreUsuario": UsuarioNombreUsuario,
+                "Usuarios.nombreComercial": UsuarioNombreComercial
+            }
+            arr.append(result)
+        prueba = jsonify({"resultado": arr})
+        print(arr)
 
         return prueba

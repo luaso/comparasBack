@@ -68,6 +68,7 @@ class Usuarios(db.Model, BaseModelMixin):
     __tablename__ = "USUARIOS"
     idUsuario = db.Column(db.Integer, primary_key=True)
     nombreUsuario = db.Column(db.String)
+    apellidoPatUsuario = db.Column(db.String)
     idRol = db.Column(db.Integer,db.ForeignKey(Rol.idRol), nullable=False)
     Ruc = db.Column(db.String)
     razonSocial = db.Column(db.String)
@@ -83,6 +84,12 @@ class Usuarios(db.Model, BaseModelMixin):
     def get_joins_filter_obtener_direcciones(self, idUsuarioGet):
         filtro = Usuarios.query.filter(Usuarios.idUsuario.in_((idUsuarioGet)))
         return filtro
+
+    @classmethod
+    def find_by_id(cls, id):
+        print("entro a find_by_id")
+        return cls.query.get(id)
+
 
 class Direcciones(db.Model, BaseModelMixin):
     __tablename__="DIRECCIONES"

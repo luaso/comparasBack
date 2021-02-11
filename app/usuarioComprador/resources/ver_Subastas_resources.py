@@ -38,18 +38,19 @@ class detalleSubasta(Resource):
             return chek_token
         try:
             #idSubastaGet = request.json['idSubasta']
-            print(Subastas.find_by_id2(idSubasta))
+
             print("**********************************************************************")
-            filtro = Subastas.get_joins_filter_Detalle_Subasta(idSubasta)
-            print(filtro)
-            prueba = Serializar.serializarDetalleSubasta(filtro)
-            print("prueba")
-            print(type(prueba))
+            pujas = Subastas.find_by_id2(idSubasta)
+            subastas = Subastas.find_by_id3(idSubasta)
+            prueba2 = Serializar.serializarDetalleSubasta2(pujas, subastas)
+            print("prueba2")
+            print(prueba2)
+
             #print(jsonify(prueba))
 
             #result = taskSchema.dump(filtro, many=True)
 
-            return prueba
+            return prueba2
         except Exception as ex:
             print(ex)
             raise ObjectNotFound(ex)

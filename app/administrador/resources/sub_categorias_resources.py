@@ -34,6 +34,7 @@ class obtenerCategoria(Resource):
         except Exception as ex:
             raise ObjectNotFound(ex)
 
+
 class obtenerSubCategoriaTotal(Resource):
     def get(self):
         chek_token = check_for_token(request.headers.get('token'))
@@ -59,23 +60,21 @@ class guardarSubCategoria(Resource):
         if valid_token != 'ok':
             return chek_token
         sub_categorias = request.get_json()
-        for datos in sub_categorias['Sub_Categorias']:
+        datos = sub_categorias['subCategorias']
 
-            try:
-                nombreSubCategorias = datos['nombreSubCategorias']
-                idCategoria = datos['idCategoria']
+        try:
+            nombreSubCategorias = datos['nombreSubCategorias']
+            idCategoria = datos['idCategoria']
+            subCategoria = Sub_Categorias(nombreSubCategorias, idCategoria)
+            print(subCategoria)
+            subCategoria.save()
+            result="ok"
+            print("3")
 
-                try:
-                    subCategoria = Sub_Categorias(nombreSubCategorias,idCategoria)
-                    subCategoria.save()
-                    result="ok"
-
-                except Exception as ex:
-                    raise ObjectNotFound(ex)
-                #access_token = create_access_token(identity={"sub_categorias": result})
-                return {'SubCategoria Guardada': result}, 200
-            except Exception as ex:
-                raise ObjectNotFound(ex)
+            #access_token = create_access_token(identity={"sub_categorias": result})
+            return {'SubCategoria Guardada': result}, 200
+        except Exception as ex:
+            raise ObjectNotFound(ex)
 
 class editarSubCategoria(Resource):
     def put(self):

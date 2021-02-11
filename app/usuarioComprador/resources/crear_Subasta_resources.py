@@ -5,7 +5,7 @@ from app.usuarioComprador.schemas.crear_Subasta_schema import TaskSchema
 from app.usuarioComprador.models.crear_Subasta_model import Subastas, Usuarios,  Productos, Direcciones, Subastas_Productos
 from app.usuarioComprador.models.ver_Subastas_model import Estado
 from app import ObjectNotFound
-import datetime
+from datetime import datetime
 from config.configuration import AdditionalConfig
 from app.validateToken import check_for_token
 
@@ -40,6 +40,14 @@ class cammbiarListaUsuario(Resource):
             data = request.get_json()
             idSubasta = data["idSubasta"]
             idUsuario = data["idUsuario"]
+
+            user = Usuarios.get_by_id(idUsuario)
+
+            apellidoPatUsuario = user.apellidoPatUsuario
+            fechaACtual = datetime.now().strftime("%d-%m-%Y, %H:%M:%S")
+            print(apellidoPatUsuario)
+            print(fechaACtual)
+            nombreLista = "Lista-Subasta-" + apellidoPatUsuario + " " + fechaACtual
             subasta = Subastas.find_by_id(idSubasta)
             print(subasta.idUsuario)
             if subasta is None:
@@ -49,6 +57,7 @@ class cammbiarListaUsuario(Resource):
                     if subasta.idEstado == 1:
                         print("el usaurio es 1")
                         subasta.idUsuario = idUsuario
+                        subasta.nombreSubasta = nombreLista
                         subasta.save_to_db()
                     else:
                         raise ObjectNotFound('La accion no es correcta')

@@ -23,7 +23,6 @@ class Sub_Categorias(db.Model, BaseModelMixin):
     idSubCategorias = db.Column(db.Integer, primary_key=True)
     nombreSubCategorias = db.Column(db.String)
     idCategoria = db.Column(db.Integer, db.ForeignKey(Categorias.idCategoria), nullable=False)
-    categoria = db.relationship('Tipos_Productos', backref='Sub_Categorias', lazy=True)
 
     @classmethod
     def get_all(self):
@@ -52,13 +51,13 @@ class Sub_Categorias(db.Model, BaseModelMixin):
     def find_by_id(cls, id):
         print("entro a find_by_id")
         return cls.query.get(id)
+
     @classmethod
     def get_query(self, idSubCategorias):
         filtro = Sub_Categorias.query.get(idSubCategorias)
         return filtro
 
-    def __init__(self, nombreSubCategoria,idCategoria):
-
+    def __init__(self, nombreSubCategoria, idCategoria):
         self.nombreSubCategoria = nombreSubCategoria
         self.idCategoria = idCategoria
 

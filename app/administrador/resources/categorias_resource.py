@@ -91,7 +91,7 @@ class Categoria(Resource):
         categoria = Categorias.find_by_id(idCategoria)
         print(categoria)
         if categoria is None:
-            categoria = Categorias(data['nombreCategoria'])
+            raise ObjectNotFound('El id de la categoria no existe')
         else:
             categoria.nombreCategoria = data['nombreCategoria']
         print(categoria)
