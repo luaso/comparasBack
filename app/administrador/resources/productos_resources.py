@@ -230,50 +230,18 @@ class eliminarProducto(Resource):
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
-        idProducto = request.json['idProducto']
-        direccion = ''
-        imagen = ''
-        flagRemove=0
-        producto = Productos.get_query(idProducto)
+
+        res = request.get_json()
+        idProducto = res['idProducto']
+        print(res)
         try:
-
-
-            filtro = Parametros.get(2)
-
-            for datos in filtro:
-                print('impirmir valor')
-                print(datos.Valor)
-                direccion = datos.Valor
-                print('aquí termina')
-
-            filtroImagen = Productos.get(idProducto)
-
-            for datos in filtroImagen:
-                print('impirmir valor')
-                print(datos.Imagen)
-                imagen = datos.Imagen
-                print('aquí termina')
-
-            if direccion != '' and imagen != '':
-
-                try:
-                    producto.delete_pro()
-                    flagRemove = 1
-
-                except Exception as ex:
-                    return 'No se pudo eliminar correctamente '
-
-                if flagRemove == 1:
-                    try:
-                        remove(direccion + imagen)
-                        direccion = ''
-                        imagen = ''
-                        flagRemove = 0
-                        #return 'successful'
-                        result = "ok"
-                    except Exception as ex:
-                        return 'No se encontró imagen o dirección'
+            producto = Productos.get_query(idProducto)
+            if producto is None:
+                raise ObjectNotFound('El id del producto no existe')
+            producto.delete_pro()
         except Exception as ex:
-            result = "no"
+            raise ObjectNotFound(ex)
+        result = 'ok'
+
         #access_token = create_access_token(identity={"parametro": result})
         return {"respuesta":result}

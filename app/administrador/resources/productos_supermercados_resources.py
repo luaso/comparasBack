@@ -101,29 +101,28 @@ class guardarProductosSupermercados(Resource):
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
-        productos_supermercados = request.get_json()
-        for datos in productos_supermercados['productos']:
+        res = request.get_json()
+        productos_supermercados = res['productos_supermercados']
+        try:
+            idSupermercado = productos_supermercados['idSupermercado']
+            idProducto = productos_supermercados['idProducto']
+            fechaProducto = productos_supermercados['fechaProducto']
+            precioRegular = productos_supermercados['precioRegular']
+            precioOnline = productos_supermercados['precioOnline']
+            precioTarjeta = productos_supermercados['precioTarjeta']
+            nombreTarjeta = productos_supermercados['nombreTarjeta']
 
             try:
-                idSupermercado = datos['idSupermercado']
-                idProducto = datos['idProducto']
-                fechaProducto = datos['fechaProducto']
-                precioRegular = datos['precioRegular']
-                precioOnline = datos['precioOnline']
-                precioTarjeta = datos['precioTarjeta']
-                nombreTarjeta = datos['nombreTarjeta']
-
-                try:
-                    productos = Productos_Supermercados(idSupermercado,idProducto,fechaProducto,precioRegular,precioOnline,precioTarjeta,nombreTarjeta)
-                    productos.save()
-                    result="ok"
-                except Exception as ex:
-                    raise ObjectNotFound(ex)
-                    result = "no"
-                #access_token = create_access_token(identity={"resultado": result})
-                return {'SubCategoria Guardada':result}, 200
+                productos = Productos_Supermercados(idSupermercado,idProducto,fechaProducto,precioRegular,precioOnline,precioTarjeta,nombreTarjeta)
+                productos.save()
+                result="ok"
             except Exception as ex:
                 raise ObjectNotFound(ex)
+                result = "no"
+                #access_token = create_access_token(identity={"resultado": result})
+            return {'producto_supermercado guardado':result}, 200
+        except Exception as ex:
+            raise ObjectNotFound(ex)
 
 class editarProductosSupermercados(Resource):
     def put(self):
@@ -131,40 +130,44 @@ class editarProductosSupermercados(Resource):
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
-        productos_supermercados = request.get_json()
-        for datos in productos_supermercados['productos']:
+        res = request.get_json()
+        productos_supermercados = res['productos_supermercados']
+
+        try:
+            idProductoSupermercado = productos_supermercados['idProductoSupermercado']
+            idSupermercado = productos_supermercados['idSupermercado']
+            idProducto = productos_supermercados['idProducto']
+            fechaProducto = productos_supermercados['fechaProducto']
+            precioRegular = productos_supermercados['precioRegular']
+            precioOnline = productos_supermercados['precioOnline']
+            precioTarjeta = productos_supermercados['precioTarjeta']
+            nombreTarjeta = productos_supermercados['nombreTarjeta']
+
+
+            productosSupermercadosEditar = Productos_Supermercados.get_query(idProductoSupermercado)
+
+            if productosSupermercadosEditar is None:
+                raise ObjectNotFound('El id del producto_supermercado no existe')
+
+            productosSupermercadosEditar.idSupermercado = idSupermercado
+            productosSupermercadosEditar.idProducto = idProducto
+            productosSupermercadosEditar.fechaProducto = fechaProducto
+            productosSupermercadosEditar.precioRegular = precioRegular
+            productosSupermercadosEditar.precioOnline = precioOnline
+            productosSupermercadosEditar.precioTarjeta = precioTarjeta
+            productosSupermercadosEditar.nombreTarjeta = nombreTarjeta
+
 
             try:
-                idProductoSupermercado = datos['idProductoSupermercado']
-                idSupermercado = datos['idSupermercado']
-                idProducto = datos['idProducto']
-                fechaProducto = datos['fechaProducto']
-                precioRegular = datos['precioRegular']
-                precioOnline = datos['precioOnline']
-                precioTarjeta = datos['precioTarjeta']
-                nombreTarjeta = datos['nombreTarjeta']
-
-
-                productosSupermercadosEditar = Productos_Supermercados.get_query(idProductoSupermercado)
-                productosSupermercadosEditar.idSupermercado = idSupermercado
-                productosSupermercadosEditar.idProducto = idProducto
-                productosSupermercadosEditar.fechaProducto = fechaProducto
-                productosSupermercadosEditar.precioRegular = precioRegular
-                productosSupermercadosEditar.precioOnline = precioOnline
-                productosSupermercadosEditar.precioTarjeta = precioTarjeta
-                productosSupermercadosEditar.nombreTarjeta = nombreTarjeta
-
-
-                try:
-                    productosSupermercadosEditar.save_to_db()
-                    result="ok"
-                except Exception as ex:
-                    raise ObjectNotFound(ex)
-                    result = "no"
-                #access_token = create_access_token(identity={"resultado": result})
-                return {'SubCategoria Editada': result}, 200
+                productosSupermercadosEditar.save_to_db()
+                result="ok"
             except Exception as ex:
                 raise ObjectNotFound(ex)
+                result = "no"
+                #access_token = create_access_token(identity={"resultado": result})
+            return {'productos_supermercados Editado': result}, 200
+        except Exception as ex:
+            raise ObjectNotFound(ex)
 
 class eliminarProductosSupermercados(Resource):
     def delete(self, idProductoSupermercado):
