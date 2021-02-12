@@ -47,8 +47,7 @@ class Tipos_Productos(db.Model, BaseModelMixin):
         print("entro a find_by_id")
         return cls.query.get(id)
 
-    def __init__(self, nombreProducto,idSubCategorias):
-
+    def __init__(self, nombreProducto, idSubCategorias):
         self.nombreProducto = nombreProducto
         self.idSubCategorias = idSubCategorias
 

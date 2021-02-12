@@ -30,6 +30,20 @@ class obtenerTiposProductos(Resource):
         except Exception as ex:
             raise ObjectNotFound(ex)
 
+class tipoProductos(Resource):
+    def get(self, idTipoProductos):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
+        try:
+            filtro = Tipos_Productos.find_by_id(idTipoProductos)
+            result = task_schema.dump(filtro)
+            #access_token = create_access_token(identity={"productos": result})
+            return {"Tipos_Productos": result}, 200
+        except Exception as ex:
+            raise ObjectNotFound(ex)
+
 class obtenerSubCategorias(Resource):
     def get(self):
         chek_token = check_for_token(request.headers.get('token'))
@@ -50,23 +64,24 @@ class guardarTiposProductos(Resource):
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
-        tipos_productos = request.get_json()
-        for datos in tipos_productos['tipos_productos']:
+        res = request.get_json()
+
+        tipos_productos = res["tipos_productos"]
+
+        try:
+            nombreTipoProducto = tipos_productos['nombreTipoProducto']
+            idSubCategorias = tipos_productos['idSubCategorias']
 
             try:
-                nombreProducto = datos['nombreProducto']
-                idSubCategorias = datos['idSubCategorias']
-
-                try:
-                    tipos_Productos = Tipos_Productos(nombreProducto,idSubCategorias)
-                    tipos_Productos.save()
-                    result="ok"
-                except Exception as ex:
-                    raise ObjectNotFound(ex)
-                #access_token = create_access_token(identity={"productos": result})
-                return {'SubCategoria Guardada':result}, 200
+                tipos_Productos = Tipos_Productos(nombreTipoProducto, idSubCategorias)
+                tipos_Productos.save_to_db()
+                result="ok"
             except Exception as ex:
                 raise ObjectNotFound(ex)
+                #access_token = create_access_token(identity={"productos": result})
+            return {'SubCategoria Guardada':result}, 200
+        except Exception as ex:
+            raise ObjectNotFound(ex)
 
 
 class editarTiposProductos(Resource):
@@ -75,29 +90,31 @@ class editarTiposProductos(Resource):
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
-        tipos_productos = request.get_json()
-        for datos in tipos_productos['tipos_productos']:
+        res = request.get_json()
+        tipos_productos = res['tipos_productos']
+        try:
+            idTipoProducto = tipos_productos['idTipoProducto']
+            nombreProducto = tipos_productos['nombreTipoProducto']
+            idSubCategorias = tipos_productos['idSubCategorias']
+
+
+            tiposProductosEditar = Tipos_Productos.find_by_id(idTipoProducto)
+
+            if tiposProductosEditar is None:
+                raise ObjectNotFound('El id del Tipo de producto no existe')
+
+            tiposProductosEditar.nombreProducto = nombreProducto
+            tiposProductosEditar.idSubCategorias = idSubCategorias
 
             try:
-                idTipoProducto = datos['idTipoProducto']
-                nombreProducto = datos['nombreProducto']
-                idSubCategorias = datos['idSubCategorias']
-
-
-                tiposProductosEditar = Tipos_Productos.get_query(idTipoProducto)
-                tiposProductosEditar.nombreProducto = nombreProducto
-                tiposProductosEditar.idSubCategorias = idSubCategorias
-
-
-                try:
-                    tiposProductosEditar.save_to_db()
-                    result="ok"
-                except Exception as ex:
-                    raise ObjectNotFound(ex)
-                #access_token = create_access_token(identity={"productos": result})
-                return {'SubCategoria Editada':result}, 200
+                tiposProductosEditar.save_to_db()
+                result="ok"
             except Exception as ex:
                 raise ObjectNotFound(ex)
+                #access_token = create_access_token(identity={"productos": result})
+            return {'SubCategoria Editada':result}, 200
+        except Exception as ex:
+            raise ObjectNotFound(ex)
 
 class eliminarTiposproductos(Resource):
     def delete(self, idTipoProducto):
