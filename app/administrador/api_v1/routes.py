@@ -32,16 +32,20 @@ api.add_resource(Supermercado, '/api/supermercado/<int:idSupermercado>', endpoin
 api.add_resource(SupermercadoBuscar, '/api/SupermercadoBuscar/<string:nombreSupermercado>', endpoint='SupermercadoBuscar')
 
 
-#Mantenimiento
-#Mantenimiento
-#Mantenimiento
+#Mantenimiento Producto
 api.add_resource(obtenerProductosTotal, '/api/obtenerProductosTotal/', endpoint='obtenerProductosTotal')
 api.add_resource(obtenerTipoProduto, '/api/obtenerTipoProduto/', endpoint='obtenerTipoProduto')
 api.add_resource(guardarproductoNuevo, '/api/guardarproductoNuevo/', endpoint='guardarproductoNuevo')
-api.add_resource(mostrarProductoSeleccionado, '/api/mostrarProductoSeleccionado/', endpoint='mostrarProductoSeleccionado')
+api.add_resource(mostrarProductoSeleccionado, '/api/mostrarProductoSeleccionado/<int:idProducto>', endpoint='mostrarProductoSeleccionado')
 api.add_resource(mostrarParametros, '/api/mostrarParametros/', endpoint='mostrarParametros')
 api.add_resource(editarProducto, '/api/editarProducto/', endpoint='editarProducto')
 api.add_resource(eliminarProducto, '/api/eliminarProducto/', endpoint='eliminarProducto')
+
+#Mantenimiento
+#Mantenimiento
+
+
+
 api.add_resource(obtenerParametro, '/api/obtenerParametro/', endpoint='obtenerParametro')
 api.add_resource(guardarParametro, '/api/guardarParametro/', endpoint='guardarParametro')
 api.add_resource(obtenerProductosSupermercado, '/api/obtenerProductosSupermercado/', endpoint='obtenerProductosSupermercado')

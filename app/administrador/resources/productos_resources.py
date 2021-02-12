@@ -4,7 +4,9 @@ from app.administrador.schemas.productos_schema import TaskSchema, TaskSchema2
 from app import ObjectNotFound
 from flask import request, Flask
 from flask_sqlalchemy import SQLAlchemy
+from config.configuration import AdditionalConfig
 
+import base64
 import os
 import time
 from os import remove
@@ -80,68 +82,67 @@ class guardarproductoNuevo(Resource):
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
-        idProductoMax = 0
-        imagen = request.files['pic']
-        if not imagen:
-            return 'Imagen no seleccionada!', 400
+
+        res = request.get_json()
+        productoRes = res["producto"]
+
+        idTipoProducto = productoRes['idTipoProducto']
+        codProducto = productoRes['codProducto']
+        nombreProducto = productoRes['nombreProducto']
+        contenidoProducto = productoRes['contenidoProducto']
+
+        marca = productoRes['marca']
+        presentacion = productoRes['presentacion']
+        unidadMedida = productoRes['unidadMedida']
+        cantidadPaquete = productoRes['cantidadPaquete']
+        imagen = productoRes['imagen']
+
+        rutaimg = AdditionalConfig.RUTAIMAGENESPRODUCTOS
+
+
+        if imagen is None:
+            return {"respuesta":'Imagen no seleccionada!'}, 400
+
         try:
-            filtro = Parametros.get(2)
-            filtroMax = Productos.get_Max()
-            direccion = ''
+            filtro = Productos.get_por_cod(codProducto)
+            print("filtro")
+            print(filtro == [])
 
-            for datos in filtro:
-                print('impirmir valor')
-                print(datos.Valor)
-                direccion = datos.Valor
-                print('aquí termina')
+            imgdata = base64.b64decode(imagen)
+            filename = 'app/imagenes/productos/' + codProducto + '.jpg'
 
-            for datos in filtroMax:
-                print(datos.idProducto)
-                idProductoMax = datos.idProducto
-                idProductoMax = idProductoMax + 1
+            if filtro == []:
+
+                with open(filename, 'wb') as f:
+                    f.write(imgdata)
+
+                imagenProductoURL = rutaimg + codProducto + '.jpg'
+
+                productos = Productos(idTipoProducto, nombreProducto, contenidoProducto, imagenProductoURL, codProducto, marca,
+                                          presentacion, unidadMedida, cantidadPaquete)
+                print(productos)
+                productos.save_to_db()
+                result = "ok"
+
+            else:
+                return {"respuesta":'Ya existe un producto con este codigo'}, 400
+
         except Exception as ex:
             raise ObjectNotFound(ex)
-        try:
-            filename = time.strftime("%H%M%S") + (time.strftime("%d%m%y")) + secure_filename(imagen.filename)
-            mimetype = imagen.mimetype
-            print(filename)
-            print(mimetype)
-            save_father_path = direccion
-            os.chdir(save_father_path)
-            img_path = os.path.join(save_father_path + filename)
-            imagen.save(img_path)
-            print('cogimos datos de la imagen')
-        except Exception as ex:
-            raise ObjectNotFound(ex)
 
-        idTipoProducto = request.form['idTipoProducto']
-        nombreProducto = request.form['nombreProducto']
-        contenidoProducto = request.form['contenidoProducto']
-        Imagen = filename
-        codProducto = 'COD' + str(idProductoMax)
-        marca = request.form['marca']
-        presentacion = request.form['presentacion']
-        unidadMedida = request.form['unidadMedida']
-        cantidadPaquete = request.form['cantidadPaquete']
-        try:
-            productos = Productos(idTipoProducto,nombreProducto,contenidoProducto,Imagen,codProducto,marca,presentacion,unidadMedida,cantidadPaquete)
-            productos.save()
-            result="ok"
-            print(Imagen)
-        except Exception as ex:
-            raise ObjectNotFound(ex)
-            result = "no"
+
         #access_token = create_access_token(identity={"tipos_productos": result})
-        return {'Imagen cargada': result}, 200
+        return {'respuesta': result}, 200
 
 class mostrarProductoSeleccionado(Resource):
-    def get(self):
+    def get(self, idProducto):
         chek_token = check_for_token(request.headers.get('token'))
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
-        idProducto = request.json['idProducto']
+        print("asdasd")
         filtro = Productos.get(idProducto)
+        print("asdasd")
         result = task_schema.dump(filtro, many=True)
         #access_token = create_access_token(identity={"producto": result})
         return {"Producto": result}, 200
@@ -163,89 +164,65 @@ class editarProducto(Resource):
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
-        #data = request.get_json()
-        imagen=''
+        #--------
+
+        res = request.get_json()
+        productoRes = res["producto"]
+
+        idProducto = productoRes['idProducto']
+        idTipoProducto = productoRes['idTipoProducto']
+        codProducto = productoRes['codProducto']
+        nombreProducto = productoRes['nombreProducto']
+        contenidoProducto = productoRes['contenidoProducto']
+
+        marca = productoRes['marca']
+        presentacion = productoRes['presentacion']
+        unidadMedida = productoRes['unidadMedida']
+        cantidadPaquete = productoRes['cantidadPaquete']
+        imagen = productoRes['imagen']
+        cambioImagen = productoRes['cambioImagen']
+
+        rutaimg = AdditionalConfig.RUTAIMAGENESPRODUCTOS
 
         try:
-            idProducto = request.form['idProducto']
+            productos = Productos.find_by_id(idProducto)
+            print("filtro")
+            print(productos)
 
-            filtroImagen = Productos.get(idProducto)
+            imgdata = base64.b64decode(imagen)
+            filename = 'app/imagenes/productos/' + codProducto + '.jpg'
 
-            for datos in filtroImagen:
-                    print('impirmir valor')
-                    print(datos.Imagen)
-                    imagen = datos.Imagen
-                    print('aquí termina')
+            if productos is None:
+                raise ObjectNotFound('El id del producto no existe')
 
-            idTipoProducto = request.form['idTipoProducto']
-            nombreProducto = request.form['nombreProducto']
-            contenidoProducto = request.form['contenidoProducto']
-            marca = request.form['marca']
-            presentacion = request.form['presentacion']
-            unidadMedida = request.form['unidadMedida']
-            cantidadPaquete = request.form['cantidadPaquete']
-            cambioImagen = request.form['cambioImagen']
+            productos.idTipoProducto = idTipoProducto
+            productos.codProducto = codProducto
+            productos.nombreProducto = nombreProducto
+            productos.contenidoProducto = contenidoProducto
+            productos.marca = marca
+            productos.presentacion = presentacion
+            productos.unidadMedida = unidadMedida
+            productos.cantidadPaquete = cantidadPaquete
 
-            productoEditar = Productos.get_query(idProducto)
-            productoEditar.idTipoProducto = idTipoProducto
-            productoEditar.nombreProducto = nombreProducto
-            productoEditar.contenidoProducto = contenidoProducto
-            productoEditar.marca = marca
-            productoEditar.presentacion = presentacion
-            productoEditar.unidadMedida = unidadMedida
-            productoEditar.cantidadPaquete = cantidadPaquete
+            if cambioImagen == 1:
+                imgdata = base64.b64decode(imagen)
+                filename = 'app/imagenes/productos/' + codProducto + '.jpg'
 
-            slash = r'\''
-            direccion = ''
-            imagen = ''
-            print('Carga de datos completada')
-        except Exception as ex:
-            raise ObjectNotFound(ex)
-        try:
-            if cambioImagen == 1 :
+                with open(filename, 'wb') as f:
+                    f.write(imgdata)
 
-                filtro = Parametros.get(2)
+                imagenProductoURL = rutaimg + codProducto + '.jpg'
+                productos.Imagen = imagenProductoURL
 
-                for datos in filtro:
-                    print('impirmir direccion valor')
-                    print(datos.Valor)
-                    direccion = datos.Valor
-                    print('aquí direccion termina')
-
-                print(direccion + imagen)
-                try:
-                    remove(direccion + imagen)
-                except Exception as ex:
-                    print('No se encontró la imagen que desea editar.')
-                try:
-                    imagen = request.files['pic']
-                    filename = time.strftime("%H%M%S") + (time.strftime("%d%m%y")) + secure_filename(imagen.filename)
-                    mimetype = imagen.mimetype
-                    print(filename)
-                    print(mimetype)
-                    save_father_path = direccion
-                    os.chdir(save_father_path)
-                    img_path = os.path.join(save_father_path + filename)
-                    imagen.save(img_path)
-                    imagen = filename
-                    print('Se guardo la imagen correctamente')
-                except Exception as ex:
-                    raise ObjectNotFound(ex)
-
-
-                productoEditar.Imagen = imagen
-        except Exception as ex:
-            raise ObjectNotFound(ex)
-        try:
-
-            productoEditar.save_to_db()
+            productos.save_to_db()
             result = "ok"
-            #access_token = create_access_token(identity={"parametro": result})
-            return {"respuesta":result}
+            return {"Producto editado": result}
+
         except Exception as ex:
-            result = "no"
-            #access_token = create_access_token(identity={"parametro": result})
-            return {"respuesta": result}
+            raise ObjectNotFound(ex)
+
+        #--------
+
 
 class eliminarProducto(Resource):
     def delete(self):

@@ -20,7 +20,7 @@ class Parametros(db.Model, BaseModelMixin):
     @classmethod
     def get(self, idParametros):
 
-       filtro =  db.session.query(Parametros).filter(Parametros.idParametros == idParametros)
+       filtro = db.session.query(Parametros).filter(Parametros.idParametros == idParametros)
 
        return filtro
 
@@ -86,6 +86,11 @@ class Productos(db.Model, BaseModelMixin):
         db.session.commit()
 
     @classmethod
+    def find_by_id(cls, id):
+        print("entro a find_by_id")
+        return cls.query.get(id)
+
+    @classmethod
     def get_query(self, idProducto):
         filtro = Productos.query.get(idProducto)
         return filtro
@@ -105,7 +110,11 @@ class Productos(db.Model, BaseModelMixin):
 
         return filtro
 
+    @classmethod
+    def get_por_cod(self, codProducto):
+        filtro = db.session.query(Productos).filter(Productos.codProducto == codProducto).all()
 
+        return filtro
 
     @classmethod
     def get_Max(self):
