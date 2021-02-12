@@ -1,7 +1,7 @@
 from flask_restful import Api, Resource
 from sqlalchemy import or_
 from app.administrador.models.productos_supermercados_model import  Productos_Supermercados, Productos, Supermercados
-from app.administrador.schemas.productos_supermercados_schema import TaskSchema
+from app.administrador.schemas.productos_supermercados_schema import TaskSchema, TaskSchema2
 from datetime import datetime
 from app import ObjectNotFound
 from flask import Flask, request, jsonify
@@ -15,6 +15,7 @@ from flask_jwt_extended import (
     get_jwt_identity
 )
 task_schema = TaskSchema()
+task_schema2 = TaskSchema2()
 #Pruebas
 '''app = Flask(__name__)
 db.init_app(app)
@@ -39,16 +40,17 @@ class obtenerProductosSupermercado(Resource):
             raise ObjectNotFound(ex)
 
 class productoSupermercado(Resource):
-    def get(self):
+    def get(self, idProductoSupermercado):
         chek_token = check_for_token(request.headers.get('token'))
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
         try:
-            idProductoSupermercado = request.json['idProductoSupermercado']
-            filtro = Productos_Supermercados.get_query(idProductoSupermercado)
-            result = task_schema.dump(filtro, many=True)
 
+            filtro = Productos_Supermercados.get_query(idProductoSupermercado)
+            print(filtro)
+            result = task_schema2.dump(filtro)
+            print(filtro)
             #access_token = create_access_token(identity={"productos": result})
 
             return {"Producto": result}, 200
@@ -176,10 +178,12 @@ class eliminarProductosSupermercados(Resource):
         if valid_token != 'ok':
             return chek_token
         try:
-            productos = Productos_Supermercados.get(idProductoSupermercado)
+            productos = Productos_Supermercados.find_by_id(idProductoSupermercado)
+            if productos is None:
+                raise ObjectNotFound('El id del producto_supermercado no existe')
             productos.delete_pro()
             result="eliminada"
             #access_token = create_access_token(identity={"resultado": result})
-            return {'SubCategoria': result}, 200
+            return {'productos_supermercados eliminado': result}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)

@@ -173,6 +173,11 @@ class Productos_Supermercados(db.Model, BaseModelMixin):
                  join(Supermercados, Productos_Supermercados.idSupermercado == Supermercados.idSupermercado)
         return filtro
 
+    @classmethod
+    def find_by_id(cls, id):
+        print("entro a find_by_id")
+        return cls.query.get(id)
+
     def __init__(self, idSupermercado, idProducto, fechaProducto, precioRegular, precioOnline, precioTarjeta, nombreTarjeta):
         # self.idProducto = idProducto
         self.idSupermercado = idSupermercado

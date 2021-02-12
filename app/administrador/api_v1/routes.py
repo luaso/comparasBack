@@ -6,7 +6,7 @@ from app.administrador.resources.supermercados_resources import Supermercado, Su
 from app.administrador.resources.productos_resources import obtenerProductosTotal, obtenerTipoProduto, guardarproductoNuevo,\
     mostrarProductoSeleccionado,mostrarParametros, editarProducto, eliminarProducto
 from app.administrador.resources.parametros_resources import guardarParametro, obtenerParametro, mostrarParametrosTotal, editarParametro, eliminarParametro
-from app.administrador.resources.productos_supermercados_resources import obtenerProductosSupermercado, eliminarProductosSupermercados, editarProductosSupermercados, guardarProductosSupermercados
+from app.administrador.resources.productos_supermercados_resources import obtenerProductosSupermercado, eliminarProductosSupermercados, editarProductosSupermercados, guardarProductosSupermercados, productoSupermercado
 from app.administrador.resources.tipos_productos_resources import obtenerTiposProductos, guardarTiposProductos, obtenerSubCategorias, eliminarTiposproductos
 from app.administrador.resources.sub_categorias_resources import obtenerCategoria, obtenerSubCategoriaTotal, eliminarSubCategorias, editarSubCategoria, guardarSubCategoria
 administrador = Blueprint('administrador', __name__)
@@ -45,6 +45,7 @@ api.add_resource(eliminarProductosSupermercados, '/api/eliminarProductosSupermer
 api.add_resource(editarProductosSupermercados, '/api/editarProductosSupermercados/', endpoint='editarProductosSupermercados')
 api.add_resource(guardarProductosSupermercados, '/api/guardarProductosSupermercados/', endpoint='guardarProductosSupermercados')
 api.add_resource(obtenerProductosSupermercado, '/api/obtenerProductosSupermercado/', endpoint='obtenerProductosSupermercado')
+api.add_resource(productoSupermercado, '/api/productosSupermercado/<int:idProductoSupermercado>', endpoint='productosSupermercado')
 
 #Mantenimiento
 

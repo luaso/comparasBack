@@ -37,3 +37,16 @@ class TaskSchema(ma.Schema):
                     'Productos_Supermercados.nombreTarjeta',
                     'Productos.nombreProducto',
                     'Supermercados.nombreSupermercado')
+
+
+
+class TaskSchema2(ma.Schema):
+    class Meta:
+        fields = (  'idProductoSupermercado',
+                    'idSupermercado',
+                    'idProducto',
+                    'fechaProducto',
+                    'precioRegular',
+                    'precioOnline',
+                    'precioTarjeta',
+                    'nombreTarjeta')
