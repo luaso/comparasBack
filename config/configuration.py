@@ -11,7 +11,7 @@ class BaseConfig(object):
 class AdditionalConfig(object):
     RUTAIMAGENESUSUARIOS = 'http://comparas.pe/imagenes/usuarios/'
     RUTAIMAGENESPRODUCTOS = 'http://comparas.pe/imagenes/productos/'
-    RUTAIMAGENESSUPERMERCADOS = 'http://comparas.pe/imagenes/productos/'
+    RUTAIMAGENESSUPERMERCADOS = 'http://comparas.pe/imagenes/supermercados/'
 
     ROL1 = 4    #Comprador
     ROL2 = 3    #Bodeguero

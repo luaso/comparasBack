@@ -1,6 +1,6 @@
 from flask_restful import Api, Resource
 from sqlalchemy import or_
-from app.usuarioBodeguero.models.detalle_Subasta_model import Subastas, Productos, Subastas_Productos, Pujas
+from app.usuarioBodeguero.models.detalle_Subasta_model import Subastas, Productos_Supermercados, Subastas_Productos, Pujas
 from app.usuarioBodeguero.schemas.detalle_Subasta_schema import TaskSchema, TaskSchema3
 from datetime import datetime
 from app import ObjectNotFound
@@ -26,11 +26,13 @@ class buscarProductosSubastaresource(Resource):
             return chek_token
         try:
 
-            filtro = Subastas.get_detalle_subasta(idSubasta)
-            result = task_schema3.dump(filtro, many=True)
+            #filtro = Subastas.get_detalle_subasta(idSubasta)
+            filtro1 = Productos_Supermercados.get_detalle_subasta1(idSubasta)
+            result1 = jsonify({"Resultado": filtro1})
+            #result = task_schema3.dump(filtro, many=True)
             # access_token = create_access_token(identity={"productos": result})
 
-            return {"Resultado": result}, 200
+            return result1
         except Exception as ex:
             raise ObjectNotFound(ex)
 

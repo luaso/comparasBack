@@ -96,6 +96,43 @@ class Productos_Supermercados(db.Model, BaseModelMixin):
     precioTarjeta = db.Column(db.Float)
     nombreTarjeta = db.Column(db.String)
 
+    @classmethod
+    def get_detalle_subasta1(self, idSubasta):
+        filtro = db.session.query(func.min(Productos_Supermercados.precioOnline).label("precioMin"), Productos.idProducto). \
+            join(Productos, Productos.idProducto == Productos_Supermercados.idProducto).\
+            join(Subastas_Productos, Subastas_Productos.idProducto == Productos.idProducto).\
+            filter(Subastas_Productos.idSubasta == idSubasta).group_by(Productos.idProducto).all()
+
+        filtro1 = db.session.query(Subastas_Productos, Productos). \
+            join(Productos, Productos.idProducto == Subastas_Productos.idProducto). \
+            filter(Subastas_Productos.idSubasta == idSubasta).all()
+
+        arr = []
+
+        for data in filtro:
+            dicc = {}
+            precioMin = data[0]
+            idProducto = data[1]
+
+
+            for subasta_productos in filtro1:
+                if idProducto == subasta_productos[0].idProducto:
+                    cantidad = subasta_productos[0].Cantidad
+                    nombreProducto = subasta_productos[1].nombreProducto
+
+            dicc = {
+                "Subastas_Productos.Cantidad": cantidad,
+                "Productos_Supermercados.idSupermercado": 3,
+                "Subastas_Productos.idSubasta": idSubasta,
+                "Productos_Supermercados.precioOnline": precioMin,
+                "Productos.nombreProducto": nombreProducto,
+                "Productos.idProducto": idProducto
+            }
+            arr.append(dicc)
+
+        return arr
+
+
 class Subastas(db.Model, BaseModelMixin):
     __tablename__ = "SUBASTAS"
     idSubasta = db.Column(db.Integer, primary_key=True)
@@ -127,6 +164,7 @@ class Subastas(db.Model, BaseModelMixin):
             filter(Subastas.idSubasta == idSubasta).all()
         # print(filtro)
         return filtro
+
 
     def __init__(self, idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, fechaSubasta):
         self.idUsuario = idUsuario
