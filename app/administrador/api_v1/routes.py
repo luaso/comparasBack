@@ -55,17 +55,10 @@ api.add_resource(eliminarTiposproductos, '/api/eliminarTiposproductos/<int:idTip
 api.add_resource(editarTiposProductos, '/api/editarTiposProductos/', endpoint='editarTiposProductos')
 api.add_resource(tipoProductos, '/api/tipoProductos/<int:idTipoProductos>', endpoint='tipoProductos')
 
-#Mantenimiento
-api.add_resource(obtenerParametro, '/api/obtenerParametro/', endpoint='obtenerParametro')
-api.add_resource(guardarParametro, '/api/guardarParametro/', endpoint='guardarParametro')
-
-
+#Mantenimiento Parametros
 api.add_resource(mostrarParametrosTotal, '/api/mostrarParametrosTotal/', endpoint='mostrarParametrosTotal')
-
+api.add_resource(obtenerParametro, '/api/obtenerParametro/<int:idParametro>', endpoint='obtenerParametro')
+api.add_resource(guardarParametro, '/api/guardarParametro/', endpoint='guardarParametro')
 api.add_resource(editarParametro, '/api/editarParametro/', endpoint='editarParametro')
 api.add_resource(eliminarParametro, '/api/eliminarParametro/', endpoint='eliminarParametro')
-
-
-
-
 

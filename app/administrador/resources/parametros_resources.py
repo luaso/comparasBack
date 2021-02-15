@@ -16,14 +16,14 @@ task_schema = TaskSchema()
 
 
 class obtenerParametro(Resource):
-    def get(self):
+    def get(self, idParametro):
         chek_token = check_for_token(request.headers.get('token'))
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
         try:
-            idParametros = request.json['idParametros']
-            filtro =  Parametros.get(idParametros)
+
+            filtro =  Parametros.get(idParametro)
             result = task_schema.dump(filtro, many=True)
             return {"Parametro": result}, 200
 
@@ -36,62 +36,59 @@ class guardarParametro(Resource):
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
-        parametros = request.get_json()
-        for datos in parametros['Parametro']:
+        res = request.get_json()
+        parametros = res['Parametro']
 
-            try:
-                Descripcion = datos['Descripcion']
-                Estado = datos['Estado']
-                FecCrea = date.today()
-                FecModifica = date.today()
-                UsuCrea = datos['UsuCrea']
-                UsuModifica = datos['UsuModifica']
-                Valor = datos['Valor']
-                try:
-                    parametros = Parametros(Descripcion,Estado,FecCrea,FecModifica,UsuCrea,UsuModifica,Valor)
-                    parametros.save()
+        try:
+            Descripcion = parametros['Descripcion']
+            Estado = parametros['Estado']
+            FecCrea = date.today()
+            FecModifica = date.today()
+            UsuCrea = parametros['UsuCrea']
+            UsuModifica = parametros['UsuModifica']
+            Valor = parametros['Valor']
 
-                except Exception as ex:
-                    raise ObjectNotFound(ex)
-                return 'Parámetro guardaro', 200
-            except Exception as ex:
-                raise ObjectNotFound(ex)
+            parametros = Parametros(Descripcion,Estado,FecCrea,FecModifica,UsuCrea,UsuModifica,Valor)
+            parametros.save()
+
+
+            return 'Parámetro guardaro', 200
+        except Exception as ex:
+            raise ObjectNotFound(ex)
+
 class editarParametro(Resource):
     def put(self):
         chek_token = check_for_token(request.headers.get('token'))
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
-        parametros = request.get_json()
-        for datos in parametros['Parametro']:
+        res = request.get_json()
+        parametros = res['Parametro']
 
-            try:
-                idParametros = datos['idParametros']
-                Descripcion = datos['Descripcion']
-                Estado = datos['Estado']
+        try:
+            idParametros = parametros['idParametro']
+            Descripcion = parametros['Descripcion']
+            Estado = parametros['Estado']
+            FecModifica = date.today()
+            UsuModifica = parametros['UsuModifica']
+            Valor = parametros['Valor']
 
-                FecModifica = date.today()
+            parametroEditar = Parametros.get_query(idParametros)
 
-                UsuModifica = datos['UsuModifica']
-                Valor = datos['Valor']
+            if parametroEditar is None:
+                raise ObjectNotFound('El id del parametro no existe')
 
-                parametroEditar = Parametros.get_query(idParametros)
-                parametroEditar.Descripcion = Descripcion
-                parametroEditar.Estado = Estado
+            parametroEditar.Descripcion = Descripcion
+            parametroEditar.Estado = Estado
+            parametroEditar.FecModifica = FecModifica
+            parametroEditar.UsuModifica = UsuModifica
+            parametroEditar.Valor = Valor
 
-                parametroEditar.FecModifica = FecModifica
+            parametroEditar.save_to_db()
 
-                parametroEditar.UsuModifica = UsuModifica
-                parametroEditar.Valor = Valor
-
-                try:
-                    parametroEditar.save_to_db()
-
-                except Exception as ex:
-                    raise ObjectNotFound(ex)
-                return 'Parámetro guardaro', 200
-            except Exception as ex:
-                raise ObjectNotFound(ex)
+            return 'Parámetro editado correctamente', 200
+        except Exception as ex:
+            raise ObjectNotFound(ex)
 
 
 class eliminarParametro(Resource):

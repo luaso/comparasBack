@@ -94,6 +94,9 @@ class editarSubCategoria(Resource):
             idCategoria = datos['idCategoria']
 
             subCategoriaEditar = Sub_Categorias.get_query(idSubCategorias)
+            if subCategoriaEditar is None:
+                raise ObjectNotFound('El id de la subCategoria no existe')
+
             subCategoriaEditar.nombreSubCategorias = nombreSubCategorias
             subCategoriaEditar.idCategoria = idCategoria
 

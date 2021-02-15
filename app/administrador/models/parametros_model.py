@@ -36,10 +36,9 @@ class Parametros(db.Model, BaseModelMixin):
         filtro = Parametros.query.get(idParametros)
         return filtro
 
-    def get(self, idParametros):
-        filtro = db.session.query(Parametros).filter(Parametros.idParametros == idParametros)
-        print(filtro)
-
+    @classmethod
+    def get(cls, idParametros):
+        filtro = db.session.query(Parametros).filter(Parametros.idParametros == idParametros).all()
         return filtro
 
     def delete_parametro(self):
