@@ -33,7 +33,7 @@ def getsecre_key():
 def getToken_generate(usuario):
     token = jwt.encode({
         'user': usuario,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=3),
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=4),
         'message':'ok',
         'status':'400'
     },  app.config['SECRET_KEY'])

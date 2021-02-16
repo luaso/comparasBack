@@ -140,10 +140,11 @@ class crearListaComprador(Resource):
 
             idEstado = estado.idEstado
 
-            tiempoInicial = datetime.datetime.now()
+            tiempoInicial = datetime.now()
+            print(tiempoInicial)
             nombreSubasta = nombreLista
             precioIdeal = 0.0
-            fechaSubasta = datetime.datetime.now()
+            fechaSubasta = datetime.now()
             # ESTE DATO (DEFAULT) PUEDE VARIAR SEGUN EL REGISTRO DE LA TABLA DIRECCIONES
             # =================================================================
             idDireccion = AdditionalConfig.DIRECCIONNODEFINIDA
