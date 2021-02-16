@@ -11,29 +11,13 @@ config = DevelopmentConfig
 
 app = create_app(config)
 
-
-#def check_for_token(func):
-    #@wraps(func)
-    #def wrapped(*args, **kwargs):
-      # token = request.headers.get('token')
-      # if not token:
-       # return jsonify({'message': 'Token no ingresado'}), 403
-        #try:
-         #   data = jwt.decode(token, app.config['SECRET_KEY'])
-
-        #except:
-         #   return jsonify({'message': 'Token Caudcado ó invalido'}), 403
-
-       #return func(*args, **kwargs)
-    #return wrapped
-
 def getsecre_key():
     return  app.config['SECRET_KEY']
 
 def getToken_generate(usuario):
     token = jwt.encode({
         'user': usuario,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=4),
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=3),
         'message':'ok',
         'status':'400'
     },  app.config['SECRET_KEY'])
