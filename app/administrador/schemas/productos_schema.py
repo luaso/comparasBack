@@ -15,6 +15,7 @@ class TaskSchema(ma.Schema):
                   'Productos.presentacion',
                   'Productos.unidadMedida',
                   'Productos.cantidadPaquete',
+                  'Tipos_Productos.nombreProducto',
                   'idProducto',
                   'nombreProducto',
                   'contenidoProducto',
