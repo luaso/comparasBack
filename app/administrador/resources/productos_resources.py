@@ -49,7 +49,7 @@ class obtenerProductosTotal(Resource):
                 direccion = datos.Valor
                 print('aquí termina')
 
-
+            print(filtro)
             result = task_schema.dump(filtro, many=True)
             #access_producto = create_access_token(identity={"productos": result})
             #access_direccion = create_access_token(identity={"direccion": direccion})

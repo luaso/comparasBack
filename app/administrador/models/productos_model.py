@@ -75,6 +75,7 @@ class Productos(db.Model, BaseModelMixin):
     presentacion = db.Column(db.String)
     unidadMedida = db.Column(db.String)
     cantidadPaquete = db.Column(db.Integer)
+
     productos_supermercado = db.relationship('Productos_Supermercados', backref='Productos', lazy=True)
 
     def save_to_db(self):
