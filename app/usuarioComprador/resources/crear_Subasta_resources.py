@@ -4,7 +4,7 @@ from sqlalchemy import or_
 from app.usuarioComprador.schemas.crear_Subasta_schema import TaskSchema
 from app.usuarioComprador.models.crear_Subasta_model import Subastas, Usuarios,  Productos, Direcciones, Subastas_Productos
 from app.usuarioComprador.models.ver_Subastas_model import Estado
-from app import ObjectNotFound
+from app import ObjectNotFound, db
 from datetime import datetime
 from config.configuration import AdditionalConfig
 from app.validateToken import check_for_token
@@ -103,8 +103,13 @@ class crearSubastaLista(Resource):
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
+        print("INGRESO")
         try:
+
+            # resultsque = db.session.execute('SELECT * FROM my_table WHERE my_column = :val', {'val': 5})
+
             idSubasta = request.json['idSubasta']
+
             CrearSubasta = Subastas.query.get(idSubasta)
             print(CrearSubasta)
             fechaSubasta = request.json['Fecha'] + ' ' + request.json['Hora']
@@ -115,9 +120,28 @@ class crearSubastaLista(Resource):
             CrearSubasta.fechaSubasta = fechaSubasta
             CrearSubasta.idDireccion = idDireccion
             CrearSubasta.idEstado = 2
+            # resultsque = db.session.execute('SELECT * FROM my_table WHERE my_column = :val', {'val': 5})
+
+            queryisnert=("""INSERT INTO "SUBASTAS"("idUsuario","idEstado","tiempoInicial","nombreSubasta","precioIdeal","idDireccion","fechaSubasta")
+            SELECT "idUsuario",1,"tiempoInicial","nombreSubasta","precioIdeal", "idDireccion", "fechaSubasta"
+            FROM "SUBASTAS" WHERE "idSubasta"="""+str(idSubasta)+ """  RETURNING "idSubasta";""")
+            print(queryisnert)
+            #txn = db.begin()
+            iduSbastanew= db.session.execute(queryisnert)
+
+            idnuevo=iduSbastanew.fetchone()[0]
+            print("Isertado: "+str(idnuevo)+" idusbasta:"+str(idSubasta))
+            queryprods="""INSERT INTO "SUBASTAS_PRODUCTOS"("idSubasta", "idProducto", "Cantidad")
+            select """+str(idnuevo)+""", "idProducto", "Cantidad" from "SUBASTAS_PRODUCTOS" where "idSubasta"="""+str(idSubasta)
+            print(queryprods)
+            db.session.commit()
+            db.session.execute(queryprods)
+            db.session.commit()
+            print('EJECUTADO:')
             CrearSubasta.save_to_db()
             result="Se creo la subasta correctamente"
         except Exception as ex:
+            print("erroes: "+ex)
             raise ObjectNotFound(ex)
         #access_token = create_access_token(identity={"crearLista": result})
         return {"Respuesta": result}
