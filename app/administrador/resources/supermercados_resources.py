@@ -123,7 +123,7 @@ class Supermercado(Resource):
         urlSupermercado = supermercadoRes["urlSupermercado"]
         cambioImagen = supermercadoRes["cambioImagen"]
         imagenSupermercadoR = supermercadoRes["imagenSupermercado"]
-
+        print("cambio es:"+cambioImagen)
         rutaimg = AdditionalConfig.RUTAIMAGENESSUPERMERCADOS
 
         supermercado = Supermercados.find_by_id(idSupermercado)
@@ -136,7 +136,7 @@ class Supermercado(Resource):
             supermercado.urlSupermercado = urlSupermercado
 
             try:
-                if cambioImagen == 1:
+                if cambioImagen == "1":
                     imgdata = base64.b64decode(imagenSupermercadoR)
                     filename = 'app/imagenes/supermercados/' + nombreSupermercado + '.jpg'
 
