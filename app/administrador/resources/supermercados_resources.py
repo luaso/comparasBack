@@ -1,3 +1,5 @@
+import datetime
+
 from flask import request
 from flask_restful import Resource
 
@@ -131,19 +133,20 @@ class Supermercado(Resource):
         if supermercado is None:
             raise ObjectNotFound('El id del supermercado no existe')
         else:
-
             supermercado.nombreSupermercado = nombreSupermercado
             supermercado.urlSupermercado = urlSupermercado
 
             try:
                 if cambioImagen == 1:
+                    x = datetime.datetime.now()
+                    hourseconds=(str(x.minute) + "_" + str(x.second))
                     imgdata = base64.b64decode(imagenSupermercadoR)
-                    filename = 'app/imagenes/supermercados/' + nombreSupermercado + '.jpg'
+                    filename = 'app/imagenes/supermercados/' + nombreSupermercado+hourseconds + '.jpg'
 
                     with open(filename, 'wb') as f:
                         f.write(imgdata)
 
-                    imagenSupermercado = rutaimg + nombreSupermercado + '.jpg'
+                    imagenSupermercado = rutaimg + nombreSupermercado+hourseconds + '.jpg'
                     supermercado.imagenSupermercado = imagenSupermercado
 
                 supermercado.save_to_db()

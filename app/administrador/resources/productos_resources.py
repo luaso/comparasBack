@@ -1,3 +1,5 @@
+import datetime
+
 from flask_restful import Resource
 from app.administrador.models.productos_model import  Productos, Tipos_Productos, Parametros
 from app.administrador.schemas.productos_schema import TaskSchema, TaskSchema2
@@ -206,12 +208,14 @@ class editarProducto(Resource):
 
             if cambioImagen == 1:
                 imgdata = base64.b64decode(imagen)
-                filename = 'app/imagenes/productos/' + codProducto + '.jpg'
+                x = datetime.datetime.now()
+                hourseconds = (str(x.minute) + "_" + str(x.second))
+                filename = 'app/imagenes/productos/' + codProducto+hourseconds + '.jpg'
 
                 with open(filename, 'wb') as f:
                     f.write(imgdata)
 
-                imagenProductoURL = rutaimg + codProducto + '.jpg'
+                imagenProductoURL = rutaimg + codProducto+hourseconds + '.jpg'
                 productos.Imagen = imagenProductoURL
 
             productos.save_to_db()
