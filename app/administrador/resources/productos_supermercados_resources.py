@@ -30,10 +30,25 @@ class obtenerProductosSupermercado(Resource):
             return chek_token
         try:
             filtro =  Productos_Supermercados.get()
+            #print(filtro)
+
             result = task_schema.dump(filtro, many=True)
-
+            #print(result)
+            for item in result:
+                item['Productos_Supermercados_idProductoSupermercado']=item["Productos_Supermercados.idProductoSupermercado"]
+                item['Productos_Supermercados_idSupermercado']=item["Productos_Supermercados.idSupermercado"]
+                item['Productos_Supermercados_idProducto']=item["Productos_Supermercados.idProducto"]
+                item['Productos_Supermercados_fechaProducto']=item["Productos_Supermercados.fechaProducto"]
+                item['Productos_Supermercados_precioRegular']=item["Productos_Supermercados.precioRegular"]
+                item['Productos_Supermercados_precioOnline']=item["Productos_Supermercados.precioOnline"]
+                item['Productos_Supermercados_precioTarjeta']=item["Productos_Supermercados.precioTarjeta"]
+                item['Productos_Supermercados_nombreTarjeta']=item["Productos_Supermercados.nombreTarjeta"]
+                item['Productos_nombreProducto']=item["Productos.nombreProducto"]
+                item['Supermercados_nombreSupermercado']=item["Supermercados.nombreSupermercado"]
+                #if item['ParameterKey'] in ["Shell", "Type"]:
+                    #item['ParameterKey'] = "new value"
             #access_token = create_access_token(identity={"productos": result})
-
+            print("imprimiendo")
             return {"Productos_Supermercados": result}, 200
 
         except Exception as ex:
