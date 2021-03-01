@@ -46,6 +46,7 @@ class guardarPuja(Resource):
             idUsuario = request.json['idUsuario']
             precioPuja = request.json['precioPuja']
             fechaPuja = request.json['fechaPuja']
+            print(fechaPuja)
             puja = Pujas(idSubasta, idUsuario, precioPuja, fechaPuja)
             print('Intentado ingresar')
             puja.save()
