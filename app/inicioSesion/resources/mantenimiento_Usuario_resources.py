@@ -1,3 +1,4 @@
+import datetime
 
 from config.configuration import AdditionalConfig
 from passlib.hash import sha256_crypt
@@ -166,7 +167,9 @@ class editarUsuarioComprador(Resource):
                 if cambioImagen == 1:
                     rutaimg = AdditionalConfig.RUTAIMAGENESUSUARIOS
                     imgdata = base64.b64decode(imgstring)
-                    filename = 'app/imagenes/usuarios/' + str(usuario['idUsuario']) + '.jpg'
+                    x = datetime.datetime.now()
+                    hourseconds = (str(x.minute) + "_" + str(x.second))
+                    filename = 'app/imagenes/usuarios/' + str(usuario['idUsuario'])+hourseconds + '.jpg'
                     with open(filename, 'wb') as f:
                         f.write(imgdata)
                     usuarioEditar.imagen = rutaimg + str(usuario['idUsuario']) + '.jpg'
@@ -262,7 +265,9 @@ class editarUsuarioBodeguero(Resource):
                 if cambioImagen == 1:
                     rutaimg = AdditionalConfig.RUTAIMAGENESUSUARIOS
                     imgdata = base64.b64decode(imgstring)
-                    filename = 'app/imagenes/usuarios/' + str(usuario['idUsuario']) + '.jpg'
+                    x = datetime.datetime.now()
+                    hourseconds = (str(x.minute) + "_" + str(x.second))
+                    filename = 'app/imagenes/usuarios/' + str(usuario['idUsuario'])+hourseconds + '.jpg'
                     with open(filename, 'wb') as f:
                         f.write(imgdata)
                     usuarioEditar.imagen = rutaimg + str(usuario['idUsuario']) + '.jpg'
