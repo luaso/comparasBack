@@ -172,7 +172,7 @@ class editarUsuarioComprador(Resource):
                     filename = 'app/imagenes/usuarios/' + str(usuario['idUsuario'])+hourseconds + '.jpg'
                     with open(filename, 'wb') as f:
                         f.write(imgdata)
-                    usuarioEditar.imagen = rutaimg + str(usuario['idUsuario']) + '.jpg'
+                    usuarioEditar.imagen = rutaimg + str(usuario['idUsuario'])+hourseconds + '.jpg'
             except Exception as ex:
                 raise ObjectNotFound(ex)
 
@@ -270,7 +270,7 @@ class editarUsuarioBodeguero(Resource):
                     filename = 'app/imagenes/usuarios/' + str(usuario['idUsuario'])+hourseconds + '.jpg'
                     with open(filename, 'wb') as f:
                         f.write(imgdata)
-                    usuarioEditar.imagen = rutaimg + str(usuario['idUsuario']) + '.jpg'
+                    usuarioEditar.imagen = rutaimg + str(usuario['idUsuario'])+hourseconds + '.jpg'
             except Exception as ex:
                 raise ObjectNotFound(ex)
 
