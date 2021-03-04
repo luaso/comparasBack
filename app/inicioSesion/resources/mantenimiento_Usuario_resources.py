@@ -155,6 +155,7 @@ class editarUsuarioComprador(Resource):
             imgstring = usuario['imagen']
 
             usuarioEditar = Usuarios.get_query(idUsuario)
+            usuarioEditar.codigoPostalPais = usuario['codigoPostalPais']
             usuarioEditar.nombreUsuario = nombreUsuario
             usuarioEditar.apellidoPatUsuario = apellidoPatUsuario
             usuarioEditar.apellidoMatUsuario = apellidoMatUsuario
