@@ -11,22 +11,6 @@ config = DevelopmentConfig
 
 app = create_app(config)
 
-
-#def check_for_token(func):
-    #@wraps(func)
-    #def wrapped(*args, **kwargs):
-      # token = request.headers.get('token')
-      # if not token:
-       # return jsonify({'message': 'Token no ingresado'}), 403
-        #try:
-         #   data = jwt.decode(token, app.config['SECRET_KEY'])
-
-        #except:
-         #   return jsonify({'message': 'Token Caudcado ó invalido'}), 403
-
-       #return func(*args, **kwargs)
-    #return wrapped
-
 def getsecre_key():
     return  app.config['SECRET_KEY']
 
@@ -73,7 +57,4 @@ def login_prueba():
         return make_response('incapaz de verificar', 403, {'WWW-Autenticate': 'Basic login'})
 
 
-
-if __name__ == '__main__':
-	app.run()
 

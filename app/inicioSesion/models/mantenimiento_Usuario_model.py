@@ -142,14 +142,16 @@ class Direcciones(db.Model, BaseModelMixin):
     direccion = db.Column(db.String)
     latitud = db.Column(db.String)
     longitud = db.Column(db.String)
+    referencia = db.Column(db.String)
     subastas = db.relationship('Subastas', backref='Direcciones', lazy=True)
 
-    def __init__(self, idUsuario,direccion,latitud,longitud):
+    def __init__(self, idUsuario,direccion,latitud,longitud,referencia):
         #self.idDireccion=idDireccion
         self.idUsuario =idUsuario
         self.direccion= direccion
         self.latitud = latitud
         self.longitud = longitud
+        self.referencia= referencia
 
     def delete_from_db(self):
         db.session.delete(self)

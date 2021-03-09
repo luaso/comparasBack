@@ -43,5 +43,6 @@ class RolSchema(ma.Schema):
                   'Direcciones.latitud',
                   'Direcciones.longitud',
                   'Direcciones.direccion',
+                  'Direcciones.referencia',
                   'idRol',
                   'nombreRol')

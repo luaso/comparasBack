@@ -74,7 +74,7 @@ class guardarUsuario(Resource):
             password = sha256_crypt.encrypt(password)
             print(password)
             print(sha256_crypt.verify("password", password))
-            ###############################
+            #####################EditarUsuarioComprador##########
 
             #imagen = request.files['pic']
 
@@ -98,10 +98,11 @@ class guardarUsuario(Resource):
             print(latitud)
             longitud = direcciones['longitud']
             print(longitud)
-
+            referencia = direcciones['referencia']
+            print(referencia)
             print('entrando al try')
             try:
-                CrearDireccion = Direcciones(idUsuario, direccion, latitud, longitud)
+                CrearDireccion = Direcciones(idUsuario, direccion, latitud, longitud,referencia)
                 print(CrearDireccion)
 
                 CrearDireccion.save()
@@ -122,13 +123,12 @@ class buscarUsuario(Resource):
             return chek_token
         task = Usuarios.query.get(idUsuario)
         filtro = Usuarios.get_buscar_usuario(idUsuario)
-        # print(filtro)
+        #print(filtro)
         result = rolSchema.dump(filtro, many=True)
         resultd = check_for_token_rol(request.headers.get('token'))
-        print(resultd)
+        print(result)
         print('================================================')
         return {"producto": result}, 200
-
 
 class editarUsuarioComprador(Resource):
     def put(seft):
@@ -196,27 +196,25 @@ class editarUsuarioComprador(Resource):
             print("Direccion")
             print(direccion.idUsuario)
             direccion.delete_from_db()
-
+            print(data['direcciones'])
         for direcciones in data['direcciones']:
 
             idUsuario = idUsuarioDireccion
             direccion = direcciones['direccion']
             latitud = direcciones['latitud']
             longitud = direcciones['longitud']
-
+            referencia = direcciones['referencia']
             print('entrando al try')
             try:
-                CrearDireccion = Direcciones(idUsuario, direccion, latitud, longitud)
+                CrearDireccion = Direcciones(idUsuario, direccion, latitud, longitud,referencia)
                 print(CrearDireccion)
                 CrearDireccion.save()
-
                 print('Direcciones agregadas correctamente')
                 Respuesta = "ok"
             except Exception as ex:
                 raise ObjectNotFound(ex)
                 Respuesta = "nok"
                 print('Error al agregar direccion')
-
         # access_token = create_access_token(identity={"request": Respuesta})
         # return {"access_token": access_token}, 200
         return ('Usuario editado correctamente')

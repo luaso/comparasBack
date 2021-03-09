@@ -2,6 +2,7 @@ from flask import Blueprint
 from flask_restful import Api
 
 from app.administrador.resources.categorias_resource import Categoria, CategoriaList
+from app.administrador.resources.recuperar_clave_resources import recuperarClave
 from app.administrador.resources.supermercados_resources import Supermercado, SupermercadoList, SupermercadoBuscar
 from app.administrador.resources.productos_resources import obtenerProductosTotal, obtenerTipoProduto, guardarproductoNuevo,\
     mostrarProductoSeleccionado,mostrarParametros, editarProducto, eliminarProducto
@@ -62,3 +63,5 @@ api.add_resource(guardarParametro, '/api/guardarParametro/', endpoint='guardarPa
 api.add_resource(editarParametro, '/api/editarParametro/', endpoint='editarParametro')
 api.add_resource(eliminarParametro, '/api/eliminarParametro/', endpoint='eliminarParametro')
 
+#RECUPERAR CONTRASEÑA
+api.add_resource(recuperarClave, '/api/recuperarClave/', endpoint='recuperarClave')
