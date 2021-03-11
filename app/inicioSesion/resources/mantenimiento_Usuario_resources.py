@@ -1,4 +1,5 @@
 import datetime
+import traceback
 
 from config.configuration import AdditionalConfig
 from passlib.hash import sha256_crypt
@@ -10,7 +11,6 @@ from app.inicioSesion.models.mantenimiento_Usuario_model import Rol, Usuarios, D
 from app.inicioSesion.schemas.mantenimiento_Usuario_schema import RolSchema
 
 import base64
-
 
 from app.validateToken import check_for_token, check_for_token_id_rol, check_for_token_rol, check_for_token_id
 
@@ -27,7 +27,6 @@ rolSchema = RolSchema()
 
 class obtenerRol(Resource):
     def get(self):
-
         filtro = Rol.query.filter(Rol.idRol.in_((3, 4)))
 
         # print(filtro)
@@ -56,7 +55,7 @@ class guardarUsuario(Resource):
             celular = usuarios['celular']
             email = usuarios['email']
             print('ingresando a seccion usuarios 2')
-            #Verificar si el email existe
+            # Verificar si el email existe
 
             usuarioExist = Usuarios.get_email(email)
             print(usuarioExist)
@@ -76,7 +75,7 @@ class guardarUsuario(Resource):
             print(sha256_crypt.verify("password", password))
             #####################EditarUsuarioComprador##########
 
-            #imagen = request.files['pic']
+            # imagen = request.files['pic']
 
             CrearUsuario = Usuarios(nombreUsuario, apellidoPatUsuario, apellidoMatUsuario, idRol, Ruc, razonSocial,
                                     nombreComercial, codigoPostalPais, telefono, celular, email, password)
@@ -102,7 +101,7 @@ class guardarUsuario(Resource):
             print(referencia)
             print('entrando al try')
             try:
-                CrearDireccion = Direcciones(idUsuario, direccion, latitud, longitud,referencia)
+                CrearDireccion = Direcciones(idUsuario, direccion, latitud, longitud, referencia)
                 print(CrearDireccion)
 
                 CrearDireccion.save()
@@ -114,35 +113,52 @@ class guardarUsuario(Resource):
         return {"respuesta": "Usuario registrado correctamente"}
 
 
-
 class buscarUsuario(Resource):
     def get(seft, idUsuario):
-        chek_token = check_for_token_id(request.headers.get('token'),idUsuario)
+        chek_token = check_for_token_id(request.headers.get('token'), idUsuario)
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
         task = Usuarios.query.get(idUsuario)
         filtro = Usuarios.get_buscar_usuario(idUsuario)
-        #print(filtro)
+        # print(filtro)
         result = rolSchema.dump(filtro, many=True)
         resultd = check_for_token_rol(request.headers.get('token'))
         print(result)
         print('================================================')
         return {"producto": result}, 200
 
+def getbyid(idUsuario):
+    try:
+        usuarioExist = Usuarios.get_query(idUsuario)
+        pasActual = str(usuarioExist.password)
+        print(pasActual)
+        return pasActual
+    except Exception as ex:
+        return "No_Existe"
+
 class editarUsuarioComprador(Resource):
+    #@property
     def put(seft):
         '''Metodo para editar un usuario con el Rol1'''
         data = request.get_json()
         rolUser = AdditionalConfig.ROL1
         chek_token = check_for_token_id_rol(request.headers.get('token'), data["Datos"][0]["idUsuario"], rolUser)
-        #chek_token = check_for_token(request.headers.get('token'))
+        # chek_token = check_for_token(request.headers.get('token'))
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
-        print(data["Datos"][0]["idUsuario"])
+        iduser=data["Datos"][0]["idUsuario"]
+        cambio=data["Datos"][0]["cambioClave"]
+        clavAct=data["Datos"][0]["claveActual"]
         idUsuarioDireccion = 0
-
+        claveActualUser = getbyid(iduser)
+        validClave = (sha256_crypt.verify(clavAct, claveActualUser))
+        validPwd=0
+        if str(validClave) == "False":
+            validPwd=1
+        if cambio == 1 and validPwd == 1:
+            return str('Clave Incorrecto')
         for usuario in data['Datos']:
             idUsuario = usuario['idUsuario']
             nombreUsuario = usuario['nombreUsuario']
@@ -150,19 +166,26 @@ class editarUsuarioComprador(Resource):
             apellidoMatUsuario = usuario['apellidoMatUsuario']
             telefono = usuario['telefono']
             celular = usuario['celular']
-            #email = usuario['email']
+            # email = usuario['email']
             cambioImagen = usuario['cambioImagen']
             imgstring = usuario['imagen']
+
+            cambioClave = usuario['cambioClave']
+            nuevaClave = usuario['nuevaClave']
 
             usuarioEditar = Usuarios.get_query(idUsuario)
             usuarioEditar.codigoPostalPais = usuario['codigoPostalPais']
             usuarioEditar.nombreUsuario = nombreUsuario
             usuarioEditar.apellidoPatUsuario = apellidoPatUsuario
             usuarioEditar.apellidoMatUsuario = apellidoMatUsuario
-            #usuarioEditar.idRol = idRol
+            # usuarioEditar.idRol = idRol
             usuarioEditar.telefono = telefono
             usuarioEditar.celular = celular
-            #usuarioEditar.email = email
+            # usuarioEditar.email = email
+
+            print("SEND CAMBIO: " + str(cambioClave))
+            if cambioClave == 1:
+                usuarioEditar.password = sha256_crypt.encrypt(nuevaClave)
 
             try:
                 if cambioImagen == 1:
@@ -170,10 +193,10 @@ class editarUsuarioComprador(Resource):
                     imgdata = base64.b64decode(imgstring)
                     x = datetime.datetime.now()
                     hourseconds = (str(x.minute) + "_" + str(x.second))
-                    filename = 'app/imagenes/usuarios/' + str(usuario['idUsuario'])+hourseconds + '.jpg'
+                    filename = 'app/imagenes/usuarios/' + str(usuario['idUsuario']) + hourseconds + '.jpg'
                     with open(filename, 'wb') as f:
                         f.write(imgdata)
-                    usuarioEditar.imagen = rutaimg + str(usuario['idUsuario'])+hourseconds + '.jpg'
+                    usuarioEditar.imagen = rutaimg + str(usuario['idUsuario']) + hourseconds + '.jpg'
             except Exception as ex:
                 raise ObjectNotFound(ex)
 
@@ -206,7 +229,7 @@ class editarUsuarioComprador(Resource):
             referencia = direcciones['referencia']
             print('entrando al try')
             try:
-                CrearDireccion = Direcciones(idUsuario, direccion, latitud, longitud,referencia)
+                CrearDireccion = Direcciones(idUsuario, direccion, latitud, longitud, referencia)
                 print(CrearDireccion)
                 CrearDireccion.save()
                 print('Direcciones agregadas correctamente')
@@ -229,6 +252,16 @@ class editarUsuarioBodeguero(Resource):
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
+        iduser = data["Datos"][0]["idUsuario"]
+        cambio = data["Datos"][0]["cambioClave"]
+        clavAct = data["Datos"][0]["claveActual"]
+        claveActualUser = getbyid(iduser)
+        validClave = (sha256_crypt.verify(clavAct, claveActualUser))
+        validPwd = 0
+        if str(validClave) == "False":
+            validPwd = 1
+        if cambio == 1 and validPwd == 1:
+            return str('Clave Incorrecto')
         idUsuarioDireccion = 0
 
         for usuario in data['Datos']:
@@ -236,15 +269,17 @@ class editarUsuarioBodeguero(Resource):
             nombreUsuario = usuario['nombreUsuario']
             apellidoPatUsuario = usuario['apellidoPatUsuario']
             apellidoMatUsuario = usuario['apellidoMatUsuario']
-            #idRol = usuario['idRol']
+            # idRol = usuario['idRol']
             Ruc = usuario['Ruc']
             razonSocial = usuario['razonSocial']
             nombreComercial = usuario['nombreComercial']
             codigoPostalPais = usuario['codigoPostalPais']
             telefono = usuario['telefono']
             celular = usuario['celular']
-            #email = usuario['email']
+            # email = usuario['email']
             cambioImagen = usuario['cambioImagen']
+            cambioClave = usuario['cambioClave']
+            nuevaClave = usuario['nuevaClave']
 
             imgstring = usuario['imagen']
 
@@ -252,13 +287,15 @@ class editarUsuarioBodeguero(Resource):
             usuarioEditar.nombreUsuario = nombreUsuario
             usuarioEditar.apellidoPatUsuario = apellidoPatUsuario
             usuarioEditar.apellidoMatUsuario = apellidoMatUsuario
-            #usuarioEditar.idRol = idRol
+            # usuarioEditar.idRol = idRol
             usuarioEditar.Ruc = Ruc
             usuarioEditar.razonSocial = razonSocial
             usuarioEditar.nombreComercial = nombreComercial
             usuarioEditar.codigoPostalPais = codigoPostalPais
             usuarioEditar.telefono = telefono
             usuarioEditar.celular = celular
+            if cambioClave == 1:
+                usuarioEditar.password = sha256_crypt.encrypt(nuevaClave)
 
             try:
                 if cambioImagen == 1:
@@ -266,13 +303,12 @@ class editarUsuarioBodeguero(Resource):
                     imgdata = base64.b64decode(imgstring)
                     x = datetime.datetime.now()
                     hourseconds = (str(x.minute) + "_" + str(x.second))
-                    filename = 'app/imagenes/usuarios/' + str(usuario['idUsuario'])+hourseconds + '.jpg'
+                    filename = 'app/imagenes/usuarios/' + str(usuario['idUsuario']) + hourseconds + '.jpg'
                     with open(filename, 'wb') as f:
                         f.write(imgdata)
-                    usuarioEditar.imagen = rutaimg + str(usuario['idUsuario'])+hourseconds + '.jpg'
+                    usuarioEditar.imagen = rutaimg + str(usuario['idUsuario']) + hourseconds + '.jpg'
             except Exception as ex:
                 raise ObjectNotFound(ex)
-
 
             print('Ingresando al save to db')
             try:
@@ -298,10 +334,10 @@ class editarUsuarioBodeguero(Resource):
             direccion = direcciones['direccion']
             latitud = direcciones['latitud']
             longitud = direcciones['longitud']
-
+            referencia ="-"
             print('entrando al try')
             try:
-                CrearDireccion = Direcciones(idUsuario, direccion, latitud, longitud)
+                CrearDireccion = Direcciones(idUsuario, direccion, latitud, longitud,referencia)
                 print(CrearDireccion)
                 CrearDireccion.save()
 

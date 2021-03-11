@@ -173,7 +173,7 @@ def sendEmailrecoverPassword(usuario, password):
                     <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
                         <tr>
                             <td style="color: #ffffff; font-family: Arial, sans-serif; font-size: 14px;">
-                                <p style="margin: 0;">&reg; Jlr, Comparas <br/>
+                                <p style="margin: 0;">&reg;  Comparas <br/>
                              <a href="#" style="color: #ffffff;">Comparas.pe</a> </p>
                             </td>
                             <td align="right"> 
@@ -207,7 +207,7 @@ def sendEmailrecoverPassword(usuario, password):
 
         mail.starttls()
 
-        mail.login('nelsonwalter1997@gmail.com', 'Bgyz0448')
+        mail.login('nelsonwalter1997@gmail.com', 'fbudewhzhbjxarlq')
         mail.sendmail(me, you, msg.as_string())
         mail.quit()
         print('realizado')
