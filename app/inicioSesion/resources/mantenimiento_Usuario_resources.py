@@ -49,7 +49,7 @@ class guardarUsuario(Resource):
             idRol = usuarios['idRol']
             Ruc = usuarios['Ruc']
             razonSocial = usuarios['razonSocial']
-            nombreComercial = usuarios['nombreComercial']
+            nombreComercial = usuarios['razonSocial']
             codigoPostalPais = usuarios['codigoPostalPais']
             telefono = usuarios['telefono']
             celular = usuarios['celular']
@@ -256,7 +256,10 @@ class editarUsuarioBodeguero(Resource):
         cambio = data["Datos"][0]["cambioClave"]
         clavAct = data["Datos"][0]["claveActual"]
         claveActualUser = getbyid(iduser)
-        validClave = (sha256_crypt.verify(clavAct, claveActualUser))
+        validClave ="False"
+        if cambio == 1:
+            validClave=(sha256_crypt.verify(clavAct, claveActualUser))
+
         validPwd = 0
         if str(validClave) == "False":
             validPwd = 1
