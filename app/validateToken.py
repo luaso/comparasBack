@@ -206,8 +206,8 @@ def sendEmailrecoverPassword(usuario, password):
         mail.ehlo()
 
         mail.starttls()
-
         mail.login('nelsonwalter1997@gmail.com', 'fbudewhzhbjxarlq')
+        #mail.login('Comparas@jlranalytics.com', 'Saturno*1')
         mail.sendmail(me, you, msg.as_string())
         mail.quit()
         print('realizado')
