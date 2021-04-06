@@ -145,6 +145,7 @@ class editarUsuarioComprador(Resource):
         rolUser = AdditionalConfig.ROL1
         chek_token = check_for_token_id_rol(request.headers.get('token'), data["Datos"][0]["idUsuario"], rolUser)
         # chek_token = check_for_token(request.headers.get('token'))
+
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
@@ -153,8 +154,11 @@ class editarUsuarioComprador(Resource):
         clavAct=data["Datos"][0]["claveActual"]
         idUsuarioDireccion = 0
         claveActualUser = getbyid(iduser)
-        validClave = (sha256_crypt.verify(clavAct, claveActualUser))
         validPwd=0
+        validClave = "False"
+        if cambio == 1:
+            validClave = (sha256_crypt.verify(clavAct, claveActualUser))
+
         if str(validClave) == "False":
             validPwd=1
         if cambio == 1 and validPwd == 1:
