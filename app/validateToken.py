@@ -107,7 +107,7 @@ def sendEmailrecoverPassword(usuario, password):
     try:
         # me == my email address
         # you == recipient's email address
-        me = "nelsonwalter1997@gmail.com"
+        me = "Comparas@jlranalytics.com"
         you = usuario
 
         # Create message container - the correct MIME type is multipart/alternative.
@@ -201,14 +201,13 @@ def sendEmailrecoverPassword(usuario, password):
         msg.attach(part1)
         msg.attach(part2)
         # Send the message via local SMTP server.
-        mail = smtplib.SMTP('smtp.gmail.com', 587)
+        mail = smtplib.SMTP('smtp-mail.outlook.com', 587)
 
         mail.ehlo()
 
         mail.starttls()
-        mail.login('nelsonwalter1997@gmail.com', 'fbudewhzhbjxarlq')
-
-        #mail.login('Comparas@jlranalytics.com', 'Saturno*1valid')
+        #mail.login('nelsonwalter1997@gmail.com', 'fbudewhzhbjxarlq')
+        mail.login('Comparas@jlranalytics.com', 'Saturno*1')
 
         mail.sendmail(me, you, msg.as_string())
         mail.quit()
