@@ -7,7 +7,7 @@ from flask_restful import Api, Resource
 from flask import request, Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from app import ObjectNotFound, validateToken
-from app.inicioSesion.models.mantenimiento_Usuario_model import Rol, Usuarios, Direcciones, Parametros
+from app.inicioSesion.models.mantenimiento_Usuario_model import Rol, Usuarios, Direcciones, Parametros, Subastas
 from app.inicioSesion.schemas.mantenimiento_Usuario_schema import RolSchema
 
 import base64
@@ -119,12 +119,50 @@ class buscarUsuario(Resource):
         valid_token = chek_token['message']
         if valid_token != 'ok':
             return chek_token
-        task = Usuarios.query.get(idUsuario)
+        #task = Usuarios.query.get(idUsuario)
         filtro = Usuarios.get_buscar_usuario(idUsuario)
         # print(filtro)
         result = rolSchema.dump(filtro, many=True)
-        resultd = check_for_token_rol(request.headers.get('token'))
+        #resultd = check_for_token_rol(request.headers.get('token'))
+        #print(result)
         print(result)
+        for item in result:
+
+            idDireccion=str(item["Direcciones.idDireccion"])
+            #print(iduSbastanew.fetchone())
+            #idnuevo = iduSbastanew.fetchone()[0]
+            #print(idnuevo)
+
+
+            item["Usuarios.razonSocial"]= str(item["Usuarios.razonSocial"])
+            item["Usuarios.apellidoPatUsuario"]=str(item["Usuarios.apellidoPatUsuario"])
+            item["Usuarios.nombreUsuario"]=str(item["Usuarios.nombreUsuario"])
+            item["Direcciones.longitud"]=str(item["Direcciones.longitud"])
+            item["Direcciones.latitud"]=str(item["Direcciones.latitud"])
+            item["Usuarios.codigoPostalPais"]=str(item["Usuarios.codigoPostalPais"])
+            item["Usuarios.Ruc"]=str(item["Usuarios.Ruc"])
+            item["Usuarios.imagen"]=str(item["Usuarios.imagen"])
+            item["Rol.nombreRol"]=str(item["Rol.nombreRol"])
+            item["Direcciones.referencia"]=str(item["Direcciones.referencia"])
+            item["Usuarios.nombreComercial"]=str(item["Usuarios.nombreComercial"])
+            item["Usuarios.idUsuario"]=str(item["Usuarios.idUsuario"])
+            item["Usuarios.email"]=str(item["Usuarios.email"])
+            item["Usuarios.apellidoMatUsuario"]=str(item["Usuarios.apellidoMatUsuario"])
+            item["Rol.idRol"]=str(item["Rol.idRol"])
+            item["Usuarios.telefono"]=str(item["Usuarios.telefono"])
+            item["Usuarios.celular"]=str(item["Usuarios.celular"])
+            item["Direcciones.direccion"]=str(item["Direcciones.direccion"])
+            item["Direcciones.idDireccion"]=str(item["Direcciones.idDireccion"])
+
+            querysubas = ("""SELECT *  FROM "SUBASTAS" WHERE "idEstado"='2' and "idDireccion"=""" + str(
+                idDireccion) + """;""")
+            iduSbastanew = db.session.execute(querysubas)
+            existe = "0"
+            try:
+                existe =str(iduSbastanew.fetchone()[0])
+            except Exception as ex:
+                existe = "0"
+            item["Direcciones.estado"]=str(existe)
         print('================================================')
         return {"producto": result}, 200
 
@@ -136,7 +174,13 @@ def getbyid(idUsuario):
         return pasActual
     except Exception as ex:
         return "No_Existe"
-
+def searchdireccion(index,direcionesUser):
+  value = "0"
+  try:
+    value = sorted(direcionesUser).index(index)
+  except Exception as ex:
+      value = "0"
+  return value
 class editarUsuarioComprador(Resource):
     #@property
     def put(seft):
@@ -187,7 +231,7 @@ class editarUsuarioComprador(Resource):
             usuarioEditar.celular = celular
             # usuarioEditar.email = email
 
-            print("SEND CAMBIO: " + str(cambioClave))
+            #print("SEND CAMBIO: " + str(cambioClave))
             if cambioClave == 1:
                 usuarioEditar.password = sha256_crypt.encrypt(nuevaClave)
 
@@ -215,33 +259,77 @@ class editarUsuarioComprador(Resource):
 
             idUsuarioDireccion = idUsuario
 
-        filtro = Direcciones.get_query(idUsuarioDireccion)
-        for direcciones in filtro:
-            print("idDireccion")
-            print(direcciones.idDireccion)
-            direccion = Direcciones.find_by_id(direcciones.idDireccion)
-            print("Direccion")
-            print(direccion.idUsuario)
+        getDireccion = Direcciones.get_query(idUsuarioDireccion)
+        direcionesBd=[]
+        direcionesUser = []
+        for direccion_item in getDireccion:
+            direcionesBd.append(direccion_item.idDireccion)
+        for direcionesUser_item in data['direcciones']:
+            direcionesUser.append(int(direcionesUser_item['id']))
+        #print("------------------------")
+        #print(direcionesBd)
+        #print(direcionesUser)
+        deletedirecciones = []
+        for f in direcionesBd:
+            if searchdireccion(f,direcionesUser) == "0":
+                deletedirecciones.append(f)
+        #print("ELIMINADOS:"+str(deletedirecciones))
+        for item in deletedirecciones:
+            #print("eliminar: "+str(item))
+            direccion = Direcciones.find_by_id(item)
+            #print(direccion.idUsuario)
             direccion.delete_from_db()
-            print(data['direcciones'])
-        for direcciones in data['direcciones']:
 
+
+        #for direcciones in filtro:
+            #print("idDireccion")
+            #print(direcciones.idDireccion)
+            #direccion = Direcciones.find_by_id(direcciones.idDireccion)
+            #print("Direccion")
+            #print(direccion.idUsuario)
+            #direccion.delete_from_db()
+            #print(data['direcciones'])
+        for direcciones in data['direcciones']:
+            print("edi")
             idUsuario = idUsuarioDireccion
             direccion = direcciones['direccion']
             latitud = direcciones['latitud']
             longitud = direcciones['longitud']
             referencia = direcciones['referencia']
-            print('entrando al try')
-            try:
-                CrearDireccion = Direcciones(idUsuario, direccion, latitud, longitud, referencia)
-                print(CrearDireccion)
-                CrearDireccion.save()
-                print('Direcciones agregadas correctamente')
-                Respuesta = "ok"
-            except Exception as ex:
-                raise ObjectNotFound(ex)
-                Respuesta = "nok"
-                print('Error al agregar direccion')
+            idDireccion_us=direcciones['id']
+            print("direcion--------")
+            print(idDireccion_us)
+            if str(idDireccion_us)=="0":
+                print('entrando al try')
+                try:
+                    CrearDireccion = Direcciones(idUsuario, direccion, latitud, longitud, referencia)
+                    print(CrearDireccion)
+                    CrearDireccion.save()
+                    print('Direcciones agregadas correctamente')
+                    Respuesta = "ok"
+                except Exception as ex:
+                    raise ObjectNotFound(ex)
+                    Respuesta = "nok"
+                    print('Error al agregar direccion')
+
+            else:
+                print("entraa update1")
+                idDirec = direcciones['id']
+                try:
+                    #print('editando')
+                    queryprods =(""" UPDATE "DIRECCIONES" SET  "direccion" = '""" + str(direccion) + """', "latitud" = '""" + str(latitud) + """',
+                                "longitud" = '""" + str(longitud) + """',
+                                "referencia" = '""" + str(referencia) + """'
+                                WHERE "idDireccion"=""" + str(idDirec) + """ """)
+
+                    db.session.execute(queryprods)
+                    db.session.commit()
+                    print('realizado')
+                except Exception as ex:
+                    print('error')
+                    raise ObjectNotFound(ex)
+
+                print("Update")
         # access_token = create_access_token(identity={"request": Respuesta})
         # return {"access_token": access_token}, 200
         return ('Usuario editado correctamente')

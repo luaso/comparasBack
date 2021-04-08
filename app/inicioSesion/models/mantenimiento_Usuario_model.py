@@ -183,6 +183,11 @@ class Subastas(db.Model, BaseModelMixin):
     idDireccion = db.Column(db.Integer, db.ForeignKey(Direcciones.idDireccion), nullable=False)
     fechaSubasta = db.Column(db.Date)
 
+
+    @classmethod
+    def find_by_id(cls, id):
+        return cls.query.get(id)
+
 #db.create_all()
 #rolsSchema = rolSchema(many=True)
 
