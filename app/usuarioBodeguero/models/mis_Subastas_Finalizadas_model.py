@@ -95,6 +95,7 @@ class Subastas(db.Model):
     precioIdeal = db.Column(db.Float)
     idDireccion = db.Column(db.Integer,db.ForeignKey(Direcciones.idDireccion), nullable=False)
     fechaSubasta = db.Column(db.Date)
+    direccionFinal = db.Column(db.String)
     usuario = db.relationship("Usuarios", foreign_keys=[idUsuario])
     usuarioGanador = db.relationship("Usuarios", foreign_keys=[idUsuarioGanador])
     subastas_productos = db.relationship('Subastas_Productos', backref='Subastas', lazy=True)
@@ -168,7 +169,7 @@ class Subastas(db.Model):
 
     @classmethod
     def get_usuario_ganador(self, idSubasta, idUsuario):
-        filtro = db.session.query(Usuarios, Direcciones). \
+        filtro = db.session.query(Usuarios, Direcciones,Subastas). \
             join(Subastas, Subastas.idUsuario == Usuarios.idUsuario). \
             join(Direcciones, Direcciones.idDireccion == Subastas.idDireccion).\
             filter(Subastas.idSubasta == idSubasta).\

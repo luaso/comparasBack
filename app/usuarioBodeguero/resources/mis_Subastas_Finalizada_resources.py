@@ -48,6 +48,8 @@ class datosUsuarioCGanador(Resource):
 
             idUsuario = chek_token['idUsuario']
             usuarioGanador = Subastas.get_usuario_ganador(idSubasta, idUsuario)
+            #print("---------datos---------"+str(idSubasta)+" | "+str(idUsuario))
+            #print(usuarioGanador)
             result = task_schema.dump(usuarioGanador, many=True)
 
             return {"resultado": result}, 200

@@ -1,5 +1,6 @@
 from flask import request
 from flask_restful import Resource
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
 from app.usuarioComprador.schemas.ver_Subastas_schema import TaskSchema,Serializar
 from app.usuarioComprador.models.ver_Subastas_model import Subastas, Usuarios, Estado
@@ -13,7 +14,7 @@ from flask_jwt_extended import (
 )
 
 from app.validateToken import check_for_token
-
+db = SQLAlchemy()
 taskSchema = TaskSchema()
 class listasSubastasCreadas(Resource):
     def get(self):
@@ -77,6 +78,13 @@ class seleccionarGanador(Resource):
             print(type(ganador.idUsuarioGanador))
 
             ganador.save_to_db()
+            print("ASIGNANDO")
+            queryprods = (""" UPDATE public."SUBASTAS"
+	            SET "direccionFinal"=(SELECT  "direccion" FROM "DIRECCIONES" WHERE "idDireccion"="SUBASTAS"."idDireccion")
+	            WHERE "idSubasta"=""" + str(idSubastaGet) + """ """)
+
+            db.session.execute(queryprods)
+            db.session.commit()
             result="Se guardo el ganador correctamente"
             #access_token = create_access_token(identity={"seleccionarGanador": result})
             return {"respuesta": result}

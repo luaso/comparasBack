@@ -10,4 +10,5 @@ class TaskSchema(ma.Schema):
                   'Usuarios.telefono',
                   'Usuarios.celular',
                   'Usuarios.email',
-                  'Direcciones.direccion')
+                  'Direcciones.direccion',
+                  "Subastas.direccionFinal")
