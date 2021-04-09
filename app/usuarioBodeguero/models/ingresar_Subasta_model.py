@@ -81,6 +81,7 @@ class Subastas(db.Model):
     nombreSubasta = db.Column(db.String)
     precioIdeal = db.Column(db.Float)
     fechaSubasta = db.Column(db.String)
+    idUsuarioGanador=db.Column(db.Integer)
 
     @classmethod
     def get_join_filter(self):
@@ -101,6 +102,17 @@ class Subastas(db.Model):
         return filtro
 
     @classmethod
+    def get_subastasuser(self,idUsuario):
+
+        filtro = db.session.query(Subastas, Direcciones, Estado, Usuarios). \
+            join(Direcciones, Subastas.idDireccion == Direcciones.idDireccion). \
+            join(Estado, Estado.idEstado == Subastas.idEstado). \
+            join(Usuarios, Subastas.idUsuario == Usuarios.idUsuario). \
+            filter(Estado.codEstado == "Cod2").\
+            filter(Subastas.idUsuarioGanador != int(idUsuario)).all()
+        return filtro
+
+    @classmethod
     def get_direccion_usuario_2km(self, idUsuario, direcciones):
         i = 0
         codRadio = AdditionalConfig.RADIOBUSQUEDASUBASTA
@@ -113,14 +125,24 @@ class Subastas(db.Model):
             coordenada = ((data.latitud, data.longitud))
 
         for direccion in direcciones:
+            idSubas=str(direccion["Subastas.idSubasta"])
+
+            querysubas = ("""SELECT * FROM "PUJAS" WHERE "idSubasta"=""" + str(idSubas) + """ and "idUsuario"=""" + str(idUsuario) + """ limit 1;""")
+
+            iduSbastanew = db.session.execute(querysubas)
+            existe = "0"
+            try:
+                existe = str(iduSbastanew.fetchone()[0])
+            except Exception as ex:
+                existe = "0"
 
             coordenadadaBus = ((direccion["Direcciones.latitud"],direccion["Direcciones.longitud"]))
+            if existe=="0":
+                dist = geodesic(coordenada,coordenadadaBus).km
 
-            dist = geodesic(coordenada,coordenadadaBus).km
+                if dist <= radioInt:
 
-            if dist <= radioInt:
-
-                direccionesMenores.append(direccion)
+                    direccionesMenores.append(direccion)
 
         return direccionesMenores
 

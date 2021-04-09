@@ -5,6 +5,7 @@ class TaskSchema(ma.Schema):
     class Meta:
         fields = ('Subastas.idSubasta',
                   'Subastas.nombreSubasta',
+                  'Subastas.idUsuarioGanador',
                   'Usuarios.idUsuario',
                   'Usuarios.nombreUsuario',
                   'Usuarios.apellidoPatUsuario',

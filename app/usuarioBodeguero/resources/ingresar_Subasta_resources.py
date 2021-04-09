@@ -27,10 +27,11 @@ class obtenerPosiblesSubastasBodeguero(Resource):
             return chek_token
         try:
             idUsuario = idUsuario
-            filtro = Subastas.get_subastas()
-            #print(filtro)
-            result = task_schema.dump(filtro, many=True)
+            #filtro = Subastas.get_subastasuserget_subastas(idUsuario)
 
+            filtro = Subastas.get_subastas()
+
+            result = task_schema.dump(filtro, many=True)
             coordenadas = Subastas.get_direccion_usuario_2km(idUsuario,result)
 
             #access_token = create_access_token(identity={"posibles_subastas": result})
