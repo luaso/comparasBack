@@ -30,7 +30,6 @@ class obtenerPosiblesSubastasBodeguero(Resource):
             #filtro = Subastas.get_subastasuserget_subastas(idUsuario)
 
             filtro = Subastas.get_subastas()
-
             result = task_schema.dump(filtro, many=True)
             coordenadas = Subastas.get_direccion_usuario_2km(idUsuario,result)
 

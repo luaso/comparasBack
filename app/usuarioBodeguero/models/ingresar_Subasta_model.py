@@ -124,23 +124,24 @@ class Subastas(db.Model):
         for data in latlongBodeguero:
             coordenada = ((data.latitud, data.longitud))
 
+        #print("ID_USUARIO:"+str(idUsuario))
+        #print(coordenada)
         for direccion in direcciones:
             idSubas=str(direccion["Subastas.idSubasta"])
-
             querysubas = ("""SELECT * FROM "PUJAS" WHERE "idSubasta"=""" + str(idSubas) + """ and "idUsuario"=""" + str(idUsuario) + """ limit 1;""")
-
             iduSbastanew = db.session.execute(querysubas)
             existe = "0"
             try:
                 existe = str(iduSbastanew.fetchone()[0])
             except Exception as ex:
                 existe = "0"
-
-            coordenadadaBus = ((direccion["Direcciones.latitud"],direccion["Direcciones.longitud"]))
+            coordenadadaBus=((direccion["Direcciones.latitud"],direccion["Direcciones.longitud"]))
             if existe=="0":
                 dist = geodesic(coordenada,coordenadadaBus).km
-
-                if dist <= radioInt:
+                print("KILLLLLL: "+str(int(round(dist)))+" PARAM:"+str(radioInt)+" ID SUBASTA:"+str(direccion["Subastas.idSubasta"]))
+                print(dist)
+                #if dist <= radioInt:
+                if str(int(round(dist)))<=int(radioInt):
 
                     direccionesMenores.append(direccion)
 
