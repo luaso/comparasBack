@@ -140,8 +140,8 @@ class Subastas(db.Model):
                 dist = geodesic(coordenada,coordenadadaBus).km
                 #print("KILLLLLL: "+str(int(round(dist)))+" PARAM:"+str(radioInt)+" ID SUBASTA:"+str(direccion["Subastas.idSubasta"]))
                 #print(dist)
-                #if dist <= radioInt:
-                if int(round(dist))<=int(radioInt):
+                if dist <= radioInt:
+                #if int(round(dist))<=int(radioInt):
                     direccionesMenores.append(direccion)
 
         return direccionesMenores
