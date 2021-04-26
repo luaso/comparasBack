@@ -52,6 +52,7 @@ class deleteMisSubastasComprador(Resource):
             #subastas.delete_from_db()
             querysubas = ("""DELETE FROM "SUBASTAS" WHERE  "idSubasta"=""" + str(idSubasta) + """ ;""")
             db.session.execute(querysubas)
+            db.session.commit()
             result = "completado"
             return {"Result": result}, 200
         except Exception as ex:
