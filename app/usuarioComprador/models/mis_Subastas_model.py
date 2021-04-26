@@ -119,6 +119,10 @@ class Subastas(db.Model):
     def find_by_id(cls, id):
         return cls.query.get(id)
 
+    def delete_from_db(self):
+        db.session.delete(self)
+        db.session.commit()
+
 
 
     def __init__(self, idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, fechaSubasta):
