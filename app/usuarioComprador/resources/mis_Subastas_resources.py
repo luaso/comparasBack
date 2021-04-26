@@ -48,7 +48,7 @@ class deleteMisSubastasComprador(Resource):
 
             #print("Subastass por eliminar")
             subastas = Subastas.find_by_id(idSubasta)
-            db.session.rollback()
+            #db.session.rollback()
 
             subastas.delete_from_db()
             result = "completado"
