@@ -115,6 +115,10 @@ class Subastas(db.Model):
             print("asd")
             return filtro
 
+    @classmethod
+    def find_by_id(cls, id):
+        return cls.query.get(id)
+
 
 
     def __init__(self, idUsuario, idEstado, tiempoInicial, nombreSubasta, precioIdeal, fechaSubasta):

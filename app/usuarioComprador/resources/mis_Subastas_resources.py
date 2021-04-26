@@ -34,3 +34,41 @@ class misSubastasComprador(Resource):
             return {"Resultado": result}, 200
         except Exception as ex:
             raise ObjectNotFound(ex)
+
+    def delete(self, idSubasta):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
+        try:
+
+            # idSubasta = request.json['idSubasta']
+            # DELETE SUBASTA BY ID
+            #print("Subastass por eliminar")
+            subastas = Subastas.find_by_id(idSubasta)
+            subastas.delete_from_db()
+            result = "completado"
+            return {"Result": result}, 200
+        except Exception as ex:
+            raise ObjectNotFound(ex)
+
+    def post(self, idSubasta):
+        chek_token = check_for_token(request.headers.get('token'))
+        valid_token = chek_token['message']
+        if valid_token != 'ok':
+            return chek_token
+        try:
+
+            # idSubasta = request.json['idSubasta']
+            # VALIDAR SUBASTA SI EXISTE CON PARTICIPANTES
+            querysubas = ("""SELECT * FROM "PUJAS" WHERE "idSubasta"=""" + str(idSubasta) + """  limit 1;""")
+            iduSbastanew = db.session.execute(querysubas)
+            existe = "0"
+            try:
+                existe = str(iduSbastanew.fetchone()[0])
+            except Exception as ex:
+                existe = "0"
+
+            return {"Result": existe}, 200
+        except Exception as ex:
+            raise ObjectNotFound(ex)
