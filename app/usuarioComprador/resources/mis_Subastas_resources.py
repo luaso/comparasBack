@@ -47,10 +47,11 @@ class deleteMisSubastasComprador(Resource):
             # DELETE SUBASTA BY ID
 
             #print("Subastass por eliminar")
-            subastas = Subastas.find_by_id(idSubasta)
-            db.session.rollback()
-
-            subastas.delete_from_db()
+            #subastas = Subastas.find_by_id(idSubasta)
+            #db.session.rollback()
+            #subastas.delete_from_db()
+            querysubas = ("""DELETE FROM "SUBASTAS" WHERE  "idSubasta"=""" + str(idSubasta) + """ ;""")
+            db.session.execute(querysubas)
             result = "completado"
             return {"Result": result}, 200
         except Exception as ex:
