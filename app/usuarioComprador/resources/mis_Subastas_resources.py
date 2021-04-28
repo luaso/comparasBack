@@ -35,7 +35,7 @@ class misSubastasComprador(Resource):
                 item['Usuarios.apellidoPatUsuario'] = item["Usuarios.apellidoPatUsuario"]
                 item['Subastas.fechaSubasta'] = item["Subastas.fechaSubasta"]
                 estado=""
-                querysubas = ("""SELECT count(*) FROM "PUJAS" WHERE "idSubasta"=""" + str(item['Subastas.idSubasta']) + """;""")
+                querysubas = ("""SELECT COUNT(DISTINCT "idUsuario") FROM "PUJAS" WHERE "idSubasta"=""" + str(item['Subastas.idSubasta']) + """;""")
                 totalPujas = db.session.execute(querysubas)
                 existe = "0"
                 try:
