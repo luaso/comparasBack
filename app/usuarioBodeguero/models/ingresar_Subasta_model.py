@@ -141,7 +141,8 @@ class Subastas(db.Model):
                 #print("KILLLLLL: "+str(int(round(dist)))+" PARAM:"+str(radioInt)+" ID SUBASTA:"+str(direccion["Subastas.idSubasta"]))
                 #print(dist)
                 #if dist < radioInt:
-                if int(round(dist)) <= radioInt:
+                #if int(round(dist)) <= radioInt:
+                if dist <= radioInt:
                     direccionesMenores.append(direccion)
 
         return direccionesMenores
