@@ -136,8 +136,8 @@ class Subastas(db.Model):
             except Exception as ex:
                 existe = "0"
             coordenadadaBus=((direccion["Direcciones.latitud"],direccion["Direcciones.longitud"]))
-            direccionesMenores.append(direccion)
-            #if existe=="0":
+            if existe=="0":
+                direccionesMenores.append(direccion)
                 #dist = geodesic(coordenada,coordenadadaBus).km
                 #print("KILLLLLL: "+str(int(round(dist)))+" PARAM:"+str(radioInt)+" ID SUBASTA:"+str(direccion["Subastas.idSubasta"]))
                 #print(dist)
