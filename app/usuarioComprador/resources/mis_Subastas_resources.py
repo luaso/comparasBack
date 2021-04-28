@@ -30,6 +30,27 @@ class misSubastasComprador(Resource):
 
 
             result = task_schema.dump(filtro, many=True)
+            for item in result:
+                item['Subastas.idSubasta'] = item["Subastas.idSubasta"]
+                item['Usuarios.apellidoPatUsuario'] = item["Usuarios.apellidoPatUsuario"]
+                item['Subastas.fechaSubasta'] = item["Subastas.fechaSubasta"]
+                estado=""
+                querysubas = ("""SELECT count(*) FROM "PUJAS" WHERE "idSubasta"=""" + str(item['Subastas.idSubasta']) + """;""")
+                totalPujas = db.session.execute(querysubas)
+                existe = "0"
+                try:
+                    existe = str(totalPujas.fetchone()[0])
+                except Exception as ex:
+                    existe = "0"
+                if existe=="0":
+                    estado=item["Estado.nombreEstado"]
+                else:
+                    estado="Curso"
+                item['Estado.nombreEstado'] = estado
+                item['Participantes']=existe
+                item['Usuarios.nombreUsuario'] = item["Usuarios.nombreUsuario"]
+                item['Subastas.idSubasta'] = item["Subastas.idSubasta"]
+
             #access_token = create_access_token(identity={"Subastas": result})
             return {"Resultado": result}, 200
         except Exception as ex:
