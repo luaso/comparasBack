@@ -137,8 +137,8 @@ class Subastas(db.Model):
                 existe = "0"
             coordenadadaBus=((direccion["Direcciones.latitud"],direccion["Direcciones.longitud"]))
             if existe=="0":
+                dist = geodesic(coordenada,coordenadadaBus).km
                 direccionesMenores.append(direccion)
-                #dist = geodesic(coordenada,coordenadadaBus).km
                 #print("KILLLLLL: "+str(int(round(dist)))+" PARAM:"+str(radioInt)+" ID SUBASTA:"+str(direccion["Subastas.idSubasta"]))
                 #print(dist)
                 #if dist < radioInt:
