@@ -15,4 +15,4 @@ class TaskSchema(ma.Schema):
                   'Estado.idEstado',
                   'Direcciones.idDireccion',
                   'Direcciones.latitud',
-                  'Direcciones.longitud',)
+                  'Direcciones.longitud')
